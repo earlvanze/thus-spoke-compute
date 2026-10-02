@@ -1,4 +1,12 @@
-# kinetic-typography-template
+# thus-spoke-compute
+
+A kinetic-typography production workspace for **“AI is a normal technology?”**. The authorized intake audio and caption materials are in [`source/`](source/); see [`source/PROVENANCE.md`](source/PROVENANCE.md) for source, format, and alignment status.
+
+> **Caption note:** `source/captions/` contains YouTube automatic captions. Review and force-align a corrected canonical lyric sheet before producing a lyric-synchronized render.
+
+## Renderer template
+
+
 
 Code-rendered **kinetic-typography music videos** from any song: give it one audio master and the lyrics, and it times
 every sung word, then renders a 1080p video where the words are the image. Each word lands on its sung onset. Every phrase

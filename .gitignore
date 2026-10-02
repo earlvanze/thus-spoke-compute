@@ -3,7 +3,7 @@ dist/
 .venv/
 __pycache__/
 *.pyc
-# per-project artefacts (never commit audio, lyrics timing or renders)
+# Per-project render caches (source media for this authorized project is tracked under source/).
 out/
 qa/
 data/
@@ -13,5 +13,6 @@ analysis/candidates/
 *.wav
 *.mp3
 *.m4a
+!source/audio/*.m4a
 *.mp4
 .env
