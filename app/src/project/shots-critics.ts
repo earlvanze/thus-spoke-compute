@@ -7,7 +7,7 @@ import {
 box,
 } from './common';
 import { cam } from '../scenes/shots';
-import { clean, lerpCam, snapCam } from '../scenes/kit';
+import { clean, heat, lerpCam, snapCam } from '../scenes/kit';
 import { hash, noise1 } from '../engine/util';
 
 /** Fixed screen camera (composition coords = screen coords) with a slow push. */
@@ -181,18 +181,33 @@ function offramp(s: S) {
   const sky = c.createLinearGradient(0, hy - 220, 0, hy); sky.addColorStop(0, col('ink', 0)); sky.addColorStop(1, col('blood', 0.35)); c.fillStyle = sky; c.fillRect(0, hy - 220, W, 220);
   poly([P(-1.25, 0), P(1.25, 0), P(1.25, 1), P(-1.25, 1)], col('graphite', 0.35));
   poly([P(-1, 0), P(1, 0), P(1, 1), P(-1, 1)], col('ink2', 1));
-  // the exit ramp: a lane that leaves the right edge and bends away to the right
-  const rk = prog(t, off.start - 0.15, off.start + 0.5, ease.outCubic);
-  const ramp: [number, number][] = [], rampIn: [number, number][] = [];
-  for (let i = 0; i <= 30; i++) { const z = 1 - i / 30 * 0.72; const a = P(1, z), b = P(1.6, z); const bend = Math.pow(i / 30, 2) * 900; ramp.push([b.x + bend, b.y - bend * 0.08]); rampIn.push([a.x + bend * 0.85, a.y - bend * 0.07]); }
-  if (rk > 0.001) {
-    c.globalAlpha = rk; c.fillStyle = col('ink2', 1); c.beginPath(); ramp.forEach(([x, y], i) => (i ? c.lineTo(x, y) : c.moveTo(x, y))); for (let i = rampIn.length - 1; i >= 0; i--) c.lineTo(rampIn[i]![0], rampIn[i]![1]); c.closePath(); c.fill(); c.globalAlpha = 1;
-    strokePts(c, ramp, rk, col('signal', 0.9), 5); strokePts(g, ramp, rk, col('ember', 0.3), 12);
-    // gore chevrons where the ramp splits
-    for (let i = 0; i < 5; i++) { const z = 0.75 - i * 0.07, a = P(1.05, z), b = P(1.45, z); rule(c, a.x, a.y, b.x, b.y - 30 * z, rk, col('bone', 0.7), 3 + 6 * z); }
-  }
-  // edges + lane dashes streaming toward the camera
-  for (const u of [-1, 1]) strokePts(c, [[P(u, 0).x, P(u, 0).y], [P(u, 1).x, P(u, 1).y]], 1, col('bone', 0.85), 5);
+  // a proper exit: a deceleration lane runs beside the right lane (dashed line between them), splits at a striped gore
+  // nose, then the ramp curves away right and drops off behind the embankment. Road space: u across (main road -1..1),
+  // z depth (0 horizon .. 1 camera).
+  const rk = prog(t, off.start - 0.2, off.start + 0.45, ease.outCubic);
+  const ZS = 0.56, LW = 0.62; // split depth, lane width (in u)
+  const uL = (z: number) => (z >= ZS ? 1 : 1 + 3.2 * Math.pow(ZS - z, 1.45)), uR = (z: number) => uL(z) + LW;
+  const zs: number[] = []; for (let i = 0; i <= 60; i++) zs.push(1 - (i / 60) * (1 - 0.16));
+  const edgeL = zs.map((z) => P(uL(z), z)), edgeR = zs.map((z) => P(uR(z), z));
+  c.save(); c.globalAlpha = 0.35 + 0.65 * rk;
+  c.fillStyle = col('graphite', 0.25); c.beginPath(); edgeR.forEach((p, i) => (i ? c.lineTo(p.x, p.y) : c.moveTo(p.x, p.y))); c.lineTo(W + 400, hy + 20); c.lineTo(W + 400, H + 200); c.closePath(); c.fill();
+  c.fillStyle = col('ink2', 1); c.beginPath(); edgeL.forEach((p, i) => (i ? c.lineTo(p.x, p.y) : c.moveTo(p.x, p.y))); for (let i = edgeR.length - 1; i >= 0; i--) c.lineTo(edgeR[i]!.x, edgeR[i]!.y); c.closePath(); c.fill();
+  // the gore: the widening wedge between the main edge and the ramp, filled with diagonal stripes
+  const gz = zs.filter((z) => z <= ZS && z >= 0.24);
+  c.fillStyle = col('graphite', 0.5); c.beginPath(); gz.forEach((z, i) => { const p = P(1, z); i ? c.lineTo(p.x, p.y) : c.moveTo(p.x, p.y); }); for (let i = gz.length - 1; i >= 0; i--) { const p = P(uL(gz[i]!), gz[i]!); c.lineTo(p.x, p.y); } c.closePath(); c.fill();
+  for (let i = 0; i < 9; i++) { const z0 = ZS - 0.035 * i, z1 = z0 - 0.03; if (z1 < 0.24) break; const a = P(1, z0), b = P(uL(z1), z1); rule(c, a.x, a.y, b.x, b.y, 1, col('bone', 0.75), 2 + 7 * z0); }
+  // lines: ramp outer edge, ramp inner edge after the split, dashed lane line before it
+  strokePts(c, edgeR.map((p) => [p.x, p.y] as [number, number]), 1, col('bone', 0.9), 5);
+  strokePts(c, zs.filter((z) => z <= ZS).map((z) => { const p = P(uL(z), z); return [p.x, p.y] as [number, number]; }), 1, col('bone', 0.9), 4);
+  for (let i = 0; i < 8; i++) { const z0 = ZS + (i / 8) * (1 - ZS), z1 = Math.min(1, z0 + 0.03); const a = P(1, z0), b = P(1, z1); rule(c, a.x, a.y, b.x, b.y, 1, col('bone', 0.8), 3 + 10 * z0); }
+  // the ramp's guide arrow, painted in the exit lane
+  { const z = 0.8, a = P(1 + LW / 2, z), sc_ = 0.4 + z; c.fillStyle = col('bone', 0.6); c.beginPath(); c.moveTo(a.x - 14 * sc_, a.y + 30 * sc_); c.lineTo(a.x - 14 * sc_, a.y - 10 * sc_); c.lineTo(a.x - 30 * sc_, a.y - 10 * sc_); c.lineTo(a.x + 10 * sc_, a.y - 46 * sc_); c.lineTo(a.x + 30 * sc_, a.y - 10 * sc_); c.lineTo(a.x + 14 * sc_, a.y - 10 * sc_); c.lineTo(a.x + 14 * sc_, a.y + 30 * sc_); c.closePath(); c.fill(); }
+  // a small EXIT sign on the gore nose
+  { const n_ = P(1.06, ZS - 0.01); c.fillStyle = col('graphite', 1); c.fillRect(n_.x - 3, n_.y - 70, 6, 70); c.fillStyle = col('bone', 1); c.fillRect(n_.x - 34, n_.y - 96, 68, 30); setFont(c, F.mono(700), 18); c.fillStyle = col('ink', 1); c.textAlign = 'center'; c.fillText('EXIT', n_.x, n_.y - 75); }
+  c.restore();
+  // main road: left edge, right edge only beyond the split, lane dashes streaming toward the camera
+  strokePts(c, [[P(-1, 0).x, P(-1, 0).y], [P(-1, 1).x, P(-1, 1).y]], 1, col('bone', 0.85), 5);
+  strokePts(c, [[P(1, 0).x, P(1, 0).y], [P(1, ZS).x, P(1, ZS).y]], 1, col('bone', 0.85), 5);
   const run = (t - sh.start) * 1.8;
   for (const u of [-0.33, 0.33]) for (let i = 0; i < 12; i++) {
     const z0 = ((i / 12 + run) % 1), z1 = Math.min(1, z0 + 0.035);
@@ -205,7 +220,7 @@ function offramp(s: S) {
     box(c, gl.x - 10, gy, 20, gl.y - gy, 12, col('graphite', 1), col('ink2', 1), col('ash', 0.5));
     box(c, gr.x - 10, gy, 20, gr.y - gy, 12, col('graphite', 1), col('ink2', 1), col('ash', 0.5));
     box(c, gl.x, gy - 14, gr.x - gl.x, 22, 12, col('graphite', 1), col('ink2', 1), col('ash', 0.5));
-    const sx = P(1.1, gz).x, sy = gy - 190 * sk;
+    const sx = Math.min(W - 280, P(1.3, gz).x), sy = gy - 190 * sk;
     box(c, sx - 250, sy, 500, 180 * sk, 18, col('bone', 1), col('ash', 1), col('bone', 0.8), col('ink', 0.8), 3);
     if (sk > 0.6) {
       note(c, 'EXIT 1', sx - 230, sy + 34, 1, 22, 'blood');
@@ -547,33 +562,51 @@ function lean(s: S) {
 function shenzhen(s: S) {
   const { t, sh, c, g } = s;
   const l1 = ln(s, 0), l2 = ln(s, 1);
-  const yrW = fw(l1, /nineteen/i), boats = fw(l1, /boats/i), paddy = fw(l1, /paddy/i), look = fw(l2, /look/i), sky = fw(l2, /skyline/i);
-  scr(s, 1.0, 1.04);
-  const hy = 700;
-  const grow = prog(t, look.start - 0.1, sky.end + 0.4, ease.outExpo);
+  const yrW = fw(l1, /nineteen/i), look = fw(l2, /look/i), sky = fw(l2, /skyline/i);
+  scr(s, 1.0, 1.03);
+  const hy = 640;
+  const grow = prog(t, l2.start - 0.1, sky.end + 0.3, ease.outCubic);
   // water + waves
-  for (let i = 0; i < 9; i++) { const y = hy + 30 + i * 36; c.strokeStyle = col('graphite', 0.7); c.lineWidth = 2; c.beginPath(); for (let x = 0; x <= W; x += 20) { const yy = y + Math.sin(x * 0.02 + t * 1.5 + i) * 5; x ? c.lineTo(x, yy) : c.moveTo(x, yy); } c.stroke(); }
+  for (let i = 0; i < 10; i++) { const y = hy + 30 + i * 40; c.strokeStyle = col('graphite', 0.7); c.lineWidth = 2; c.beginPath(); for (let x = 0; x <= W; x += 20) { const yy = y + Math.sin(x * 0.02 + t * 1.5 + i) * 5; x ? c.lineTo(x, yy) : c.moveTo(x, yy); } c.stroke(); }
   rule(c, 0, hy, W, hy, 1, col('bone', 0.8), 3);
-  // boats (original simple hulls with a mast and a sail)
-  const bk = prog(t, boats.start - 0.1, boats.start + 0.4, ease.outCubic);
-  for (let i = 0; i < 4; i++) { const x = 300 + i * 380 + Math.sin(t * 0.7 + i) * 20, y = hy + 70 + (i % 2) * 70; if (bk <= 0) break; c.fillStyle = col('bone', bk * (1 - grow * 0.6)); c.beginPath(); c.moveTo(x - 70, y); c.lineTo(x + 70, y); c.lineTo(x + 50, y + 26); c.lineTo(x - 50, y + 26); c.closePath(); c.fill(); rule(c, x, y, x, y - 90, 1, col('bone', bk), 3); c.beginPath(); c.moveTo(x + 4, y - 86); c.lineTo(x + 60, y - 20); c.lineTo(x + 4, y - 20); c.closePath(); c.fill(); }
-  // paddy field terraces (the near shore, left) — replaced by towers as the skyline grows
-  const pk = prog(t, paddy.start - 0.1, paddy.start + 0.5, ease.outCubic) * (1 - grow);
-  for (let i = 0; i < 7; i++) rule(c, 100, hy - 20 - i * 18, 100 + (700 - i * 60) * pk, hy - 20 - i * 18, 1, col('graphite', 0.9), 3);
-  // the skyline: towers rise from the horizon; each carries a word of line 2 rotated vertically
-  const ws2 = l2.words;
-  for (let i = 0; i < 16; i++) {
-    const x = 120 + i * 110, h = (220 + hash(i, 9) * 460) * prog(grow, (i % 5) * 0.08, (i % 5) * 0.08 + 0.6, ease.outExpo), w = 80 + hash(i, 2) * 40;
-    if (h <= 1) continue;
-    c.fillStyle = col('ink2', 1); c.strokeStyle = col('graphite', 1); c.lineWidth = 2; c.fillRect(x, hy - h, w, h); c.strokeRect(x, hy - h, w, h);
-    for (let r = 0; r < h / 30 - 1; r++) if (hash(i, r) > 0.45) { c.fillStyle = col('signal', 0.7); c.fillRect(x + 10, hy - h + 12 + r * 30, w - 20, 8); g.fillStyle = col('ember', 0.2); g.fillRect(x + 10, hy - h + 12 + r * 30, w - 20, 8); }
-  }
-  // the year: 1980 → 2026 on "skyline"
+  // line 1: the scene-setting words at the top; FISHING / BOATS ride the water as hulls; PADDY / FIELDS are terraces
+  const fish = l1.words.filter((w) => /fishing|boats/i.test(w.w)), field = l1.words.filter((w) => /paddy|fields/i.test(w.w));
+  const head = l1.words.filter((w) => !fish.includes(w) && !field.includes(w) && !/nineteen|eighty/i.test(w.w));
+  const a1 = 1 - grow * 0.85;
+  lyric(s, head, 170, { width: 900, max: 84, align: 'l', alpha: a1 });
+  fish.forEach((w, i) => {
+    if (t < w.start - 0.3) return;
+    const k = ease.outBack(prog(t, w.start - 0.1, w.start + 0.35)), x = 520 + i * 560 + Math.sin(t * 0.8 + i) * 18, y = hy + 140 + Math.sin(t * 2 + i) * 6 - (1 - k) * 60;
+    const f = A(100, 900), wd = measure(txt(w), f, 64) + 70;
+    c.save(); c.globalAlpha = a1;
+    c.fillStyle = mix('bone', 'signal', heat(w, t)); c.beginPath(); c.moveTo(x - wd / 2 - 30, y - 40); c.lineTo(x + wd / 2 + 40, y - 40); c.lineTo(x + wd / 2, y + 30); c.lineTo(x - wd / 2, y + 30); c.closePath(); c.fill();
+    rule(c, x, y - 40, x, y - 230, 1, col('bone', 1), 5);
+    c.fillStyle = col('bone', 0.85); c.beginPath(); c.moveTo(x + 6, y - 225); c.lineTo(x + 150, y - 60); c.lineTo(x + 6, y - 60); c.closePath(); c.fill();
+    c.restore();
+    word(s, w, txt(w), f, 64, x, y - 6, { base: 'ink', hot: 'blood', alpha: a1 });
+  });
+  field.forEach((w, i) => {
+    if (t < w.start - 0.3) return;
+    const k = prog(t, w.start - 0.1, w.start + 0.5, ease.outCubic), y0 = hy - 30 - i * 90;
+    for (let r = 0; r < 3; r++) rule(c, 120 + r * 26, y0 - r * 22, 120 + r * 26 + (700 - r * 60) * k, y0 - r * 22, 1, col('graphite', a1), 4);
+    word(s, w, txt(w), A(125, 900), 56, 120 + 240, y0 - 60, { alpha: a1 * k, align: 'l' });
+  });
+  // line 2: each word rises from the horizon as a tower with the word running up its face; SKYLINE is the tallest
+  const ws2 = l2.words, n2 = ws2.length;
+  ws2.forEach((w, i) => {
+    const k = prog(t, w.start - 0.1, w.start + 0.45, ease.outExpo);
+    if (k <= 0) return;
+    const isSky = /skyline/i.test(w.w), f = A(isSky ? 125 : 100, 900), fs = isSky ? 74 : 50;
+    const len = measure(txt(w), f, fs), tw = isSky ? 150 : 96, th = (len + 120) * k;
+    const x = 160 + (i / Math.max(1, n2 - 1)) * (W - 320) - tw / 2;
+    box(c, x, hy - th, tw, th, 60, col('ink2', 1), col('ink', 1), col('graphite', 0.6), col('graphite', 1), 2);
+    for (let r = 0; r < th / 34 - 1; r++) for (const side of [0, 1]) if (hash(i, r, side) > 0.5) { c.fillStyle = col('signal', 0.6); c.fillRect(x + 8 + side * (tw - 24), hy - th + 14 + r * 34, 10, 12); }
+    word(s, w, txt(w), f, fs, x + tw / 2, hy - th / 2, { rot: -Math.PI / 2, glow: isSky ? 1.5 : 1 });
+  });
+  // the year: 1980 → 2026 across the second line
   const yr = Math.round(lerp(1980, 2026, prog(t, look.start, sky.end, ease.inOutCubic)));
-  if (t > yrW.start - 0.05) label(s, String(yr), A(62, 900), 260, 1560, 220, col(t > look.start ? 'signal' : 'bone', 0.9));
-  { const a = 1 - prog(t, l2.start - 0.2, l2.start + 0.2) * 0.8, k = Math.max(1, l1.words.findIndex((w) => /fishing/i.test(w.w))); lyric(s, l1.words.slice(0, k), 170, { width: 1150, max: 90, align: 'l', alpha: a }); lyric(s, l1.words.slice(k), 300, { width: 1150, max: 80, align: 'l', alpha: a, anno: false }); }
-  if (t > l2.start - 0.3) lyric(s, ws2, 950, { width: 1600, max: 84 });
-  void sh;
+  if (t > yrW.start - 0.05) label(s, String(yr), A(62, 900), 150, 1150, 200, col(t > look.start ? 'signal' : 'bone', 0.9));
+  void sh; void g;
 }
 
 // ------------------------------------------------------------------ V4: the assembly line — ROBOTS stamped on every unit
@@ -619,42 +652,69 @@ function assembly(s: S) {
     const off = nxt ? prog(t, nxt.start - 0.15, nxt.start + 0.35, ease.inCubic) : 0;
     if (off >= 1 || t < l.start - 0.5) return;
     const drift = -(t - l.start) * 25 - off * 2200;
-    const sizes = l.words.map((w) => (/robot/i.test(w.w) ? 92 : 64));
-    const fams = l.words.map((w) => A(/robot/i.test(w.w) ? 125 : 87, 900));
-    const wds = l.words.map((w, i) => measure(txt(w), fams[i]!, sizes[i]!));
-    const tot = wds.reduce((a, b) => a + b, 0) + 30 * (wds.length - 1);
-    const sc = Math.min(1, 1560 / tot);
+    // every word is an object on the belt: a crate with the word stencilled on it; ROBOTS are robot units
+    const isR = l.words.map((w) => /robot/i.test(w.w));
+    const f = A(87, 900), fsz = l.words.map((w, i) => (isR[i] ? 40 : 34));
+    const wds = l.words.map((w, i) => Math.max(isR[i] ? 120 : 70, measure(txt(w), f, fsz[i]!) + 30));
+    const tot = wds.reduce((a, b) => a + b, 0) + 16 * (wds.length - 1);
+    const sc = Math.min(1, 1640 / tot);
     let x = W / 2 - (tot * sc) / 2 + drift;
-    l.words.forEach((w, i) => { word(s, w, txt(w), fams[i]!, sizes[i]! * sc, x + (wds[i]! * sc) / 2, 610 - (sizes[i]! * sc) * 0.2, { sc: slam(w, t, 1.5) }); x += (wds[i]! + 30) * sc; });
+    l.words.forEach((w, i) => {
+      const cw = wds[i]! * sc, cx = x + cw / 2, k = ease.outBack(prog(t, w.start - 0.1, w.start + 0.2));
+      x += (wds[i]! + 16) * sc;
+      if (k <= 0.001) return;
+      const hot = heat(w, t);
+      c.save(); c.translate(cx, by); c.scale(k, k);
+      if (isR[i]) { // a robot unit: legs, body, head with a visor — the word on its chest
+        c.fillStyle = mix('ash', 'signal', hot); c.fillRect(-cw * 0.32, -40, cw * 0.18, 40); c.fillRect(cw * 0.14, -40, cw * 0.18, 40);
+        box(c, -cw / 2, -150 * sc, cw, 112 * sc, 34, mix('ash', 'signal', hot), col('graphite', 1), col('bone', 0.6), col('ink', 0.6), 1.5);
+        box(c, -cw * 0.25, -214 * sc, cw * 0.5, 58 * sc, 26, mix('ash', 'signal', hot), col('graphite', 1), col('bone', 0.6), col('ink', 0.6), 1.5);
+        c.fillStyle = col('ink', 1); c.fillRect(-cw * 0.18, -194 * sc, cw * 0.36, 12 * sc);
+      } else box(c, -cw / 2, -96 * sc, cw, 96 * sc, 40, mix('ash', 'ember', hot * 0.6), col('graphite', 1), col('bone', 0.55), col('ink', 0.6), 1.5);
+      c.restore();
+      word(s, w, txt(w), f, fsz[i]! * sc * Math.max(0.001, k), cx, by - (isR[i] ? 94 : 48) * sc * k, { base: 'ink', hot: 'blood' });
+    });
   });
   void lineIdx;
 }
 
 // ------------------------------------------------------------------ V4: diminishing returns — until capital can think, and learns
 function returns(s: S) {
-  const { t, c } = s;
+  const { t, c, g } = s;
   const l1 = ln(s, 0), l2 = ln(s, 1);
-  const dim_ = fw(l1, /diminishing/i), think = fw(l2, /think/i), learns = l2.words[l2.words.length - 1]!;
-  scr(s, 1.0, 1.03);
-  const x0 = 240, y0 = 920, w = 1100, h = 560;
+  const think = fw(l2, /think/i), learns = l2.words[l2.words.length - 1]!;
+  // the chart is BUILT FROM THE WORDS: each sung word is a bar. Line 1's bars trace diminishing returns (each one adds
+  // less); line 2's bars climb the acid exponential once capital can think, LEARNS the tallest.
+  const x0 = 200, y0 = 960, w = 1520, h = 700;
+  const zoomOut = prog(t, think.start - 0.2, learns.end + 0.3, ease.inOutCubic);
+  cam(s, { x: W / 2, y: lerp(H / 2, H / 2 - 160, zoomOut), z: lerp(1, 0.84, zoomOut), r: 0 });
   const ak = prog(t, l1.start - 0.2, l1.start + 0.3, ease.outExpo);
-  rule(c, x0, y0, x0 + w, y0, ak, col('bone', 0.9), 3); rule(c, x0, y0, x0, y0 - h, ak, col('bone', 0.9), 3);
-  note(c, 'CAPITAL →', x0 + w, y0 + 44, ak, 22, 'ash', 'right'); note(c, 'OUTPUT', x0 - 10, y0 - h - 16, ak, 22, 'ash');
-  // concave part: sqrt-ish flattening
-  const conc: [number, number][] = []; for (let i = 0; i <= 40; i++) { const u = i / 40 * 0.6; conc.push([x0 + u * w, y0 - h * 0.55 * Math.pow(u / 0.6, 0.4)]); }
-  strokePts(c, conc, prog(t, l1.start, dim_.end + 0.3, ease.inOutQuad), col('bone', 1), 6);
-  // the knee: on "think" the curve bends upward in acid
-  const kn = conc[conc.length - 1]!;
-  const ex: [number, number][] = [[kn[0], kn[1]]]; for (let i = 1; i <= 40; i++) { const u = i / 40; ex.push([kn[0] + u * w * 0.4, kn[1] - (Math.exp(u * 3.5) - 1) / (Math.exp(3.5) - 1) * 900]); }
-  const ek = prog(t, think.start, learns.end + 0.2, ease.inQuad);
-  strokePts(c, ex, ek, col('acid', 1), 7); strokePts(s.g, ex, ek, col('acid', 0.45), 18);
-  if (ek > 0) { c.fillStyle = col('acid', 1); c.beginPath(); c.arc(kn[0], kn[1], 12, 0, TAU); c.fill(); }
-  // the dashed "diminishing" asymptote
-  c.setLineDash([12, 10]); rule(c, kn[0], kn[1], x0 + w, kn[1] - 30, prog(t, dim_.start, dim_.end + 0.3), col('graphite', 1), 3); c.setLineDash([]);
-  const a1 = 1 - prog(t, l2.start - 0.2, l2.start + 0.2) * 0.75;
-  lyric(s, l1.words, 160, { width: 1600, max: 80, alpha: a1 });
-  lyric(s, upto(l2, /learns/i), 280, { width: 1600, max: 80, alpha: t > l2.start - 0.4 ? 1 : 0, anno: false });
-  word(s, learns, 'LEARNS.', A(125, 900), sizeTo('LEARNS.', A(125, 900), 640, 200), 1450, 620, { sc: slam(learns, t, 1.5), rot: -0.08 });
+  rule(c, x0, y0, x0 + w, y0, ak, col('bone', 0.9), 3); rule(c, x0, y0, x0, y0 - h - 300, ak, col('bone', 0.9), 3);
+  note(c, 'CAPITAL →', x0 + w, y0 + 44, ak, 22, 'ash', 'right'); note(c, 'OUTPUT', x0 - 10, y0 - h - 316, ak, 22, 'ash');
+  const n1 = l1.words.length, n2 = l2.words.length, N = n1 + n2, slot = w / N;
+  const conc = (u: number) => h * 0.5 * Math.pow(u, 0.42);              // u: 0..1 across line 1's bars
+  const kneeH = conc(1);
+  const expo = (u: number) => kneeH + (Math.exp(u * 3.4) - 1) / (Math.exp(3.4) - 1) * (h + 260 - kneeH); // line 2
+  const tops: [number, number][] = [];
+  [...l1.words, ...l2.words].forEach((wd, i) => {
+    const second = i >= n1, u = second ? (i - n1 + 1) / n2 : (i + 1) / n1;
+    const bh = (second ? expo(u) : conc(u)) * ease.outCubic(prog(t, wd.start - 0.06, wd.start + 0.3));
+    const x = x0 + i * slot + 6, bw = slot - 12, top = y0 - bh;
+    tops.push([x + bw / 2, y0 - (second ? expo(u) : conc(u))]);
+    if (bh <= 1) return;
+    const hot = heat(wd, t);
+    c.fillStyle = second ? mix('ink2', 'acid', 0.18 + 0.3 * hot) : mix('ink2', 'signal', 0.12 + 0.35 * hot); c.fillRect(x, top, bw, bh);
+    c.strokeStyle = col(second ? 'acid' : 'graphite', 0.9); c.lineWidth = 2; c.strokeRect(x, top, bw, bh);
+    if (second && hot > 0.05) { g.fillStyle = col('acid', 0.18 * hot); g.fillRect(x, top, bw, bh); }
+    // the word runs up inside its bar (sized to fit both the bar's height and width)
+    const f = A(/learns|think|capital|returns|diminishing/i.test(wd.w) ? 100 : 62, 900);
+    const fs = Math.min(bw * 0.78, sizeTo(txt(wd), f, Math.max(40, bh - 24), 999));
+    word(s, wd, txt(wd), f, fs, x + bw / 2, top + bh / 2, { rot: -Math.PI / 2, glow: second ? 1.3 : 1 });
+  });
+  // the curve over the bar tops: bone along the flattening, acid once it kinks upward
+  const k1 = prog(t, l1.start, l1.words[n1 - 1]!.end + 0.2, ease.inOutQuad), k2 = prog(t, think.start, learns.end + 0.2, ease.inQuad);
+  strokePts(c, tops.slice(0, n1), k1, col('bone', 0.9), 4);
+  strokePts(c, tops.slice(n1 - 1), k2, col('acid', 1), 6); strokePts(g, tops.slice(n1 - 1), k2, col('acid', 0.4), 16);
 }
 
 // ------------------------------------------------------------------ V4: the fab and the vote; man is a rope (between animal and overman) — priced
@@ -666,7 +726,7 @@ function rope(s: S) {
   cam(s, { x: W / 2, y: H / 2 + sw * H, z: 1, r: 0 });
   // panel A: a wafer turning (the fab) beside a ballot slot that nobody uses
   {
-    const wx = 520, wy = 600, R = 280, rot = (t - l1.start) * 0.6;
+    const wx = 430, wy = 620, R = 250, rot = (t - l1.start) * 0.6;
     const fk = prog(t, fab.start - 0.1, fab.start + 0.4, ease.outExpo);
     c.save(); c.translate(wx, wy); c.rotate(rot);
     c.strokeStyle = col('bone', 0.9 * fk); c.lineWidth = 4; c.beginPath(); c.arc(0, 0, R * fk, 0, TAU); c.stroke();
@@ -676,6 +736,25 @@ function rope(s: S) {
     // ballot box
     const vk = prog(t, vote.start - 0.1, vote.start + 0.3, ease.outBack);
     if (vk > 0.001) { c.strokeStyle = col('bone', 0.9); c.lineWidth = 5; c.strokeRect(1300, 560, 340 * vk, 280); c.fillStyle = col('ink', 1); c.fillRect(1380, 548, 180 * vk, 22); word(s, vote, 'VOTE', A(100, 900), 90, 1470, 720, {}); rule(c, 1280, 560, 1660, 860, prog(t, vote.start + 0.15, vote.start + 0.45, ease.outExpo), col('signal', 1), 10); }
+    // the journal: a closed, unread book between the fab and the ballot box (dust on its top edge, a ribbon still tucked in)
+    const jw = l1.words.find((w) => /journal/i.test(w.w)), cw_ = l1.words.find((w) => /curve/i.test(w.w));
+    if (jw && t >= jw.start - 0.1) {
+      const k = ease.outBack(prog(t, jw.start - 0.1, jw.start + 0.3)), bx_ = 960, by_ = 720;
+      c.save(); c.translate(bx_, by_); c.scale(Math.max(0.001, k), Math.max(0.001, k)); c.rotate(-0.06);
+      box(c, -170, -230, 340, 300, 60, col('blood', 1), col('bone', 0.85), col('bone', 0.7), col('ink', 0.7), 2);
+      c.fillStyle = col('ember', 0.85); c.fillRect(-140, -200, 280, 6); c.fillRect(-140, 30, 280, 6);
+      for (let i = 0; i < 26; i++) { c.fillStyle = col('ash', 0.35); c.fillRect(-160 + hash(i, 4) * 330, -232 - hash(i, 5) * 6, 4, 2); }
+      c.fillStyle = col('signal', 1); c.fillRect(110, 66, 14, 60);
+      c.restore();
+      word(s, jw, 'JOURNAL', F.serif(600, false), 54 * Math.max(0.001, k), bx_, by_ - 110, { base: 'bone', hot: 'ember' });
+      note(c, 'VOL. 1 · UNREAD', bx_, by_ - 40, k, 18, 'bone', 'center');
+    }
+    // the curve: drawn on the front of the ballot box, already climbing past it
+    if (cw_ && t >= cw_.start - 0.06) {
+      const k = prog(t, cw_.start, cw_.start + 0.5, ease.inQuad), pts: [number, number][] = [];
+      for (let i = 0; i <= 30; i++) { const u = i / 30; pts.push([1320 + u * 300, 820 - (Math.exp(u * 3) - 1) / (Math.exp(3) - 1) * 380]); }
+      strokePts(c, pts, k, col('acid', 1), 6); strokePts(g, pts, k, col('acid', 0.4), 16);
+    }
     lyric(s, l1.words.slice(0, -1), 180, { width: 1600, max: 74 });
   }
   // panel B: an actual rope (twisted strands) slung between ANIMAL and OVERMAN. Fuse style: the words sit ON the rope, a

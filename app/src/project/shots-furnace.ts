@@ -573,30 +573,79 @@ function fleet(s: S) {
 
 // YOUR BOTTLENECK'S A SPEED BUMP ON A HYPERBOLIC ROUTE: the camera drives the acid curve; the bump is tiny
 function hyper(s: S) {
-  const { t, sh, c } = s;
+  const { t, sh, c, g } = s;
   const l = ln(s);
   const ws = l.words;
-  const pts = hyperPts(0, 900, 4200, 900, 1.2, 200);
-  const us = ws.map((_, i) => 0.05 + (i / (ws.length - 1)) * 0.9);
+  // the road follows the hyperbolic curve; every word is an object on it, and a small car drives through them in time
+  const pts = hyperPts(0, 900, 4200, 1000, 1.18, 260);
+  const wds = ws.map((w) => (/bottleneck/i.test(w.w) ? 520 : /speed|bump/i.test(w.w) ? 300 : /hyperbolic/i.test(w.w) ? 620 : /route/i.test(w.w) ? 360 : 150));
+  const tot = wds.reduce((x, y) => x + y, 0); const us: number[] = []; let acc0 = 0;
+  for (const wd of wds) { us.push(0.05 + 0.88 * (acc0 + wd / 2) / tot); acc0 += wd; }
   const pos = us.map((u) => along(pts, u));
-  const times = [sh.start, ...ws.map((w) => w.start - 0.07)];
-  const targets = [{ x: pos[0]!.x + 200, y: pos[0]!.y - 100, z: 1, r: 0 }, ...pos.map((p) => ({ x: p.x + 40, y: p.y - 140, z: 0.92, r: -clamp(p.a, -0.6, 0.6) * 0.5 }))];
-  cam(s, snapCam(t, times, targets, 0.38));
-  // the road: double line + dashed centre
-  const last = ws[ws.length - 1]!;
-  const k = prog(t, sh.start, last.end + 0.2, ease.linear);
-  strokePts(c, pts, 1, col('graphite', 0.6), 26);
-  strokePts(c, pts, k, col('acid', 0.95), 6); strokePts(s.g, pts, k, col('acid', 0.4), 18);
-  // the speed bump under BOTTLENECK'S: a tiny hump
-  const bi = ws.findIndex((w) => /bottleneck/i.test(w.w)), bp = pos[Math.max(0, bi)]!;
-  c.fillStyle = col('signal', 0.9); c.beginPath(); c.ellipse(bp.x, bp.y - 2, 26, 9, bp.a, Math.PI, TAU); c.fill();
+  let cur = -1; ws.forEach((w, i) => { if (t >= w.start) cur = i; });
+  const uCar = cur < 0 ? 0.02 : lerp(us[cur]! - (wds[cur]! / tot) * 0.44, us[cur]! + (wds[cur]! / tot) * 0.44, prog(t, ws[cur]!.start, Math.max(ws[cur]!.start + 0.12, ws[cur]!.end)));
+  const car = along(pts, uCar);
+  cam(s, { x: car.x + 160, y: car.y - 110, z: 1.35, r: -clamp(car.a, -0.6, 0.6) * 0.35 });
+  // asphalt band, edge lines, dashed centre; the travelled part glows acid
+  strokePts(c, pts, 1, col('ink2', 1), 96); strokePts(c, pts, 1, col('graphite', 1), 90);
+  const off = (q: [number, number][], d: number) => q.map(([x, y], i) => { const b = q[Math.min(q.length - 1, i + 1)]!, a = q[Math.max(0, i - 1)]!, an = Math.atan2(b[1] - a[1], b[0] - a[0]); return [x - Math.sin(an) * d, y + Math.cos(an) * d] as [number, number]; });
+  strokePts(c, off(pts, -44), 1, col('bone', 0.85), 4); strokePts(c, off(pts, 44), 1, col('bone', 0.85), 4);
+  c.save(); c.setLineDash([28, 22]); strokePts(c, pts, 1, col('bone', 0.6), 4); c.restore();
+  strokePts(c, off(pts, -44), uCar, col('acid', 1), 6); strokePts(g, off(pts, -44), uCar, col('acid', 0.4), 18);
   ws.forEach((w, i) => {
-    const p = pos[i]!;
-    const big = /hyperbolic|route|speed|bump/i.test(w.w);
-    const tiny = /bottleneck/i.test(w.w);
-    const sz = tiny ? 34 : big ? 120 : 70;
-    word(s, w, txt(w), tiny ? F.mono(600) : A(/hyperbolic/i.test(w.w) ? 62 : 100, 900), sz, p.x, p.y - 40 - sz * 0.4, { rot: clamp(p.a, -0.6, 0.6), sc: slam(w, t, tiny ? 1 : 1.5), ghost: 0.12 });
+    const p = pos[i]!, rot = clamp(p.a, -0.75, 0.75);
+    const shown = t >= w.start - 0.45, hot = heat(w, t), pop = ease.outBack(prog(t, w.start - 0.08, w.start + 0.2));
+    if (!shown) return;
+    c.save(); c.translate(p.x, p.y); c.rotate(rot);
+    if (/bottleneck/i.test(w.w)) { // a bottle lying across the lane, its neck narrowing ahead; the word is its label
+      const k = Math.max(0.001, pop);
+      c.scale(k, k);
+      c.fillStyle = col('bone', 0.14); c.strokeStyle = mix('bone', 'signal', hot); c.lineWidth = 5;
+      c.beginPath(); c.moveTo(-250, -70); c.lineTo(80, -70); c.quadraticCurveTo(150, -70, 175, -26); c.lineTo(245, -22); c.lineTo(245, 22); c.lineTo(175, 26); c.quadraticCurveTo(150, 70, 80, 70); c.lineTo(-250, 70); c.quadraticCurveTo(-270, 0, -250, -70); c.closePath(); c.fill(); c.stroke();
+      c.fillStyle = col('graphite', 1); c.fillRect(245, -26, 18, 52);
+      c.fillStyle = mix('ink2', 'signal', 0.3 * hot); c.fillRect(-200, -46, 250, 92);
+      c.restore();
+      word(s, w, txt(w), A(87, 900), sizeTo(txt(w), A(87, 900), 230, 60), p.x + Math.cos(rot) * -75 * pop, p.y + Math.sin(rot) * -75 * pop, { rot });
+      return;
+    }
+    if (/speed|bump/i.test(w.w)) { // a striped speed bump across the road; the word printed on its face
+      const k = Math.max(0.001, pop), bw = 230;
+      c.scale(k, k);
+      c.fillStyle = col('ink', 1); c.beginPath(); c.ellipse(0, 0, bw / 2, 34, 0, Math.PI, TAU); c.fill();
+      for (let q = 0; q < 6; q++) { c.fillStyle = col(q % 2 ? 'ink' : 'signal', 1); c.beginPath(); c.moveTo(-bw / 2 + q * (bw / 6), 0); c.lineTo(-bw / 2 + (q + 1) * (bw / 6), 0); c.lineTo(-bw / 2 + (q + 1) * (bw / 6) - 10, -30); c.lineTo(-bw / 2 + q * (bw / 6) - 10, -30); c.closePath(); c.fill(); }
+      c.restore();
+      word(s, w, txt(w), A(100, 900), 70, p.x + Math.sin(rot) * 110, p.y - Math.cos(rot) * 110, { rot, sc: slam(w, t, 1.4) });
+      return;
+    }
+    c.restore();
+    if (/hyperbolic/i.test(w.w)) { // painted on the road surface where it rears up
+      word(s, w, txt(w), A(62, 900), 84, p.x, p.y + 8, { rot, base: 'bone', sc: slam(w, t, 1.3) });
+      return;
+    }
+    if (/route/i.test(w.w)) { // a route shield on a post at the roadside
+      const sx = p.x + Math.sin(rot) * 150, sy = p.y - Math.cos(rot) * 150, k = Math.max(0.001, pop);
+      c.fillStyle = col('graphite', 1); c.fillRect(sx - 6, sy, 12, 150);
+      c.save(); c.translate(sx, sy - 60); c.scale(k, k);
+      c.fillStyle = col('bone', 1); c.strokeStyle = col('ink', 1); c.lineWidth = 6;
+      c.beginPath(); c.moveTo(-110, -90); c.lineTo(110, -90); c.lineTo(110, 10); c.quadraticCurveTo(110, 80, 0, 110); c.quadraticCurveTo(-110, 80, -110, 10); c.closePath(); c.fill(); c.stroke();
+      c.restore();
+      word(s, w, txt(w), A(100, 900), 58 * k, sx, sy - 90, { base: 'ink', hot: 'blood' });
+      label(s, '∞', F.serif(600, false), 70 * k, sx, sy - 20, col('ink', 1));
+      return;
+    }
+    word(s, w, txt(w), A(62, 500), 48, p.x + Math.sin(rot) * 80, p.y - Math.cos(rot) * 80, { rot, sc: slam(w, t, 1.3), ghost: 0.15 });
   });
+  // the car: hops over the bump, squeezes through the bottle's neck
+  const bi = ws.findIndex((w) => /bump/i.test(w.w)), ni = ws.findIndex((w) => /bottleneck/i.test(w.w));
+  const hop = bi >= 0 ? Math.max(0, Math.sin(clamp((uCar - (us[bi]! - 0.012)) / 0.024) * Math.PI)) * 50 : 0;
+  const squeeze = ni >= 0 ? 1 - 0.45 * Math.max(0, 1 - Math.abs(uCar - (us[ni]! + 0.03)) / 0.02) : 1;
+  c.save(); c.translate(car.x - Math.sin(car.a) * hop, car.y + Math.cos(car.a) * -hop - 26); c.rotate(clamp(car.a, -0.9, 0.9)); c.scale(1, squeeze);
+  c.fillStyle = col('signal', 1); c.beginPath(); c.moveTo(-60, 0); c.lineTo(-56, -26); c.lineTo(-22, -28); c.lineTo(-8, -52); c.lineTo(30, -52); c.lineTo(46, -28); c.lineTo(62, -24); c.lineTo(64, 0); c.closePath(); c.fill();
+  c.fillStyle = col('ink', 1); c.fillRect(-2, -46, 26, 16);
+  for (const wx of [-34, 40]) { c.fillStyle = col('ink', 1); c.beginPath(); c.arc(wx, 2, 15, 0, TAU); c.fill(); c.strokeStyle = col('bone', 0.9); c.lineWidth = 4; c.stroke(); }
+  c.restore();
+  g.fillStyle = col('ember', 0.18); g.beginPath(); g.arc(car.x, car.y - 30, 36, 0, TAU); g.fill();
+  void sh;
 }
 
 // YOUR CONSTRAINTS ARE FOOTNOTES …: superscripts fall to the foot of the page; OUT OF DATE strikes them through
@@ -721,7 +770,7 @@ function liftoff(s: S) {
   // camera: chase the head (head sits in the upper third), zoom out with height so the curve becomes a steep wall
   // frame the whole curve, floor to pen: as it climbs the view pulls back and the curve reads as a steepening wall
   const z = Math.min(1, 800 / (height + 260), 1500 / (hx - LX0 + 360));
-  const camX = Math.min((LX0 - 120 + hx + 160) / 2, hx - 520 / z), camY = (980 + hy - 120) / 2;
+  const camX = Math.max(W / 2 - 260, Math.min((LX0 - 120 + hx + 160) / 2, hx - 520 / z)), camY = (980 + hy - 120) / 2;
   const shakeK = clamp(vel / 20000);
   const rot = -0.04 * clamp(height / 4000);
   cam(s, { x: camX, y: camY, z, r: rot });
@@ -760,12 +809,43 @@ function liftoff(s: S) {
   g.fillStyle = col('ember', 0.9); g.beginPath(); g.arc(hx, hy, 26 / z, 0, TAU); g.fill();
   c.fillStyle = col('ember', 1); c.beginPath(); c.arc(hx, hy, 10 / z, 0, TAU); c.fill();
   // --- typography (sized in screen pixels: world size = px / z)
+  // line 1 as OBJECTS on the floor of the chart (world space, before the climb):
+  //   OUT OF DATE — a rubber stamp slammed above the start of the curve
+  //   THE CURVE DON'T WAIT — sitting ON the curve's floor, lit as the pen (the fuse spark) creeps past them
+  //   FOR REFEREES — a banner held up by the referees standing at its foot
   const head = all.slice(0, all.indexOf(it));
-  const a1 = 1 - prog(t, it.start - 0.1, it.start + 0.4);
-  if (a1 > 0) { cam(s, { x: W / 2, y: H / 2, z: 1, r: 0 }); lyric(s, head, 240, { width: 1500, max: 110, alpha: a1 }); cam(s, { x: camX, y: camY, z, r: rot }); }
+  const a1 = 1 - prog(t, comp.start - 0.2, comp.start + 0.5);
+  if (a1 > 0) {
+    const ood = head.filter((w) => /^(out|of|date)$/i.test(clean(w.w)));
+    const onCurve = head.filter((w) => !ood.includes(w) && !/^(for|referees)$/i.test(clean(w.w)));
+    const banner = head.filter((w) => /^(for|referees)$/i.test(clean(w.w)));
+    if (ood.length && t >= ood[0]!.start - 0.05) {
+      const k = prog(t, ood[0]!.start - 0.05, ood[0]!.start + 0.1, ease.outQuad), sc = lerp(2.0, 1, k), sx = 560, sy = 640;
+      c.save(); c.globalAlpha = a1 * k; c.translate(sx, sy); c.rotate(-0.1); c.scale(sc, sc);
+      c.strokeStyle = col('signal', 1); c.lineWidth = 8; c.strokeRect(-260, -70, 520, 140); c.lineWidth = 3; c.strokeRect(-246, -56, 492, 112);
+      c.restore();
+      let ox = sx - 210;
+      ood.forEach((w) => { const f = A(/date/i.test(w.w) ? 125 : 87, 900), fs = /date/i.test(w.w) ? 76 : 50, wd = measure(txt(w), f, fs); word(s, w, txt(w), f, fs * sc, ox + wd / 2, sy - 6 + (ox - sx) * -0.1, { rot: -0.1, alpha: a1 * k }); ox += wd + 20; });
+    }
+    onCurve.forEach((w, i) => {
+      const u = 0.14 + (i / Math.max(1, onCurve.length - 1)) * 0.3, x = liftX(u), y = liftY(u);
+      const big = /curve|wait/i.test(w.w), f = A(big ? 100 : 62, big ? 900 : 500), fs = big ? 92 : 56;
+      word(s, w, txt(w), f, fs, x, y - fs * 0.6 - 18, { alpha: a1, sc: slam(w, t, 1.5), ghost: 0.14 });
+    });
+    if (banner.length && t >= banner[0]!.start - 0.3) {
+      const k = ease.outBack(prog(t, banner[0]!.start - 0.1, banner[0]!.start + 0.3)), bx0 = 220, bx1 = 560, by = 800 - 30 * k;
+      c.save(); c.globalAlpha = a1;
+      rule(c, bx0, 1000 - 60, bx0, by, 1, col('bone', 0.8), 4); rule(c, bx1, 1000 - 60, bx1, by, 1, col('bone', 0.8), 4);
+      c.fillStyle = col('bone', 0.95); c.fillRect(bx0, by - 70, (bx1 - bx0) * Math.max(0.001, k), 70);
+      c.restore();
+      const fw_ = banner.find((w) => /for/i.test(w.w)), rw = banner.find((w) => /referees/i.test(w.w));
+      if (fw_) word(s, fw_, 'FOR', A(62, 500), 30, bx0 + 34, by - 35, { base: 'ink', hot: 'blood', alpha: a1 * k });
+      if (rw) word(s, rw, 'REFEREES', A(100, 900), 46, (bx0 + bx1) / 2 + 26, by - 35, { base: 'ink', hot: 'blood', alpha: a1 * k });
+    }
+  }
   // IT JUST: small, left behind on the floor where the climb starts
   const itJust = all.slice(all.indexOf(it), all.indexOf(comp));
-  itJust.forEach((w, i) => { const [x, y] = at(-760 + i * 150, -40); word(s, w, txt(w), A(62, 300), 70 / z, x, y, { sc: slam(w, t, 1.4), alpha: 1 - prog(t, comp.start + 0.2, comp.start + 0.7) }); });
+  itJust.forEach((w, i) => { const [x, y] = at(-560 + i * 150, -150); word(s, w, txt(w), A(62, 300), 70 / z, x, y, { sc: slam(w, t, 1.4), alpha: 1 - prog(t, comp.start + 0.2, comp.start + 0.7) }); });
   // COMPOUNDS rides the head; an echo trail of past positions shows the acceleration
   if (t >= comp.start - 0.06) {
     const fam = A(125, 900), spx = sizeTo('COMPOUNDS', fam, 1180, 220), px = spx / z;

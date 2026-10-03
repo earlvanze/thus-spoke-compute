@@ -485,6 +485,18 @@
     ]
    ],
    "why": "1:05 \"go put away the party hats\": whisper put \"go\" at 64.57 s inside the held \"concludes\"; the remaining words pinned to vocal-band onsets 65.17 / 65.39 / 65.58 / 65.86 / 66.26 / 66.70 s"
+  },
+  {
+   "line": 1,
+   "word": 0,
+   "start": 6.95,
+   "why": "0:06 \"Like\" pinned to the vocal peak at ~7.0 s (6.0 s onset is the music bed; caption cue 7.20)"
+  },
+  {
+   "line": 1,
+   "word": 1,
+   "start": 7.2,
+   "why": "\"electricity\" follows at the caption cue 7.20 s"
   }
  ]
 }
