@@ -4,6 +4,7 @@
 import {
   A, CAP, F, H, W, base, clamp, col, ease, from, fw, hold, label, lerp, ln, lyric, measure, mix, note, prog, rule, setFont, slam,
   strokePts, TAU, txt, typeOn, upto, word, along, sizeTo, pulseAt, stamp, type S, type Word,
+box,
 } from './common';
 import { cam } from '../scenes/shots';
 import { clean } from '../scenes/kit';
@@ -44,11 +45,18 @@ function wall(s: S) {
   // the gold medal on "gold"
   const gk = prog(t, gold.start - 0.05, gold.start + 0.35, ease.outBack);
   if (gk > 0) {
-    const mx = 1600, my = 260;
-    c.strokeStyle = col('signal', 1); c.lineWidth = 8; c.beginPath(); c.moveTo(mx - 50, my - 160); c.lineTo(mx, my - 50); c.lineTo(mx + 50, my - 160); c.stroke();
-    c.fillStyle = col('signal', 1); c.beginPath(); c.arc(mx, my, 90 * gk, 0, TAU); c.fill();
-    g.fillStyle = col('ember', 0.5); g.beginPath(); g.arc(mx, my, 110 * gk, 0, TAU); g.fill();
-    label(s, 'IMO', A(100, 900), 46 * gk, mx, my, col('ink', 1));
+    // hung on the wall's face from a nail in the top course (y 400), right of the break-through, swinging as it lands
+    const fall = 1 - boom, nx = 1650, ny = 400, swing = Math.sin((t - gold.start) * 9) * 0.25 * pulseAt(t, gold.start, 0.5);
+    const mx = nx + Math.sin(swing) * 210, my = ny + Math.cos(swing) * 210 - (1 - gk) * 260 + boom * boom * 900;
+    if (fall > 0.02) {
+      c.fillStyle = col('bone', 1); c.beginPath(); c.arc(nx, ny, 9, 0, TAU); c.fill();
+      c.strokeStyle = col('signal', 1); c.lineWidth = 10; c.beginPath(); c.moveTo(nx - 6, ny); c.lineTo(mx - 40, my - 70); c.moveTo(nx + 6, ny); c.lineTo(mx + 40, my - 70); c.stroke();
+      c.fillStyle = col('signal', 1); c.beginPath(); c.arc(mx, my, 92 * gk, 0, TAU); c.fill();
+      c.strokeStyle = col('ember', 1); c.lineWidth = 5; c.beginPath(); c.arc(mx, my, 74 * gk, 0, TAU); c.stroke();
+      g.fillStyle = col('ember', 0.45); g.beginPath(); g.arc(mx, my, 112 * gk, 0, TAU); g.fill();
+      label(s, 'IMO', A(100, 900), 48 * gk, mx, my - 10, col('ink', 1));
+      label(s, 'GOLD', F.mono(700), 20 * gk, mx, my + 34, col('ink', 1));
+    }
   }
   // line 2 set at the top; THROUGH punches through the hole
   lyric(s, l2.words.slice(0, -1), 150, { width: 1600, max: 74, alpha: t > l2.start - 0.4 ? 1 : 0 });
@@ -130,42 +138,75 @@ function stoppedClock(s: S) {
 }
 
 // ------------------------------------------------------------------ V2: an off-ramp, not the road — the doomed one hauls the load
+// A night highway in one-point perspective: shoulders, lane dashes streaming toward the camera (we drive behind the
+// truck), an exit ramp peeling off right under an overhead gantry sign. On line 2 a truck, seen from BEHIND, pulls away up
+// the main road toward the horizon: rear doors stencilled THE LOAD, tail lights, a trailer full of tokens.
 function offramp(s: S) {
   const { t, sh, c, g } = s;
   const l1 = ln(s, 0), l2 = ln(s, 1);
   const off = fw(l1, /off/i), road = l1.words[l1.words.length - 1]!, doomed = l2.words.filter((w) => /doom/i.test(w.w)), load = l2.words[l2.words.length - 1]!;
-  scr(s, 1.0, 1.03);
-  const hy = 430; // horizon
-  // perspective road: two edges converging, dashes running toward the camera (speed), and the exit ramp peeling right
-  const vx = W / 2;
-  c.fillStyle = col('ink2', 1); c.beginPath(); c.moveTo(vx - 20, hy); c.lineTo(vx + 20, hy); c.lineTo(W + 300, H); c.lineTo(-300, H); c.closePath(); c.fill();
-  rule(c, vx - 20, hy, -300, H, 1, col('bone', 0.8), 4); rule(c, vx + 20, hy, W + 300, H, 1, col('bone', 0.8), 4);
-  const run = (t - sh.start) * 1.6;
-  for (let i = 0; i < 14; i++) { const z0 = ((i / 14 + run) % 1), z1 = z0 + 0.03; const f = (z: number) => hy + (H - hy) * Math.pow(z, 2.2); rule(c, vx, f(z0), vx, f(z1), 1, col('bone', 0.8), 2 + 14 * z0); }
-  const rk = prog(t, off.start - 0.1, off.start + 0.5, ease.outCubic);
-  c.strokeStyle = col('signal', 0.9 * rk); c.lineWidth = 5; c.beginPath(); c.moveTo(vx + 400, H); c.quadraticCurveTo(vx + 380, hy + 160, W + 100, hy + 120); c.stroke();
-  // the exit sign
-  const sk = prog(t, l1.start - 0.1, l1.start + 0.3, ease.outBack);
-  if (sk > 0) {
-    c.fillStyle = col('bone', 0.95); c.fillRect(1240, 140, 540 * sk, 200); rule(c, 1500, 340, 1500, 470, sk, col('graphite', 1), 10);
-    word(s, off, 'OFF-RAMP →', A(100, 900), 70, 1510, 210, { base: 'ink', hot: 'blood', alpha: sk });
-    word(s, road, 'NOT THE ROAD', F.mono(700), 34, 1510, 290, { base: 'ink', hot: 'blood', alpha: sk });
+  scr(s, 1.0, 1.02);
+  const hy = 470, vx = W / 2;
+  const P = (u: number, z: number) => ({ x: vx + u * (40 + 1500 * Math.pow(z, 1.8)), y: hy + (H - hy + 140) * Math.pow(z, 1.8) }); // u: -1..1 across the road, z: 0 (horizon) .. 1 (camera)
+  const poly = (pts: { x: number; y: number }[], fill: string) => { c.fillStyle = fill; c.beginPath(); pts.forEach((p, i) => (i ? c.lineTo(p.x, p.y) : c.moveTo(p.x, p.y))); c.closePath(); c.fill(); };
+  // sky glow on the horizon, the asphalt, shoulders
+  const sky = c.createLinearGradient(0, hy - 220, 0, hy); sky.addColorStop(0, col('ink', 0)); sky.addColorStop(1, col('blood', 0.35)); c.fillStyle = sky; c.fillRect(0, hy - 220, W, 220);
+  poly([P(-1.25, 0), P(1.25, 0), P(1.25, 1), P(-1.25, 1)], col('graphite', 0.35));
+  poly([P(-1, 0), P(1, 0), P(1, 1), P(-1, 1)], col('ink2', 1));
+  // the exit ramp: a lane that leaves the right edge and bends away to the right
+  const rk = prog(t, off.start - 0.15, off.start + 0.5, ease.outCubic);
+  const ramp: [number, number][] = [], rampIn: [number, number][] = [];
+  for (let i = 0; i <= 30; i++) { const z = 1 - i / 30 * 0.72; const a = P(1, z), b = P(1.6, z); const bend = Math.pow(i / 30, 2) * 900; ramp.push([b.x + bend, b.y - bend * 0.08]); rampIn.push([a.x + bend * 0.85, a.y - bend * 0.07]); }
+  if (rk > 0) {
+    c.globalAlpha = rk; c.fillStyle = col('ink2', 1); c.beginPath(); ramp.forEach(([x, y], i) => (i ? c.lineTo(x, y) : c.moveTo(x, y))); for (let i = rampIn.length - 1; i >= 0; i--) c.lineTo(rampIn[i]![0], rampIn[i]![1]); c.closePath(); c.fill(); c.globalAlpha = 1;
+    strokePts(c, ramp, rk, col('signal', 0.9), 5); strokePts(g, ramp, rk, col('ember', 0.3), 12);
+    // gore chevrons where the ramp splits
+    for (let i = 0; i < 5; i++) { const z = 0.75 - i * 0.07, a = P(1.05, z), b = P(1.45, z); rule(c, a.x, a.y, b.x, b.y - 30 * z, rk, col('bone', 0.7), 3 + 6 * z); }
   }
-  lyric(s, upto(l1, /off/i), 200, { x: 640, width: 980, max: 96, alpha: 1 - prog(t, l2.start - 0.2, l2.start + 0.2) * 0.8 });
-  // line 2: the truck labelled DOOMED hauls a trailer of tokens up the road
+  // edges + lane dashes streaming toward the camera
+  for (const u of [-1, 1]) strokePts(c, [[P(u, 0).x, P(u, 0).y], [P(u, 1).x, P(u, 1).y]], 1, col('bone', 0.85), 5);
+  const run = (t - sh.start) * 1.8;
+  for (const u of [-0.33, 0.33]) for (let i = 0; i < 12; i++) {
+    const z0 = ((i / 12 + run) % 1), z1 = Math.min(1, z0 + 0.035);
+    const a = P(u, z0), b = P(u, z1); rule(c, a.x, a.y, b.x, b.y, 1, col('bone', 0.75), 2 + 16 * z0);
+  }
+  // overhead gantry with the sign (2.5D boxes): EXIT → OFF-RAMP / NOT THE ROAD
+  const sk = prog(t, l1.start - 0.1, l1.start + 0.35, ease.outBack);
+  if (sk > 0) {
+    const gz = 0.55, gl = P(-1.15, gz), gr = P(1.75, gz), gy = gl.y - 560 * Math.pow(gz, 1.8) - 90;
+    box(c, gl.x - 10, gy, 20, gl.y - gy, 12, col('graphite', 1), col('ink2', 1), col('ash', 0.5));
+    box(c, gr.x - 10, gy, 20, gr.y - gy, 12, col('graphite', 1), col('ink2', 1), col('ash', 0.5));
+    box(c, gl.x, gy - 14, gr.x - gl.x, 22, 12, col('graphite', 1), col('ink2', 1), col('ash', 0.5));
+    const sx = P(1.1, gz).x, sy = gy - 190 * sk;
+    box(c, sx - 250, sy, 500, 180 * sk, 18, col('bone', 1), col('ash', 1), col('bone', 0.8), col('ink', 0.8), 3);
+    if (sk > 0.6) {
+      note(c, 'EXIT 1', sx - 230, sy + 34, 1, 22, 'blood');
+      word(s, off, 'OFF-RAMP ↗', A(100, 900), 64, sx, sy + 82, { base: 'ink', hot: 'blood' });
+      word(s, road, 'NOT THE ROAD', F.mono(700), 30, sx, sy + 140, { base: 'ink', hot: 'blood' });
+    }
+  }
+  lyric(s, upto(l1, /off/i), 170, { x: 640, width: 980, max: 96, alpha: 1 - prog(t, l2.start - 0.25, l2.start + 0.1) });
+  // line 2: the truck from behind, pulling away along the right lane toward the horizon
   if (t > l2.start - 0.3) {
-    const dk = prog(t, l2.start, load.end + 0.5, ease.inOutCubic);
-    const z = lerp(0.95, 0.35, dk), ty = hy + (H - hy) * Math.pow(z, 2.2), sc = 0.2 + 1.3 * Math.pow(z, 2.2);
-    c.save(); c.translate(vx - 60 * sc, ty); c.scale(sc, sc);
-    c.fillStyle = col('graphite', 1); c.fillRect(-420, -260, 600, 230); c.fillStyle = col('signal', 1); c.fillRect(200, -200, 180, 170);
-    c.fillStyle = col('ink', 1); c.fillRect(260, -180, 90, 60);
-    for (const wx of [-340, -100, 280]) { c.fillStyle = col('ink', 1); c.beginPath(); c.arc(wx, -20, 46, 0, TAU); c.fill(); c.strokeStyle = col('bone', 0.9); c.lineWidth = 8; c.stroke(); }
-    setFont(c, F.mono(700), 34); c.textAlign = 'left';
-    for (let r = 0; r < 4; r++) for (let q = 0; q < 6; q++) { c.fillStyle = col(hash(r, q) > 0.8 ? 'signal' : 'bone', 0.9); c.fillText(['tok', '▮', 'λ', '∑', 'id', '01'][(r + q) % 6]!, -400 + q * 96, -200 + r * 44); }
+    const dk = prog(t, l2.start - 0.2, load.end + 0.8, ease.inOutQuad);
+    const z = lerp(0.98, 0.3, dk), base_ = P(0.33, z), sc = 0.12 + 1.05 * Math.pow(z, 1.8);
+    const bob = Math.sin(t * 22) * 2 * sc;
+    c.save(); c.translate(base_.x, base_.y + bob); c.scale(sc, sc);
+    // shadow, wheels + mud flaps, then the trailer's rear face (doors) with a hint of its right side and roof
+    c.fillStyle = col('ink', 0.6); c.beginPath(); c.ellipse(0, 0, 330, 34, 0, 0, TAU); c.fill();
+    for (const wx of [-230, -150, 150, 230]) { c.fillStyle = col('ink', 1); c.fillRect(wx - 34, -70, 68, 70); }
+    c.fillStyle = col('graphite', 1); c.fillRect(-270, -40, 70, 36); c.fillRect(200, -40, 70, 36);
+    box(c, -290, -600, 580, 520, 120, col('ash', 1), col('graphite', 1), col('bone', 0.6), col('ink', 0.8), 3);
+    rule(c, 0, -600, 0, -80, 1, col('ink', 0.8), 4);
+    for (const hx of [-140, 140]) { rule(c, hx, -560, hx, -120, 1, col('ink', 0.5), 3); }
+    c.fillStyle = col('ink', 1); c.fillRect(-300, -84, 600, 26); // bumper
+    for (const lx of [-262, 262]) { c.fillStyle = col('signal', 1); c.fillRect(lx - 22, -150, 44, 30); }
+    setFont(c, F.mono(700), 46); c.fillStyle = col('ink', 1); c.textAlign = 'center'; c.fillText('THE LOAD', 0, -470);
+    setFont(c, F.mono(700), 34); for (let r = 0; r < 4; r++) { let line = ''; for (let q = 0; q < 6; q++) line += ['tok', 'λ', '∑', 'id', '01', '▮'][(r * 3 + q) % 6] + ' '; c.fillStyle = col('ink', 0.55); c.fillText(line, 0, -400 + r * 56); }
     c.restore();
-    lyric(s, l2.words.filter((w) => w !== doomed[0]), 560, { width: 1200, max: 64, anno: false, x: 640 });
-    if (doomed[0]) word(s, doomed[0], 'DOOMED,', A(125, 900), 120, 640, 440, { sc: slam(doomed[0], t, 1.6) });
-    void g;
+    for (const lx of [-262, 262]) { g.fillStyle = col('ember', 0.6); g.beginPath(); g.arc(base_.x + lx * sc, base_.y + bob - 135 * sc, 40 * sc + 6, 0, TAU); g.fill(); }
+    lyric(s, l2.words.filter((w) => w !== doomed[0]), 330, { width: 1200, max: 64, anno: false, x: 640 });
+    if (doomed[0]) word(s, doomed[0], 'DOOMED,', A(125, 900), 120, 640, 220, { sc: slam(doomed[0], t, 1.6) });
   }
 }
 
@@ -515,7 +556,18 @@ function assembly(s: S) {
   // the belt: rollers + moving chevrons
   const by = 760;
   rule(c, 0, by, W, by, 1, col('bone', 0.8), 4); rule(c, 0, by + 70, W, by + 70, 1, col('bone', 0.8), 4);
-  const mv = ((t - sh.start) * 260) % 120;
+  // accelerating cadence: hits per second grow from 1.6 to 14 over the shot; phase = ∫ rate dt (closed form)
+  const D = Math.max(0.5, sh.end - sh.start), xT = clamp((t - sh.start) / D), ra = 1.6, rb = 12.4;
+  const phase = D * (ra * xT + (rb * xT * xT * xT) / 3), rate = ra + rb * xT * xT;
+  const beltX = D * (ra * xT + (rb * xT * xT * xT) / 3) * 118;
+  const mv = beltX % 120;
+  // printed units ride the belt: one per hit, solid boxes stamped ROBOT
+  for (let k = Math.max(0, Math.floor(phase) - 26); k <= Math.floor(phase); k++) {
+    const ux = 1590 - (beltX - k * 118), uy = 760 - 70;
+    if (ux < -120 || ux > W + 120) continue;
+    box(c, ux - 40, uy, 80, 66, 30, col('ash', 1), col('graphite', 1), col('bone', 0.6), col('ink', 0.6), 1.5);
+    setFont(c, F.mono(700), 15); c.fillStyle = col('ink', 1); c.textAlign = 'center'; c.fillText('ROBOT', ux, uy + 40);
+  }
   for (let x = -120; x < W + 120; x += 120) { c.strokeStyle = col('graphite', 1); c.lineWidth = 4; c.beginPath(); c.moveTo(x - mv + 20, by + 12); c.lineTo(x - mv + 50, by + 35); c.lineTo(x - mv + 20, by + 58); c.stroke(); }
   for (let x = 40; x < W; x += 160) { c.strokeStyle = col('graphite', 1); c.beginPath(); c.arc(x, by + 110, 22, 0, TAU); c.stroke(); }
   // stations (arm shapes) above the belt: MINE / WIRE / PAINT
@@ -523,12 +575,15 @@ function assembly(s: S) {
   const verbs = all.filter((w) => /mine|wire|paint/i.test(w.w));
   ST.forEach((st, i) => {
     const v = verbs[i];
-    const hit = v ? pulseAt(t, v.start, 0.12) : 0;
+    const ph = phase - i * 0.33, fr = ph - Math.floor(ph);
+    const cad = ph > 0 ? Math.pow(1 - fr, 6) : 0; // the press drops at each beat of the accelerating cadence
+    const hit = Math.max(v ? pulseAt(t, v.start, 0.12) : 0, cad * clamp(0.4 + rate / 14));
     rule(c, st.x, 140, st.x, 380 + 160 * hit, 1, col('bone', 0.9), 12);
     c.fillStyle = col(hit > 0.1 ? 'signal' : 'graphite', 1); c.fillRect(st.x - 70, 380 + 160 * hit, 140, 40);
     if (hit > 0.05) { g.fillStyle = col('ember', 0.5 * hit); g.fillRect(st.x - 90, 370 + 160 * hit, 180, 60); }
     note(c, st.l, st.x, 120, 0.8, 22, 'ash', 'center');
   });
+  note(c, `${Math.round(rate * 60)} UNITS / MIN`, W - 120, 1040, 0.9, 26, rate > 9 ? 'signal' : 'ash', 'right');
   // every sung word rides the belt: it enters at its onset at the right of the station that matches, and flows left
   const lineIdx = (w: Word) => sh.lines.findIndex((l) => l.words.includes(w));
   sh.lines.forEach((l, li) => {
@@ -542,7 +597,7 @@ function assembly(s: S) {
     const tot = wds.reduce((a, b) => a + b, 0) + 30 * (wds.length - 1);
     const sc = Math.min(1, 1560 / tot);
     let x = W / 2 - (tot * sc) / 2 + drift;
-    l.words.forEach((w, i) => { word(s, w, txt(w), fams[i]!, sizes[i]! * sc, x + (wds[i]! * sc) / 2, 690 - (sizes[i]! * sc) * 0.2, { sc: slam(w, t, 1.5) }); x += (wds[i]! + 30) * sc; });
+    l.words.forEach((w, i) => { word(s, w, txt(w), fams[i]!, sizes[i]! * sc, x + (wds[i]! * sc) / 2, 610 - (sizes[i]! * sc) * 0.2, { sc: slam(w, t, 1.5) }); x += (wds[i]! + 30) * sc; });
   });
   void lineIdx;
 }
@@ -571,7 +626,7 @@ function returns(s: S) {
   const a1 = 1 - prog(t, l2.start - 0.2, l2.start + 0.2) * 0.75;
   lyric(s, l1.words, 160, { width: 1600, max: 80, alpha: a1 });
   lyric(s, upto(l2, /learns/i), 280, { width: 1600, max: 80, alpha: t > l2.start - 0.4 ? 1 : 0, anno: false });
-  word(s, learns, 'LEARNS.', A(125, 900), 220 * lerp(0.7, 1.0, ek), 1560, 560, { sc: slam(learns, t, 1.8), rot: -0.08 });
+  word(s, learns, 'LEARNS.', A(125, 900), sizeTo('LEARNS.', A(125, 900), 640, 200), 1450, 620, { sc: slam(learns, t, 1.5), rot: -0.08 });
 }
 
 // ------------------------------------------------------------------ V4: the fab and the vote; man is a rope (between animal and overman) — priced

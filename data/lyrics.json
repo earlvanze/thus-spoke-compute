@@ -6,55 +6,56 @@
    "words": [
     {
      "w": "So",
-     "start": 0.18,
+     "start": 2.24,
      "conf": 1.0,
-     "end": 2.39
+     "end": 2.58
     },
     {
      "w": "you",
-     "start": 2.4,
+     "start": 2.58,
      "conf": 1.0,
-     "end": 2.52
+     "end": 3.15
     },
     {
      "w": "think",
-     "start": 2.53,
+     "start": 3.15,
      "conf": 1.0,
-     "end": 2.75
+     "end": 3.6
     },
     {
      "w": "AI",
-     "start": 2.76,
+     "start": 3.6,
      "conf": 1.0,
-     "end": 2.99
+     "end": 4.15
     },
     {
      "w": "is",
-     "start": 3.0,
+     "start": 4.15,
      "conf": 1.0,
-     "end": 3.25
+     "end": 4.56
     },
     {
      "w": "a",
-     "start": 3.26,
+     "start": 4.56,
      "conf": 1.0,
-     "end": 3.38
+     "end": 4.86
     },
     {
      "w": "normal",
-     "start": 3.39,
+     "start": 4.86,
      "conf": 1.0,
-     "end": 4.17
+     "end": 5.65
     },
     {
      "w": "technology",
-     "start": 4.18,
+     "start": 5.65,
      "conf": 1.0,
-     "end": 4.49
+     "end": 7.2
     }
    ],
-   "start": 0.18,
-   "end": 4.49
+   "start": 2.24,
+   "end": 7.2,
+   "refined": "reviewed fix: 0:00 whisper put \"So\" 2 s early (caption cue 2.20) (pinned to caption-cue timing from analysis/timing_lite.py)"
   },
   {
    "text": "Like electricity, like the spreadsheet, like the fax machine.",
@@ -62,61 +63,62 @@
    "words": [
     {
      "w": "Like",
-     "start": 6.0,
+     "start": 7.26,
      "conf": 1.0,
-     "end": 6.17
+     "end": 7.57
     },
     {
      "w": "electricity",
-     "start": 6.18,
+     "start": 7.57,
      "conf": 1.0,
-     "end": 7.96
+     "end": 9.15
     },
     {
      "w": "like",
-     "start": 7.97,
+     "start": 9.15,
      "conf": 1.0,
-     "end": 8.36
+     "end": 9.37
     },
     {
      "w": "the",
-     "start": 8.37,
+     "start": 9.37,
      "conf": 1.0,
-     "end": 8.64
+     "end": 9.77
     },
     {
      "w": "spreadsheet",
-     "start": 8.65,
-     "conf": 1.0,
-     "end": 9.71
-    },
-    {
-     "w": "like",
-     "start": 9.72,
+     "start": 9.77,
      "conf": 1.0,
      "end": 10.47
     },
     {
-     "w": "the",
-     "start": 10.48,
+     "w": "like",
+     "start": 10.47,
      "conf": 1.0,
-     "end": 10.67
+     "end": 10.93
+    },
+    {
+     "w": "the",
+     "start": 10.93,
+     "conf": 1.0,
+     "end": 11.4
     },
     {
      "w": "fax",
-     "start": 10.68,
+     "start": 11.4,
      "conf": 0.8,
-     "end": 11.29
+     "end": 11.84
     },
     {
      "w": "machine",
-     "start": 11.3,
+     "start": 11.84,
      "conf": 1.0,
-     "end": 11.61
+     "end": 12.96
     }
    ],
-   "start": 6.0,
-   "end": 11.61
+   "start": 7.26,
+   "end": 12.96,
+   "refined": "reviewed fix: intro: whisper ~1.3 s early vs caption cue 7.20 (pinned to caption-cue timing from analysis/timing_lite.py)"
   },
   {
    "text": "Slow diffusion, adoption lag, complementary investment.",
@@ -124,43 +126,44 @@
    "words": [
     {
      "w": "Slow",
-     "start": 12.13,
+     "start": 13.03,
      "conf": 1.0,
-     "end": 12.85
+     "end": 13.29
     },
     {
      "w": "diffusion",
-     "start": 12.86,
+     "start": 13.29,
      "conf": 1.0,
-     "end": 14.0
+     "end": 14.23
     },
     {
      "w": "adoption",
-     "start": 14.01,
+     "start": 14.23,
      "conf": 1.0,
-     "end": 15.15
+     "end": 15.25
     },
     {
      "w": "lag",
-     "start": 15.16,
+     "start": 15.25,
      "conf": 1.0,
-     "end": 15.58
+     "end": 15.66
     },
     {
      "w": "complementary",
-     "start": 15.59,
+     "start": 15.66,
      "conf": 1.0,
-     "end": 17.46
+     "end": 17.35
     },
     {
      "w": "investment",
-     "start": 17.47,
+     "start": 17.35,
      "conf": 1.0,
-     "end": 17.78
+     "end": 18.36
     }
    ],
-   "start": 12.13,
-   "end": 17.78
+   "start": 13.03,
+   "end": 18.36,
+   "refined": "reviewed fix: intro: whisper ~0.9 s early vs caption cue 13.00 (pinned to caption-cue timing from analysis/timing_lite.py)"
   },
   {
    "text": "Okay. But consider.",
@@ -194,55 +197,56 @@
    "words": [
     {
      "w": "So",
-     "start": 30.18,
+     "start": 34.56,
      "conf": 1.0,
-     "end": 30.93
+     "end": 34.79
     },
     {
      "w": "you",
-     "start": 30.94,
+     "start": 34.79,
      "conf": 1.0,
-     "end": 32.36
+     "end": 35.1
     },
     {
      "w": "think",
-     "start": 32.37,
+     "start": 35.1,
      "conf": 1.0,
-     "end": 34.7
+     "end": 35.34
     },
     {
      "w": "AI",
-     "start": 34.71,
+     "start": 35.34,
      "conf": 1.0,
-     "end": 35.61
+     "end": 35.58
     },
     {
      "w": "is",
-     "start": 35.62,
+     "start": 35.58,
      "conf": 1.0,
-     "end": 35.89
+     "end": 35.92
     },
     {
      "w": "a",
-     "start": 35.9,
+     "start": 35.92,
      "conf": 1.0,
-     "end": 35.99
+     "end": 36.22
     },
     {
      "w": "normal",
-     "start": 36.0,
+     "start": 36.22,
      "conf": 1.0,
-     "end": 36.49
+     "end": 36.72
     },
     {
      "w": "technology",
-     "start": 36.5,
+     "start": 36.72,
      "conf": 1.0,
-     "end": 36.81
+     "end": 37.53
     }
    ],
-   "start": 30.18,
-   "end": 36.81
+   "start": 34.56,
+   "end": 37.53,
+   "refined": "reviewed fix: 0:30 whisper started the verse at 30.2 s; vocal enters 34.56 (caption cue) (pinned to caption-cue timing from analysis/timing_lite.py)"
   },
   {
    "text": "A dynamo remix with a slower chronology.",
@@ -658,11 +662,11 @@
      "w": "learn",
      "start": 56.56,
      "conf": 1.0,
-     "end": 56.87
+     "end": 56.86
     }
    ],
    "start": 54.0,
-   "end": 56.87
+   "end": 56.86
   },
   {
    "text": "So the model keeps it modest, and the model gets its turn.",
@@ -670,79 +674,80 @@
    "words": [
     {
      "w": "So",
-     "start": 57.11,
+     "start": 56.87,
      "conf": 1.0,
-     "end": 57.17
+     "end": 57.18
     },
     {
      "w": "the",
-     "start": 57.14,
+     "start": 57.18,
      "conf": 1.0,
-     "end": 57.32
+     "end": 57.37
     },
     {
      "w": "model",
-     "start": 57.33,
+     "start": 57.37,
      "conf": 1.0,
-     "end": 57.69
+     "end": 57.92
     },
     {
      "w": "keeps",
-     "start": 57.7,
+     "start": 57.92,
      "conf": 1.0,
-     "end": 58.06
+     "end": 58.09
     },
     {
      "w": "it",
-     "start": 58.07,
+     "start": 58.09,
      "conf": 1.0,
-     "end": 58.21
+     "end": 58.25
     },
     {
      "w": "modest",
-     "start": 58.22,
+     "start": 58.25,
      "conf": 1.0,
-     "end": 58.87
+     "end": 58.6
     },
     {
      "w": "and",
-     "start": 58.88,
+     "start": 58.6,
      "conf": 1.0,
-     "end": 58.96
+     "end": 58.94
     },
     {
      "w": "the",
-     "start": 58.97,
+     "start": 58.94,
      "conf": 1.0,
-     "end": 59.22
+     "end": 59.13
     },
     {
      "w": "model",
-     "start": 59.23,
+     "start": 59.13,
      "conf": 1.0,
-     "end": 59.68
+     "end": 59.44
     },
     {
      "w": "gets",
-     "start": 59.69,
+     "start": 59.44,
      "conf": 1.0,
-     "end": 60.04
+     "end": 59.8
     },
     {
      "w": "its",
-     "start": 60.05,
+     "start": 59.8,
      "conf": 1.0,
-     "end": 60.31
+     "end": 60.13
     },
     {
      "w": "turn",
-     "start": 60.32,
+     "start": 60.13,
      "conf": 1.0,
-     "end": 60.63
+     "end": 60.28
     }
    ],
-   "start": 57.11,
-   "end": 60.63
+   "start": 56.87,
+   "end": 60.28,
+   "refined": "reviewed fix: 1:00 \"turn\" lands earlier per captions/onsets (pinned to caption-cue timing from analysis/timing_lite.py)"
   },
   {
    "text": "Solow saw computers everywhere except the stats.",
@@ -795,7 +800,7 @@
    "end": 63.64
   },
   {
-   "text": "So the seminar concludes, don't put away the party hats.",
+   "text": "So the seminar concludes, go put away the party hats.",
    "section": "verse1",
    "words": [
     {
@@ -823,7 +828,7 @@
      "end": 64.56
     },
     {
-     "w": "don't",
+     "w": "go",
      "start": 64.57,
      "conf": 0.0,
      "end": 64.88
@@ -2806,67 +2811,68 @@
    "words": [
     {
      "w": "The",
-     "start": 158.37,
+     "start": 158.51,
      "conf": 1.0,
-     "end": 158.45
+     "end": 158.79
     },
     {
      "w": "bubble",
-     "start": 158.46,
+     "start": 158.79,
      "conf": 1.0,
-     "end": 158.74
+     "end": 159.2
     },
     {
      "w": "funds",
-     "start": 158.75,
+     "start": 159.2,
      "conf": 1.0,
-     "end": 159.21
+     "end": 159.29
     },
     {
      "w": "the",
-     "start": 159.22,
+     "start": 159.29,
      "conf": 1.0,
-     "end": 159.4
+     "end": 159.6
     },
     {
      "w": "buildout",
-     "start": 159.41,
+     "start": 159.6,
      "conf": 0.769,
-     "end": 160.05
+     "end": 160.02
     },
     {
      "w": "and",
-     "start": 160.06,
+     "start": 160.02,
      "conf": 1.0,
-     "end": 160.24
+     "end": 160.12
     },
     {
      "w": "the",
-     "start": 160.25,
+     "start": 160.12,
      "conf": 1.0,
-     "end": 160.76
+     "end": 160.37
     },
     {
      "w": "buildout's",
-     "start": 160.77,
+     "start": 160.37,
      "conf": 0.5,
-     "end": 161.08
+     "end": 160.84
     },
     {
      "w": "landing",
-     "start": 161.09,
+     "start": 160.84,
      "conf": 1.0,
-     "end": 161.54
+     "end": 161.12
     },
     {
      "w": "soon",
-     "start": 161.55,
+     "start": 161.12,
      "conf": 1.0,
-     "end": 161.86
+     "end": 162.051
     }
    ],
-   "start": 158.37,
-   "end": 161.86
+   "start": 158.51,
+   "end": 162.051,
+   "refined": "reviewed fix: 2:42 \"landing soon\" per caption cue 2:41.13 (pinned to caption-cue timing from analysis/timing_lite.py)"
   },
   {
    "text": "Thus spoke compute. Thus spoke compute.",
@@ -2874,43 +2880,44 @@
    "words": [
     {
      "w": "Thus",
-     "start": 164.1,
+     "start": 164.2,
      "conf": 0.571,
-     "end": 164.16
+     "end": 164.53
     },
     {
      "w": "spoke",
-     "start": 164.1,
+     "start": 164.53,
      "conf": 0.8,
-     "end": 164.27
+     "end": 164.95
     },
     {
      "w": "compute",
-     "start": 164.28,
+     "start": 164.95,
      "conf": 0.545,
-     "end": 164.62
+     "end": 165.69
     },
     {
      "w": "Thus",
-     "start": 164.63,
+     "start": 165.69,
      "conf": 0.571,
-     "end": 165.05
+     "end": 166.16
     },
     {
      "w": "spoke",
-     "start": 165.06,
+     "start": 166.16,
      "conf": 0.8,
-     "end": 166.36
+     "end": 166.57
     },
     {
      "w": "compute",
-     "start": 166.37,
+     "start": 166.57,
      "conf": 0.545,
-     "end": 166.68
+     "end": 167.54
     }
    ],
-   "start": 164.1,
-   "end": 166.68
+   "start": 164.2,
+   "end": 167.54,
+   "refined": "reviewed fix: 2:45 whisper compressed the first hook (3 words in 0.2 s) (pinned to caption-cue timing from analysis/timing_lite.py)"
   },
   {
    "text": "Robots building robots from the ore to the suit.",
@@ -3370,61 +3377,62 @@
    "words": [
     {
      "w": "Seven",
-     "start": 195.94,
+     "start": 204.38,
      "conf": 0.0,
-     "end": 202.04
+     "end": 204.91
     },
     {
      "w": "problems",
-     "start": 202.05,
+     "start": 204.91,
      "conf": 1.0,
-     "end": 205.69
+     "end": 205.47
     },
     {
      "w": "Clay",
-     "start": 205.7,
+     "start": 205.47,
      "conf": 1.0,
-     "end": 206.0
+     "end": 205.57
     },
     {
      "w": "put",
-     "start": 206.01,
+     "start": 205.57,
      "conf": 1.0,
-     "end": 206.19
+     "end": 205.9
     },
     {
      "w": "a",
-     "start": 206.2,
+     "start": 205.9,
      "conf": 1.0,
-     "end": 206.61
+     "end": 206.1
     },
     {
      "w": "million",
-     "start": 206.62,
+     "start": 206.1,
      "conf": 1.0,
-     "end": 206.73
+     "end": 206.53
     },
     {
      "w": "down",
-     "start": 206.74,
+     "start": 206.53,
      "conf": 1.0,
-     "end": 206.99
+     "end": 206.89
     },
     {
      "w": "on",
-     "start": 207.0,
+     "start": 206.89,
      "conf": 1.0,
-     "end": 207.13
+     "end": 207.14
     },
     {
      "w": "each",
      "start": 207.14,
      "conf": 1.0,
-     "end": 207.45
+     "end": 207.2
     }
    ],
-   "start": 195.94,
-   "end": 207.45
+   "start": 204.38,
+   "end": 207.2,
+   "refined": "reviewed fix: 3:17 whisper stretched \"Seven\" across the instrumental; vocal enters 3:24.4 (caption cue) (pinned to caption-cue timing from analysis/timing_lite.py)"
   },
   {
    "text": "Quarter century later, six are still beyond our reach.",
@@ -4452,43 +4460,44 @@
    "words": [
     {
      "w": "Thus",
-     "start": 256.85,
+     "start": 259.3,
      "conf": 0.571,
-     "end": 257.51
+     "end": 259.76
     },
     {
      "w": "spoke",
-     "start": 257.52,
+     "start": 259.76,
      "conf": 0.8,
-     "end": 258.94
+     "end": 260.11
     },
     {
      "w": "compute",
-     "start": 258.95,
+     "start": 260.11,
      "conf": 1.0,
-     "end": 259.555
+     "end": 261.15
     },
     {
      "w": "Thus",
-     "start": 259.565,
+     "start": 261.15,
      "conf": 0.0,
-     "end": 260.17
+     "end": 261.62
     },
     {
      "w": "spoke",
-     "start": 260.18,
+     "start": 261.62,
      "conf": 0.0,
-     "end": 260.785
+     "end": 262.04
     },
     {
      "w": "compute",
-     "start": 260.795,
+     "start": 262.04,
      "conf": 0.0,
-     "end": 261.105
+     "end": 262.89
     }
    ],
-   "start": 256.85,
-   "end": 261.105
+   "start": 259.3,
+   "end": 262.89,
+   "refined": "reviewed fix: 4:17 final hook ~2.4 s early (pinned to caption-cue timing from analysis/timing_lite.py)"
   },
   {
    "text": "Robots building robots from the ore to the suit.",
@@ -4496,61 +4505,62 @@
    "words": [
     {
      "w": "Robots",
-     "start": 261.41,
+     "start": 262.9,
      "conf": 0.667,
-     "end": 261.91
+     "end": 263.39
     },
     {
      "w": "building",
-     "start": 261.92,
+     "start": 263.39,
      "conf": 1.0,
-     "end": 263.28
+     "end": 263.94
     },
     {
      "w": "robots",
-     "start": 263.29,
+     "start": 263.94,
      "conf": 1.0,
      "end": 264.37
     },
     {
      "w": "from",
-     "start": 264.38,
+     "start": 264.37,
      "conf": 1.0,
-     "end": 264.66
+     "end": 264.67
     },
     {
      "w": "the",
      "start": 264.67,
      "conf": 1.0,
-     "end": 264.9
+     "end": 264.91
     },
     {
      "w": "ore",
      "start": 264.91,
      "conf": 1.0,
-     "end": 265.14
+     "end": 265.09
     },
     {
      "w": "to",
-     "start": 265.15,
+     "start": 265.09,
      "conf": 1.0,
-     "end": 265.3
+     "end": 265.41
     },
     {
      "w": "the",
-     "start": 265.31,
+     "start": 265.41,
      "conf": 1.0,
-     "end": 265.54
+     "end": 265.52
     },
     {
      "w": "suit",
-     "start": 265.55,
+     "start": 265.52,
      "conf": 1.0,
-     "end": 265.86
+     "end": 265.83
     }
    ],
-   "start": 261.41,
-   "end": 265.86
+   "start": 262.9,
+   "end": 265.83,
+   "refined": "reviewed fix: 4:21 ~1.5 s early (pinned to caption-cue timing from analysis/timing_lite.py)"
   },
   {
    "text": "A million minds in parallel that never need to sleep.",
@@ -4694,43 +4704,44 @@
    "words": [
     {
      "w": "Thus",
-     "start": 272.237,
+     "start": 273.42,
      "conf": 0.0,
-     "end": 272.375
+     "end": 273.83
     },
     {
      "w": "spoke",
-     "start": 272.385,
+     "start": 273.83,
      "conf": 0.0,
-     "end": 272.523
+     "end": 274.23
     },
     {
      "w": "compute",
-     "start": 272.533,
+     "start": 274.23,
      "conf": 0.0,
-     "end": 272.67
+     "end": 274.84
     },
     {
      "w": "Thus",
-     "start": 272.68,
+     "start": 274.84,
      "conf": 0.571,
-     "end": 272.82
+     "end": 275.04
     },
     {
      "w": "spoke",
-     "start": 272.83,
+     "start": 275.04,
      "conf": 0.8,
-     "end": 273.38
+     "end": 275.37
     },
     {
      "w": "compute",
-     "start": 273.39,
+     "start": 275.37,
      "conf": 1.0,
-     "end": 273.7
+     "end": 275.76
     }
    ],
-   "start": 272.237,
-   "end": 273.7
+   "start": 273.42,
+   "end": 275.76,
+   "refined": "reviewed fix: 4:32 whisper squeezed the hook into 1.2 s (pinned to caption-cue timing from analysis/timing_lite.py)"
   },
   {
    "text": "Your bottleneck's a speed bump on a hyperbolic route.",
@@ -4738,61 +4749,62 @@
    "words": [
     {
      "w": "Your",
-     "start": 274.36,
+     "start": 275.79,
      "conf": 1.0,
-     "end": 274.59
+     "end": 275.88
     },
     {
      "w": "bottleneck's",
-     "start": 274.6,
+     "start": 275.88,
      "conf": 0.842,
-     "end": 275.86
+     "end": 276.69
     },
     {
      "w": "a",
-     "start": 275.87,
+     "start": 276.69,
      "conf": 1.0,
-     "end": 275.98
+     "end": 277.02
     },
     {
      "w": "speed",
-     "start": 275.99,
+     "start": 277.02,
      "conf": 1.0,
-     "end": 276.49
+     "end": 277.13
     },
     {
      "w": "bump",
-     "start": 276.5,
+     "start": 277.13,
      "conf": 1.0,
-     "end": 276.91
+     "end": 277.32
     },
     {
      "w": "on",
-     "start": 276.92,
+     "start": 277.32,
      "conf": 1.0,
-     "end": 277.12
+     "end": 277.66
     },
     {
      "w": "a",
-     "start": 277.13,
+     "start": 277.66,
      "conf": 1.0,
-     "end": 277.85
+     "end": 277.91
     },
     {
      "w": "hyperbolic",
-     "start": 277.86,
+     "start": 277.91,
      "conf": 0.571,
-     "end": 278.32
+     "end": 278.89
     },
     {
      "w": "route",
-     "start": 278.33,
+     "start": 278.89,
      "conf": 1.0,
-     "end": 278.64
+     "end": 279.05
     }
    ],
-   "start": 274.36,
-   "end": 278.64
+   "start": 275.79,
+   "end": 279.05,
+   "refined": "reviewed fix: 4:34 ~1.4 s early (pinned to caption-cue timing from analysis/timing_lite.py)"
   },
   {
    "text": "Your constraint's a footnote in the book of rules.",
@@ -4924,37 +4936,38 @@
    "words": [
     {
      "w": "It",
-     "start": 284.32,
+     "start": 287.15,
      "conf": 1.0,
-     "end": 284.68
+     "end": 287.67
     },
     {
      "w": "just",
-     "start": 284.69,
+     "start": 287.67,
      "conf": 1.0,
-     "end": 285.87
+     "end": 288.16
     },
     {
      "w": "compounds",
-     "start": 285.88,
+     "start": 288.16,
      "conf": 1.0,
-     "end": 288.31
+     "end": 289.31
     },
     {
      "w": "the",
-     "start": 288.32,
+     "start": 289.31,
      "conf": 1.0,
-     "end": 288.58
+     "end": 289.72
     },
     {
      "w": "rate",
-     "start": 288.59,
+     "start": 289.72,
      "conf": 1.0,
-     "end": 288.9
+     "end": 290.22
     }
    ],
-   "start": 284.32,
-   "end": 288.9
+   "start": 287.15,
+   "end": 290.22,
+   "refined": "reviewed fix: 4:44 \"It just compounds\" ~2.8 s early (pinned to caption-cue timing from analysis/timing_lite.py)"
   },
   {
    "text": "So, you think AI is a normal technology.",
@@ -4962,55 +4975,56 @@
    "words": [
     {
      "w": "So",
-     "start": 289.14,
+     "start": 290.56,
      "conf": 1.0,
-     "end": 291.08
+     "end": 291.48
     },
     {
      "w": "you",
-     "start": 291.09,
+     "start": 293.02,
      "conf": 1.0,
-     "end": 291.78
+     "end": 293.56
     },
     {
      "w": "think",
-     "start": 291.79,
+     "start": 293.56,
      "conf": 1.0,
-     "end": 293.23
+     "end": 294.15
     },
     {
      "w": "AI",
-     "start": 293.24,
-     "conf": 1.0,
-     "end": 294.0
-    },
-    {
-     "w": "is",
-     "start": 294.01,
-     "conf": 1.0,
-     "end": 294.45
-    },
-    {
-     "w": "a",
-     "start": 294.46,
+     "start": 294.15,
      "conf": 1.0,
      "end": 294.76
     },
     {
-     "w": "normal",
-     "start": 294.77,
+     "w": "is",
+     "start": 295.92,
      "conf": 1.0,
-     "end": 296.63
+     "end": 296.38
+    },
+    {
+     "w": "a",
+     "start": 296.38,
+     "conf": 1.0,
+     "end": 296.8
+    },
+    {
+     "w": "normal",
+     "start": 296.8,
+     "conf": 1.0,
+     "end": 297.75
     },
     {
      "w": "technology",
-     "start": 296.64,
+     "start": 297.75,
      "conf": 1.0,
-     "end": 296.95
+     "end": 299.74
     }
    ],
-   "start": 289.14,
-   "end": 296.95
+   "start": 290.56,
+   "end": 299.74,
+   "refined": "reviewed fix: outro ~1.4 s early (pinned to caption-cue timing from analysis/timing_lite.py)"
   },
   {
    "text": "Cute.",
@@ -5018,13 +5032,14 @@
    "words": [
     {
      "w": "Cute",
-     "start": 297.78,
+     "start": 300.4,
      "conf": 1.0,
-     "end": 298.09
+     "end": 301.32
     }
    ],
-   "start": 297.78,
-   "end": 298.09
+   "start": 300.4,
+   "end": 301.32,
+   "refined": "reviewed fix: outro \"Cute.\" ~2.6 s early (pinned to caption-cue timing from analysis/timing_lite.py)"
   }
  ],
  "notes": "Local whisper.cpp large-v3-turbo acoustic word timing; canonical lyrics reconciled by sequence alignment. 702/735 canonical words acoustically matched; unmatched words interpolated only within adjacent acoustic anchors."

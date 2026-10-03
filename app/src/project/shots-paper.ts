@@ -156,7 +156,7 @@ function stampShot(s: S) {
   const fk = prog(t, sh.start, sh.start + 0.5, ease.outExpo);
   c.save(); c.translate(W / 2, H / 2 + (1 - fk) * 300); c.rotate(-0.025);
   c.fillStyle = col('bone', 1); c.strokeStyle = col('graphite', 0.6); c.lineWidth = 2;
-  c.fillRect(-720, -420, 1440, 840); c.strokeRect(-720, -420, 1440, 840);
+  c.fillRect(-760, -430, 1520, 860); c.strokeRect(-760, -430, 1520, 860);
   note(c, 'REFEREE REPORT — RECOMMENDATION', -660, -360, fk, 22, 'graphite');
   for (let i = 0; i < 9; i++) rule(c, -660, 290 + (i % 3) * 30 - (i > 2 ? 900 : 0), -660 + 900 * (0.5 + 0.5 * hash(i)), 290 + (i % 3) * 30 - (i > 2 ? 900 : 0), i < 3 ? fk : 0, col('graphite', 0.25), 10);
   c.restore();
@@ -164,8 +164,10 @@ function stampShot(s: S) {
   const sat = fw(l, /satisfactory/i);
   const pat = fw(l, /patient/i);
   const r1 = upto(l, /patient/i), r2 = from(l, /and/i, /satisfactory/i);
-  lyric(s, r1, 300, { width: 860, max: 96, align: 'l' });
-  word(s, pat, 'patient,', F.serif(600, true), 170, 1720 - measure('patient,', F.serif(600, true), 170) / 2, 290, { sc: slam(pat, t, 1.2) });
+  // everything sits inside the card (x 200..1720 → margins 300..1620)
+  const pw = measure('patient,', F.serif(600, true), 150);
+  lyric(s, r1, 300, { x: 300 + (1320 - pw - 60) / 2, width: 1320 - pw - 60, max: 92 });
+  word(s, pat, 'patient,', F.serif(600, true), 150, 1620 - pw / 2, 290, { sc: slam(pat, t, 1.2) });
   lyric(s, r2, 520, { width: 1200, max: 90 });
   // the verdict is a rubber stamp, not a word
   stamp(s, 'SATISFACTORY', W / 2, 760, sat.start, 110, -0.08, 'blood');

@@ -9,7 +9,7 @@ const P = { bg: { paper: 1 } }; // paper sheet: words stay solid ink (see WORKFL
 /** Chorus: robots → minds → fleet, then the hyperbolic route → footnotes → compounding curve. `n` grows each time. */
 function chorus(n: number, c: number): Spec[] {
   if (c === 6) return [['robots', 1, { n }], ['minds', 1, { n }], ['fleet', 1, { n }], ['hyper', 1, { n }], ['footnotes', 1, { n }], ['compound', 1, { n }]];
-  if (c === 8) return [['oracle', 1, { n }], ['robots', 1, { n }], ['minds', 1, { n }], ['fleet', 1, { n }], ['oracle', 1, { n, v: 1 }], ['hyper', 1, { n }], ['footnotes', 1, { n }], ['compound', 1, { n }]];
+  if (c === 8) return [['oracle', 1, { n }], ['robots', 1, { n }], ['minds', 1, { n }], ['fleet', 1, { n }], ['oracle', 1, { n, v: 1 }], ['hyper', 1, { n }], ['footnotes', 1, { n }], ['compound', 1, { n }], ['interlude', 0, { afterPrev: 1.6 }]];
   if (c === 9) return [['oracle', 1, { n }], ['robots', 1, { n }], ['minds', 1, { n }], ['fleet', 1, { n }], ['oracle', 1, { n, v: 1 }], ['hyper', 1, { n }], ['footnotes', 1, { n }], ['compound', 2, { n }]];
   return [['slam', c]];
 }

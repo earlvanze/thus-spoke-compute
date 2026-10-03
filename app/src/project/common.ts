@@ -113,3 +113,28 @@ export function wordAt(s: S, w: Word, fam: string, size: number, x: number, y: n
 export const sizeTo = (text: string, fam: string, width: number, max = 999) => Math.min(max, (100 * width) / Math.max(1, measure(text, fam, 100)));
 export const pulseAt = (t: number, t0: number, hl = 0.12) => (t < t0 ? 0 : Math.pow(0.5, (t - t0) / hl));
 export { mix as mixc, hotK as hot };
+
+// ------------------------------------------------------------------ 2.5D solids (oblique projection: depth goes up-right)
+export const OBL = { x: 0.62, y: -0.42 };
+/** A solid box: front face (x, y, w, h) plus top and right faces of depth d. Colours are CSS strings. */
+export function box(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, d: number, front: string, side: string, top: string, edge?: string, lw = 2) {
+  const dx = d * OBL.x, dy = d * OBL.y;
+  ctx.fillStyle = side; ctx.beginPath(); ctx.moveTo(x + w, y); ctx.lineTo(x + w + dx, y + dy); ctx.lineTo(x + w + dx, y + h + dy); ctx.lineTo(x + w, y + h); ctx.closePath(); ctx.fill();
+  ctx.fillStyle = top; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + dx, y + dy); ctx.lineTo(x + w + dx, y + dy); ctx.lineTo(x + w, y); ctx.closePath(); ctx.fill();
+  ctx.fillStyle = front; ctx.fillRect(x, y, w, h);
+  if (edge) {
+    ctx.strokeStyle = edge; ctx.lineWidth = lw; ctx.strokeRect(x, y, w, h);
+    ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + dx, y + dy); ctx.lineTo(x + w + dx, y + dy); ctx.lineTo(x + w + dx, y + h + dy); ctx.lineTo(x + w, y + h); ctx.moveTo(x + w, y); ctx.lineTo(x + w + dx, y + dy); ctx.stroke();
+  }
+}
+/** Extruded (solid) type centred on (x, cap-centre y): the side is stacked copies in `side`, then the face. */
+export function solidText(ctx: CanvasRenderingContext2D, text: string, fam: string, size: number, x: number, y: number, depth: number, face: string, side: string, sc = 1) {
+  if (sc <= 0.001) return;
+  ctx.save(); ctx.translate(x, y); if (sc !== 1) ctx.scale(sc, sc);
+  setFont(ctx, fam, size); ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+  const n = Math.max(2, Math.round(depth / 2));
+  ctx.fillStyle = side;
+  for (let i = n; i >= 1; i--) ctx.fillText(text, (depth * OBL.x * i) / n, (CAP * size) / 2 + (depth * OBL.y * i) / n);
+  ctx.fillStyle = face; ctx.fillText(text, 0, (CAP * size) / 2);
+  ctx.restore();
+}

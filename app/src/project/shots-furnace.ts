@@ -3,8 +3,10 @@
 import {
   A, CAP, F, H, W, base, clamp, col, ease, from, fw, hold, label, lerp, ln, lyric, measure, mix, note, prog, rule, setFont, slam,
   split, strokePts, TAU, txt, upto, word, along, sizeTo, pulseAt, type S, type Word,
+box, solidText,
 } from './common';
 import { cam } from '../scenes/shots';
+import { heat } from '../scenes/kit';
 import { clean, snapCam } from '../scenes/kit';
 import { row } from '../scenes/typeset';
 import { hash, noise1 } from '../engine/util';
@@ -186,13 +188,13 @@ function tasks(s: S) {
   hold(s, 1.0, 1.04, 0);
   // the task grid: 8 x 4 cells
   const gx = 220, gy = 330, cw = 185, chh = 120;
-  const turnK = prog(t, turn.start - 0.05, turn.start + 0.6, ease.inOutCubic);
+  const turnK = prog(t, turn.start - 0.06, turn.start + 0.22, ease.outBack);
   for (let i = 0; i < 32; i++) {
     const r = Math.floor(i / 8), q = i % 8, x = gx + q * cw, y = gy + r * chh;
     const isEasy = [0, 1, 2, 12].includes(i);
     const litE = isEasy && t >= easy.start + i * 0.02;
     // on "turn" every cell flips over (scaleY through 0) and comes back lit
-    const fl = prog(t, turn.start + (q + r) * 0.04, turn.start + (q + r) * 0.04 + 0.35, ease.inOutCubic);
+    const fl = prog(t, turn.start - 0.04 + (q + r) * 0.015, turn.start - 0.04 + (q + r) * 0.015 + 0.2, ease.inOutCubic);
     const sy = Math.abs(Math.cos(fl * Math.PI));
     const lit = litE || fl > 0.5;
     c.save(); c.translate(x + cw / 2, y + chh / 2); c.scale(1, Math.max(0.02, sy));
@@ -209,7 +211,7 @@ function tasks(s: S) {
   lyric(s, pre, 870, { width: 760, max: 72, x: 560, anno: false });
   word(s, mod, 'modest', F.serif(400, true), 44, 1010, 870, { sc: 1 });
   lyric(s, post, 980, { width: 820, max: 72, x: 700, anno: false });
-  word(s, turn, 'TURN.', A(125, 900), 150, 1450, 960, { rot: -Math.PI / 2 * turnK + Math.PI / 2 * 0, sc: slam(turn, t, 1.4) });
+  word(s, turn, 'TURN.', A(125, 900), 130, 1480, 975, { rot: -TAU * turnK, sc: slam(turn, t, 1.4) });
 }
 
 // ------------------------------------------------------------------ V1: computers everywhere except the stats; party hats
@@ -258,7 +260,7 @@ function solow(s: S) {
       const x = hash(i, 2) * W + Math.sin(dt * 3 + i) * 30, y = oy - 40 + dt * (180 + 160 * hash(i, 3));
       c.fillStyle = col(i % 3 ? 'signal' : i % 2 ? 'bone' : 'acid', 0.85); c.save(); c.translate(x, y); c.rotate(dt * 4 + i); c.fillRect(-6, -3, 12, 6); c.restore();
     }
-    const pre = upto(l2, /don/i), post = from(l2, /don/i);
+    const pre = upto(l2, /^go$/i), post = from(l2, /^go$/i);
     lyric(s, pre, oy + 230, { width: 1200, max: 96 });
     lyric(s, post, oy + 400, { width: 1500, max: 120 });
   }
@@ -271,98 +273,103 @@ function hammer(s: S) {
   const hw = fw(l1, /hammer/i), hand = fw(l1, /hand/i), hum = fw(l1, /human/i);
   const builds = fw(l2, /build/i), hand2 = fw(l2, /hand/i), ham2 = fw(l2, /hammer/i);
   const in2 = prog(t, l2.start - 0.2, l2.start + 0.3, ease.inOutCubic);
-  cam(s, { x: W / 2 + 120 * in2, y: H / 2, z: lerp(1, 0.92, in2), r: 0 });
-  // line 1 / line 2 text at the top
-  lyric(s, l1.words, 160, { width: 1500, max: 92, alpha: 1 - 0.8 * in2 });
-  if (in2 > 0) lyric(s, l2.words, 160 + 120 * in2, { width: 1500, max: 84 });
-  // the hammer: head = the word HAMMER on a block; handle = a bar; it swings on line-2 onsets (strikes)
+  cam(s, { x: W / 2 + 100 * in2, y: H / 2, z: lerp(1, 0.94, in2), r: 0 });
+  lyric(s, l1.words, 150, { width: 1500, max: 88, alpha: 1 - 0.85 * in2 });
+  if (in2 > 0) lyric(s, l2.words, 150 + 110 * in2, { width: 1500, max: 80 });
+  // a solid 2.5D hammer: a steel head (box) on a long handle (box), pivoting at the grip; on line 2 it strikes on onsets
   const strikes = l2.words.filter((w) => w.start >= ham2.start).map((w) => w.start);
   let sw = 0; for (const st of strikes) sw = Math.max(sw, pulseAt(t, st, 0.09));
-  const ang = -0.32 * in2 + 0.4 * sw * in2;
-  const px = 760, py = 1000;
+  const ang = -0.34 * in2 + 0.42 * sw * in2;
+  const px = 700, py = 960;
   const hk = prog(t, hw.start - 0.05, hw.start + 0.3, ease.outBack);
   c.save(); c.translate(px, py); c.rotate(ang);
-  c.fillStyle = col('graphite', 0.95); c.fillRect(-22, -380 * hk, 44, 380 * hk);
+  box(c, -24, -400 * hk, 48, 400 * hk, 30, col('graphite', 1), col('ink2', 1), col('ash', 0.6), col('ash', 0.5));
   if (hk > 0) {
-    c.fillStyle = col('ink2', 1); c.strokeStyle = col('bone', 0.9); c.lineWidth = 4; c.fillRect(-280, -500, 560, 140); c.strokeRect(-280, -500, 560, 140);
-    word(s, hw, 'HAMMER', A(125, 900), sizeTo('HAMMER', A(125, 900), 500, 120), 0, -430, { sc: 1 });
+    box(c, -290, -540, 580, 150, 70, col('ash', 1), col('graphite', 1), col('bone', 0.85), col('ink', 0.8), 2);
+    solidText(c, 'HAMMER', A(125, 900), 90, 0, -465, 6, mix('ink', 'signal', heat(hw, t)), col('ink', 0.5));
   }
   c.restore();
-  // the hand (line 1): HUMAN / HAND gripping the handle
+  // line 1: HUMAN HAND as solid extruded type gripping the handle
   const a1 = 1 - in2;
-  if (a1 > 0) {
-    word(s, hum, 'HUMAN', A(62, 900), 80, px - 230, py - 200, { alpha: a1 });
-    word(s, hand, 'HAND', A(125, 900), 150, px, py - 120, { alpha: a1, sc: slam(hand, t, 1.4) });
-  }
-  // line 2: every strike lands on the anvil at the right and builds a letter of HAND
+  if (a1 > 0 && t >= hand.start - 0.06) solidText(c, 'HAND', A(125, 900), 160, px, py - 150, 26 * a1, mix('bone', 'signal', heat(hand, t), a1), col('graphite', a1), slam(hand, t, 1.4));
+  if (a1 > 0 && t >= hum.start - 0.06) solidText(c, 'HUMAN', A(62, 900), 80, px - 290, py - 290, 14, col('bone', a1), col('graphite', a1));
+  // line 2: an anvil; every strike forges one solid letter of HAND (white-hot, then cooling to bone)
   if (in2 > 0) {
-    const ax = 1400, ay = 820;
-    c.fillStyle = col('graphite', 0.9); c.fillRect(ax - 260, ay + 40, 520, 50); c.fillRect(ax - 120, ay + 90, 240, 120);
-    const letters = 'HAND';
-    const fam = A(125, 900), sz = 240, total = measure(letters, fam, sz);
+    const ax = 1380, ay = 830;
+    box(c, ax - 270, ay + 40, 540, 60, 60, col('graphite', 1), col('ink2', 1), col('ash', 0.7), col('ink', 0.6));
+    box(c, ax - 110, ay + 100, 220, 130, 50, col('graphite', 1), col('ink2', 1), col('ash', 0.6), col('ink', 0.6));
+    const letters = 'HAND', fam = A(125, 900), sz = 230, total = measure(letters, fam, sz);
     const bst = [builds.start, (builds.start + hand2.start) / 2, hand2.start - 0.12, hand2.start];
     letters.split('').forEach((ch, i) => {
       const k = prog(t, bst[i]!, bst[i]! + 0.2, ease.outBack);
       if (k <= 0) return;
       const cw = measure(letters.slice(0, i), fam, sz), chw = measure(ch, fam, sz);
-      const x = ax - total / 2 + cw + chw / 2, y = ay - 80;
-      label(s, ch, fam, sz * k, x, y, mix('bone', 'signal', pulseAt(t, bst[i]!, 0.25)));
-      label(s, ch, fam, sz * k, x, y, col('ember', 0.5 * pulseAt(t, bst[i]!, 0.25)), g);
-      // sparks
-      for (let q = 0; q < 10; q++) { const p = pulseAt(t, bst[i]!, 0.12); if (p < 0.05) break; const a = -Math.PI * hash(i, q); rule(g, x, ay + 30, x + Math.cos(a) * 160 * (1 - p), ay + 30 + Math.sin(a) * 160 * (1 - p), 1, col('ember', p), 3); }
+      const x = ax - total / 2 + cw + chw / 2, y = ay - 80, hot = pulseAt(t, bst[i]!, 0.35);
+      solidText(c, ch, fam, sz * k, x, y, 34 * k, mix('bone', 'ember', hot), mix('graphite', 'signal', hot));
+      if (hot > 0.05) solidText(g, ch, fam, sz * k, x, y, 0, col('ember', 0.5 * hot), col('ember', 0));
+      for (let q = 0; q < 10; q++) { const p = pulseAt(t, bst[i]!, 0.12); if (p < 0.05) break; const a = -Math.PI * hash(i, q); rule(g, x, ay + 40, x + Math.cos(a) * 160 * (1 - p), ay + 40 + Math.sin(a) * 160 * (1 - p), 1, col('ember', p), 3); }
     });
     s.post.shake = [noise1(t * 60, 1) * 12 * sw * in2, noise1(t * 60, 2) * 12 * sw * in2];
   }
 }
 
 // =================================================================== CHORUS
-// ROBOTS BUILDING ROBOTS: the word assembles copies of itself; each generation builds two more (depth grows with n)
+/** An original, boxy 2.5D robot (legs, torso with a chest panel, arms, head with a visor slit), assembled bottom-up as
+ *  `k` goes 0→1. Its right arm reaches out to `reach` (the child it is building) while `arm` > 0. */
+function robotFig(s: S, x: number, y: number, sc: number, k: number, hot: number, reach: [number, number] | null, arm: number) {
+  const { c, g } = s;
+  if (k <= 0) return;
+  const F_ = mix('ash', 'signal', hot), SD = col('graphite', 1), TP = mix('bone', 'ember', hot), E = col('ink', 0.7);
+  const part = (i: number) => clamp(k * 5 - i);
+  c.save(); c.translate(x, y); c.scale(sc, sc);
+  if (part(0) > 0) { box(c, -46, -90 * part(0), 34, 90 * part(0), 26, F_, SD, TP, E); box(c, 12, -90 * part(0), 34, 90 * part(0), 26, F_, SD, TP, E); }
+  if (part(1) > 0) { box(c, -70, -250, 140, 160 * part(1), 50, F_, SD, TP, E); c.fillStyle = col('ink', 0.85); c.fillRect(-42, -220, 84, 60); c.fillStyle = mix('graphite', 'signal', 0.4 + 0.6 * hot); for (let i = 0; i < 4; i++) c.fillRect(-34 + i * 20, -200, 12, 20); }
+  if (part(2) > 0) {
+    box(c, -110, -240, 36, 130 * part(2), 26, F_, SD, TP, E);
+    // the working arm: from the shoulder towards the child being built
+    const ex = reach ? lerp(110, (reach[0] - x) / sc, arm) : 110, ey = reach ? lerp(-120, (reach[1] - y) / sc, arm) : -120;
+    c.strokeStyle = col('ash', 1); c.lineWidth = 22; c.lineCap = 'round'; c.beginPath(); c.moveTo(92, -230); c.lineTo(lerp(92, ex, 0.5), lerp(-230, ey, 0.5) - 30 * arm); c.lineTo(ex, ey); c.stroke();
+    if (arm > 0.05 && reach) { g.fillStyle = col('ember', 0.8 * arm); g.beginPath(); g.arc(ex * sc + x, ey * sc + y, 14, 0, TAU); g.fill(); }
+  }
+  if (part(3) > 0) { box(c, -54, -250 - 100 * part(3), 108, 90 * part(3), 40, F_, SD, TP, E); c.fillStyle = col('ink', 1); c.fillRect(-40, -320, 80, 18); c.fillStyle = mix('signal', 'ember', hot); c.fillRect(-36, -316, 72 * part(4), 10); }
+  c.restore();
+  if (hot > 0.05) { g.save(); g.translate(x, y); g.scale(sc, sc); g.fillStyle = col('ember', 0.25 * hot); g.fillRect(-70, -350, 140, 350); g.restore(); }
+}
+// ROBOTS BUILDING ROBOTS: solid 2.5D robots, each one assembling the next generation with its arm (depth grows with n)
 function robots(s: S) {
   const { t, sh, c, g } = s;
   const l = ln(s);
   const n = nOf(s);
   const r1 = l.words[0]!, bld = fw(l, /build/i), r2 = l.words.find((w, i) => i > 1 && /robot/i.test(w.w)) ?? l.words[2]!;
   const ore = fw(l, /ore/i), suit = l.words[l.words.length - 1]!;
-  const depth = 2 + n;
-  const gk = prog(t, r2.start, ore.start + 0.2, ease.linear);
-  cam(s, { x: W / 2, y: lerp(420, 520, gk), z: lerp(1.0, 0.82 - 0.06 * n, gk), r: lerp(0, -0.02, gk) });
-  const fam = A(125, 900);
-  // generation 0 + 1 built by the sung words, deeper generations unfold over the rest of the line
-  type Node = { x: number; y: number; sz: number; d: number; t0: number };
-  const nodes: Node[] = [{ x: W / 2, y: 230, sz: 210, d: 0, t0: r1.start }];
+  const depth = 1 + n;
+  cam(s, { x: W / 2, y: H / 2, z: 1, r: 0 });
+  type Node = { x: number; y: number; sc: number; d: number; t0: number; parent: number };
+  const nodes: Node[] = [{ x: W / 2, y: 640, sc: 0.9, d: 0, t0: r1.start, parent: -1 }];
+  const span = Math.max(0.25, (suit.start - r2.start) / depth);
   for (let d = 1; d <= depth; d++) {
-    const prev = nodes.filter((q) => q.d === d - 1);
-    const span = (suit.start - r2.start) / depth;
-    prev.forEach((p, i) => {
-      for (const side of [-1, 1]) nodes.push({ x: p.x + side * (W / Math.pow(2, d + 1)) * 1.12, y: p.y + 200 / Math.pow(1.25, d - 1) + 30, sz: p.sz * 0.56, d, t0: d === 1 ? (side < 0 ? bld.start : r2.start) : r2.start + (d - 1) * span + (i / prev.length) * span * 0.7 });
+    const prev = nodes.map((q, i) => [q, i] as const).filter(([q]) => q.d === d - 1);
+    prev.forEach(([p, pi], j) => {
+      for (const side of [-1, 1]) nodes.push({ x: p.x + side * (W / Math.pow(2, d + 1)) * 1.05, y: 640 + d * 120 + 20 * Math.min(d, 1), sc: 0.9 * Math.pow(0.55, d), d, t0: d === 1 ? (side < 0 ? bld.start : r2.start) : r2.start + (d - 1) * span + (j / prev.length) * span * 0.6, parent: pi });
     });
   }
-  for (const q of nodes) {
-    if (t < q.t0 - 0.06) continue;
-    const k = prog(t, q.t0 - 0.06, q.t0 + 0.25, ease.outExpo);
-    // the build arm from parent: a hairline that draws the copy into being
-    const hot = pulseAt(t, q.t0, 0.25);
-    if (q.d > 0) { const py = q.y - 200 / Math.pow(1.25, q.d - 1) - 30; rule(c, q.x, q.y - q.sz * 0.5, lerp(q.x, W / 2, 0) , py + q.sz * 0.9, k, col('graphite', 0.7), 2); }
-    const text = 'ROBOTS', wd = measure(text, fam, q.sz);
-    // letters assemble left to right
-    text.split('').forEach((ch, i) => {
-      const ki = prog(t, q.t0 - 0.06 + i * 0.03, q.t0 + i * 0.03 + 0.18, ease.outExpo);
-      if (ki <= 0) return;
-      const cw = measure(text.slice(0, i), fam, q.sz), chw = measure(ch, fam, q.sz);
-      label(s, ch, fam, q.sz, q.x - wd / 2 + cw + chw / 2, q.y + (1 - ki) * -q.sz * 0.5, mix('bone', 'signal', Math.max(hot, q.d === 0 ? 0 : 0.25), ki));
-      if (hot > 0.05) label(s, ch, fam, q.sz, q.x - wd / 2 + cw + chw / 2, q.y + (1 - ki) * -q.sz * 0.5, col('ember', 0.4 * hot * ki), g);
-    });
-  }
-  // r1 / build / r2 are the first three nodes; the sung "building" sits between them
-  word(s, bld, 'BUILDING', A(62, 300), 70, W / 2, 380, { sc: slam(bld, t, 1.3) });
-  // FROM THE ORE TO THE SUIT: the supply chain along the bottom
+  nodes.forEach((q, i) => {
+    const k = prog(t, q.t0 - 0.08, q.t0 + 0.35, ease.outCubic);
+    const hot = pulseAt(t, q.t0, 0.3);
+    // a parent's arm reaches to the child it is building while the child assembles
+    const kids = nodes.filter((ch) => ch.parent === i);
+    const building = kids.find((ch) => t >= ch.t0 - 0.1 && t < ch.t0 + 0.45);
+    const arm = building ? Math.sin(Math.PI * prog(t, building.t0 - 0.1, building.t0 + 0.45)) : 0;
+    robotFig(s, q.x, q.y, q.sc, k, hot, building ? [building.x, building.y - 160 * building.sc] : null, arm);
+  });
+  // the words: ROBOTS (solid, on the root), BUILDING, ROBOTS (on the first child), then the supply chain
+  if (t >= r1.start - 0.06) solidText(c, 'ROBOTS', A(125, 900), 150, W / 2, 140, 22, mix('bone', 'signal', heat(r1, t)), col('graphite', 1), slam(r1, t, 1.5));
+  word(s, bld, 'BUILDING', A(62, 300), 64, W / 2, 245, { sc: slam(bld, t, 1.3) });
+  const c1 = nodes[2]!;
+  if (t >= r2.start - 0.06) solidText(c, 'ROBOTS', A(125, 900), 80, c1.x, c1.y - 330 * c1.sc - 40, 12, mix('bone', 'signal', heat(r2, t)), col('graphite', 1), slam(r2, t, 1.5));
   const tail = from(l, /from/i);
-  const ty = 1000 + 120 * gk;
-  if (t > ore.start - 0.4) {
-    rule(c, 260, ty + 70, 1660, ty + 70, prog(t, ore.start, suit.start + 0.2), col('signal', 0.9), 4);
-    rule(g, 260, ty + 70, 1660, ty + 70, prog(t, ore.start, suit.start + 0.2), col('ember', 0.4), 10);
-  }
-  lyric(s, tail, ty, { width: 1400, max: 90, anno: false });
+  if (t > ore.start - 0.4) { rule(c, 260, 1030, 1660, 1030, prog(t, ore.start, suit.start + 0.2), col('signal', 0.9), 4); rule(g, 260, 1030, 1660, 1030, prog(t, ore.start, suit.start + 0.2), col('ember', 0.4), 10); }
+  lyric(s, tail, 985, { width: 1200, max: 64, anno: false });
   void sh;
 }
 
@@ -401,45 +408,53 @@ function minds(s: S) {
   void sh;
 }
 
-/** An original, geometric tractor (body, cab, big rear wheel, small front wheel). */
+/** An original 2.5D tractor: a solid body box (its label always fits inside), a cab box, big rear + small front wheel. */
 function tractor(s: S, x: number, y: number, sz: number, a: number, hot: number, textOn = true) {
   const { c } = s;
+  if (a <= 0) return;
   c.save(); c.translate(x, y); c.scale(sz, sz); c.globalAlpha = a;
-  c.fillStyle = mix('bone', 'signal', hot); c.fillRect(-60, -60, 110, 40); c.fillRect(-20, -105, 50, 48);
-  c.fillStyle = col('ink', 1); c.fillRect(-12, -98, 34, 26);
-  c.fillStyle = col('graphite', 1); c.fillRect(32, -80, 8, 22);
-  c.strokeStyle = mix('bone', 'signal', hot); c.lineWidth = 9; c.beginPath(); c.arc(-30, -5, 30, 0, TAU); c.stroke(); c.beginPath(); c.arc(40, 2, 18, 0, TAU); c.stroke();
-  if (textOn) { setFont(c, A(100, 900), 22); c.fillStyle = col('ink', 1); c.textAlign = 'center'; c.fillText('TRACTOR', -5, -32); }
+  const F_ = mix('bone', 'signal', hot), SD = mix('graphite', 'blood', hot), TP = mix('ash', 'ember', hot);
+  box(c, -78, -64, 150, 44, 34, F_, SD, TP, col('ink', 0.6), 1.5);
+  box(c, -40, -118, 60, 56, 30, F_, SD, TP, col('ink', 0.6), 1.5);
+  c.fillStyle = col('ink', 1); c.fillRect(-32, -110, 44, 26);
+  c.fillStyle = col('graphite', 1); c.fillRect(42, -92, 9, 28);
+  for (const [wx, wy, r] of [[-42, -8, 32], [50, 0, 20]] as const) { c.fillStyle = col('ink', 1); c.beginPath(); c.arc(wx, wy, r, 0, TAU); c.fill(); c.strokeStyle = F_; c.lineWidth = 8; c.stroke(); c.fillStyle = TP; c.beginPath(); c.arc(wx, wy, r * 0.3, 0, TAU); c.fill(); }
+  if (textOn) { const f = A(100, 900), fs = sizeTo('TRACTOR', f, 128, 28); setFont(c, f, fs); c.fillStyle = col('ink', 1); c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('TRACTOR', -3, -42); }
   c.restore();
 }
-// YOU MODELED A TRACTOR, NOW THE TRACTORS BUILD THE FLEET: one becomes many
+// YOU MODELED A TRACTOR, NOW THE TRACTORS BUILD THE FLEET: one becomes many. Doublings land on the sung words
+// (tractors / build / the / fleet) and then on every beat; the fleet lives in its own band so no type overlaps it.
 function fleet(s: S) {
   const { t, c } = s;
   const l = ln(s);
   const n = nOf(s);
-  const tr = fw(l, /tractor\b|tractor,/i), trs = fw(l, /tractors/i), bld = fw(l, /build/i), flt = l.words[l.words.length - 1]!;
-  const gen = (tt: number) => (tt < trs.start ? 0 : Math.min(6 + n, Math.floor((tt - trs.start) / Math.max(0.12, (flt.start - trs.start) / (5 + n))) + 1));
-  const G = gen(t);
+  const tr = l.words.find((w) => /^tractor$/i.test(clean(w.w))) ?? fw(l, /tractor/i), trs = fw(l, /tractors/i), flt = l.words[l.words.length - 1]!;
+  const steps = l.words.filter((w) => w.start >= trs.start).map((w) => w.start);
+  const beats = s.au.beats.filter((b) => b > flt.start + 0.1);
+  const all = [...steps, ...beats].slice(0, 6 + n);
+  let G = 0; for (const st of all) if (t >= st - 0.04) G++;
   const count = Math.pow(2, G);
-  const z = lerp(1.0, 0.36, clamp(G / (6 + n)));
-  cam(s, { x: W / 2, y: H / 2 + 60, z: z * (1 + 0.04 * pulseAt(t, flt.start, 0.2)), r: 0 });
-  const per = Math.ceil(Math.sqrt(count * 2.2));
-  for (let i = 0; i < (G === 0 ? 0 : count); i++) {
-    const q = i % per, r = Math.floor(i / per);
-    const rowsN = Math.ceil(count / per);
-    const x = W / 2 + (q - (per - 1) / 2) * 190, y = H / 2 + 60 + (r - (rowsN - 1) / 2) * 140 + 380 / z;
-    const born = i < count / 2 ? 0 : pulseAt(t, trs.start + (G - 1) * Math.max(0.12, (flt.start - trs.start) / (5 + n)), 0.2);
-    tractor(s, x, y, 1.1, 1, born, G < 5);
-  }
-  if (G === 0) tractor(s, W / 2, H / 2 + 300, 4.2, prog(t, tr.start - 0.05, tr.start + 0.25, ease.outBack), 0, true);
-  // the words stay screen-sized: counter-scale the camera for the type
+  const born = G > 0 ? pulseAt(t, all[G - 1]!, 0.18) : 0;
   cam(s, { x: W / 2, y: H / 2, z: 1, r: 0 });
-  c.save(); c.setTransform(1, 0, 0, 1, 0, 0); c.fillStyle = col('ink', 0.7 * clamp(G / 3)); c.fillRect(0, 100, W, 330); c.restore();
-  lyric(s, upto(l, /now/i), 200, { width: 1300, max: 100 });
-  lyric(s, from(l, /now/i).slice(0, -1), 340, { width: 1100, max: 80, anno: false });
-  word(s, flt, 'FLEET.', A(125, 900), sizeTo('FLEET.', A(125, 900), 1300, 360), W / 2, 760, { sc: slam(flt, t, 2.2) });
-  note(c, `×${count.toLocaleString('en-US')}`, W - 150, 980, t > trs.start ? 1 : 0, 34, 'signal', 'right');
-  void bld;
+  // band: y 430..870 for machines; rows of text above, FLEET below
+  const bx0 = 140, bx1 = W - 140, by0 = 440, by1 = 860;
+  if (G === 0) tractor(s, W / 2, 780, 3.0, prog(t, tr.start - 0.05, tr.start + 0.25, ease.outBack), pulseAt(t, tr.start, 0.3), true);
+  else {
+    const cellW = 200, cellH = 150, aspect = (bx1 - bx0) / (by1 - by0);
+    const per = Math.max(1, Math.ceil(Math.sqrt(count * aspect * cellH / cellW)));
+    const rowsN = Math.ceil(count / per);
+    const scl = Math.min(3.0, (bx1 - bx0) / (per * cellW), (by1 - by0) / (rowsN * cellH));
+    const showText = scl * 0.9 > 0.55;
+    for (let i = 0; i < count; i++) {
+      const q = i % per, r = Math.floor(i / per);
+      const x = W / 2 + (q - (per - 1) / 2) * cellW * scl, y = (by0 + by1) / 2 + (r - (rowsN - 1) / 2) * cellH * scl + 50 * scl;
+      tractor(s, x, y, scl * 0.9, 1, i >= count / 2 ? born : 0, showText);
+    }
+  }
+  lyric(s, upto(l, /now/i), 170, { width: 1300, max: 100 });
+  lyric(s, from(l, /now/i).slice(0, -1), 330, { width: 1100, max: 80, anno: false });
+  word(s, flt, 'FLEET.', A(125, 900), sizeTo('FLEET.', A(125, 900), 700, 170), W / 2, 965, { sc: slam(flt, t, 1.8) });
+  note(c, `×${count.toLocaleString('en-US')}`, W - 150, 1000, G > 0 ? 1 : 0, 34, 'signal', 'right');
 }
 
 // YOUR BOTTLENECK'S A SPEED BUMP ON A HYPERBOLIC ROUTE: the camera drives the acid curve; the bump is tiny
@@ -760,5 +775,50 @@ function oracle(s: S) {
   s.post.shake = [noise1(t * 50, 3) * 10 * hit, noise1(t * 50, 4) * 10 * hit];
 }
 
-export const FURNACE = { takeoff, sarcasm, dynamo, factory, tasks, solow, hammer, robots, minds, fleet, hyper, footnotes, compound, oracle };
+// INSTRUMENTAL (after chorus 2, into the bridge): the oracle machine goes quiet and computes. Glyphs stream out of its
+// grille, orbit, and condense into seven cards in a row — the seven problems the bridge is about to name. Cards light on
+// downbeats; an agent counter climbs; the last bar turns the frame to paper for the bridge's first shot.
+const GLYPHS = ['∑', '∫', 'ζ', '∀', '∃', '≠', '=', 'π', '∂', '∞', 'λ', '⊢', '√', 'Ω', 'φ', '≤'];
+const SEVEN = ['P vs NP', 'HODGE', 'POINCARÉ', 'RIEMANN', 'YANG–MILLS', 'NAVIER–STOKES', 'BSD'];
+function interlude(s: S) {
+  const { t, sh, c, g } = s;
+  const t0 = sh.start, t1 = sh.end, d = Math.max(1, t1 - t0);
+  const k = clamp((t - t0) / d);
+  s.bg.glow = 0.4; s.bg.gx = 0.5; s.bg.gy = 0.32;
+  cam(s, { x: W / 2, y: H / 2, z: lerp(1.0, 0.92, k), r: 0 });
+  // the machine, small and high, computing (all blades busy, grille breathing on the beat)
+  const beat = s.au.beats.filter((b) => b <= t).pop() ?? t0;
+  machine(s, W / 2, 70, 0.55, 1, 0.4 + 0.6 * pulseAt(t, beat, 0.12), 0.9, 7);
+  const GX = W / 2, GY = 70 + 680 * 0.55 * 0.44;
+  // seven cards along the bottom: they assemble from the glyph stream (card i fills over its own slice of the interlude)
+  const cw = 230, gap = 22, x0 = GX - (7 * cw + 6 * gap) / 2, cy = 640;
+  const dbs = s.au.downbeats.filter((b) => b >= t0 && b < t1);
+  for (let i = 0; i < 7; i++) {
+    const a = t0 + d * (0.08 + i * 0.1), b = a + d * 0.22;
+    const fill = prog(t, a, b, ease.inOutCubic);
+    const x = x0 + i * (cw + gap);
+    // glyphs fly from the grille into this card while it fills
+    if (fill > 0 && fill < 1) for (let q = 0; q < 14; q++) {
+      const f = clamp(fill * 1.3 - q / 14 * 0.3), fx = lerp(GX, x + cw / 2 + (hash(i, q) - 0.5) * cw, f), fy = lerp(GY, cy + 60 + hash(q, i) * 140, f) - Math.sin(f * Math.PI) * 160;
+      label(s, GLYPHS[(i * 5 + q) % GLYPHS.length]!, F.serif(600, true), 34, fx, fy, col(q % 3 ? 'bone' : 'signal', 0.85 * (1 - f * 0.3)));
+    }
+    if (fill <= 0) continue;
+    const lit = dbs.filter((db) => t >= db).length > i ? pulseAt(t, dbs[i] ?? 1e9, 0.4) : 0;
+    box(c, x, cy, cw, 260 * fill, 20, mix('ink2', 'signal', 0.15 + 0.5 * lit), col('ink', 1), col('graphite', 0.8), col('graphite', 1), 2);
+    if (fill > 0.6) {
+      setFont(c, F.mono(600), SEVEN[i]!.length > 10 ? 18 : 24); c.fillStyle = col('bone', 0.95); c.textAlign = 'center'; c.fillText(SEVEN[i]!, x + cw / 2, cy + 52);
+      label(s, '?', F.serif(600, true), 120, x + cw / 2, cy + 160, col(lit > 0.1 ? 'signal' : 'graphite', 1));
+    }
+    if (lit > 0.05) { g.fillStyle = col('ember', 0.25 * lit); g.fillRect(x, cy, cw, 260); }
+  }
+  // the agent counter, climbing exponentially toward the bridge's ten thousand
+  const agents = Math.floor(Math.pow(10, 4 * prog(t, t0 + d * 0.2, t1 - 0.6, ease.inQuad)));
+  label(s, `${agents.toLocaleString('en-US')} AGENTS`, F.mono(700), 34, GX, 990, col(agents > 5000 ? 'signal' : 'ash', 1));
+  note(c, 'MILLENNIUM PRIZE PROBLEMS · $1,000,000 EACH', GX, 600, prog(t, t0 + d * 0.15, t0 + d * 0.3), 22, 'ash', 'center');
+  // last bar: the frame bleaches to paper (hands off to the bridge's paper sheet)
+  const pk = prog(t, t1 - 0.5, t1, ease.inCubic);
+  if (pk > 0) { c.save(); c.setTransform(1, 0, 0, 1, 0, 0); c.fillStyle = col('bone', pk); c.fillRect(0, 0, W, H); c.restore(); }
+}
+
+export const FURNACE = { takeoff, sarcasm, dynamo, factory, tasks, solow, hammer, robots, minds, fleet, hyper, footnotes, compound, oracle, interlude };
 void base; void split; void sizeTo;
