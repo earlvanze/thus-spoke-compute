@@ -9,7 +9,7 @@ import { cam } from '../scenes/shots';
 import { heat } from '../scenes/kit';
 import { clean, snapCam } from '../scenes/kit';
 import { row } from '../scenes/typeset';
-import { hash, noise1 } from '../engine/util';
+import { hash, mulberry32, noise1 } from '../engine/util';
 import { BRAND } from './brand';
 
 const nOf = (s: S) => Math.max(1, Math.min(3, s.sh.o.n ?? 1));
@@ -267,75 +267,152 @@ function solow(s: S) {
 }
 
 // ------------------------------------------------------------------ PRE: the hammer in the human hand — then the hammer builds the hand
+/** A flat 2D hammer (tapered handle + steel head with bevels), pivoting at the grip (0,0), pointing "up" at angle 0. */
+function drawHammer(s: S, px: number, py: number, ang: number, hk: number, hot: number, w: Word) {
+  const { c, t } = s;
+  if (hk <= 0) return;
+  c.save(); c.translate(px, py); c.rotate(ang);
+  const L = 470 * hk;
+  // handle: tapered, two-tone (a highlight stripe reads as a round dowel)
+  c.fillStyle = col('graphite', 1); c.beginPath(); c.moveTo(-20, 60); c.lineTo(20, 60); c.lineTo(15, -L); c.lineTo(-15, -L); c.closePath(); c.fill();
+  c.fillStyle = col('ash', 0.55); c.fillRect(-6, -L, 6, L + 60);
+  c.fillStyle = col('ink', 1); for (let i = 0; i < 6; i++) c.fillRect(-20, 10 + i * 8, 40, 3); // grip wrap
+  if (hk > 0.6) {
+    // head: a steel block across the handle, striking face on the +x end, bevelled edges, the word on its cheek
+    const hx = -120, hy = -L - 70, hw = 300, hh = 120;
+    c.fillStyle = mix('ash', 'ember', hot * 0.5); c.fillRect(hx, hy, hw, hh);
+    c.fillStyle = col('bone', 0.55); c.fillRect(hx, hy, hw, 10); c.fillStyle = col('graphite', 1); c.fillRect(hx, hy + hh - 12, hw, 12);
+    c.fillStyle = col('graphite', 1); c.fillRect(hx + hw - 26, hy - 8, 26, hh + 16); // striking face
+    c.fillStyle = col('ink', 1); c.fillRect(-20, hy + hh - 2, 40, 14); // the eye/wedge
+    const f = A(125, 900), fs = sizeTo('HAMMER', f, 220, 60);
+    word(s, w, 'HAMMER', f, fs, hx + 120, hy + hh / 2, { base: 'ink', hot: 'blood' });
+  }
+  c.restore();
+  void t;
+}
+/** An original anvil silhouette (horn left, flat face, waist, foot) on a perspective stump. Top face at y = top. */
+function drawAnvil(s: S, cx: number, top: number) {
+  const { c } = s;
+  box(c, cx - 120, top + 150, 240, 200, 120, col('graphite', 0.9), col('ink2', 1), col('ash', 0.4), col('ink', 0.6));
+  c.fillStyle = col('graphite', 1); c.beginPath();
+  c.moveTo(cx - 330, top + 10); c.quadraticCurveTo(cx - 250, top - 4, cx - 190, top); c.lineTo(cx + 230, top); c.lineTo(cx + 230, top + 64);
+  c.lineTo(cx + 120, top + 70); c.quadraticCurveTo(cx + 70, top + 110, cx + 110, top + 150); c.lineTo(cx - 110, top + 150);
+  c.quadraticCurveTo(cx - 70, top + 110, cx - 120, top + 70); c.lineTo(cx - 190, top + 60); c.quadraticCurveTo(cx - 260, top + 40, cx - 330, top + 10); c.closePath(); c.fill();
+  c.fillStyle = col('ash', 0.75); c.fillRect(cx - 190, top, 420, 8); // the polished face catches the light
+}
 function hammer(s: S) {
   const { t, c, g } = s;
   const l1 = ln(s, 0), l2 = ln(s, 1);
   const hw = fw(l1, /hammer/i), hand = fw(l1, /hand/i), hum = fw(l1, /human/i);
   const builds = fw(l2, /build/i), hand2 = fw(l2, /hand/i), ham2 = fw(l2, /hammer/i);
-  const in2 = prog(t, l2.start - 0.2, l2.start + 0.3, ease.inOutCubic);
-  cam(s, { x: W / 2 + 100 * in2, y: H / 2, z: lerp(1, 0.94, in2), r: 0 });
-  lyric(s, l1.words, 150, { width: 1500, max: 88, alpha: 1 - 0.85 * in2 });
-  if (in2 > 0) lyric(s, l2.words, 150 + 110 * in2, { width: 1500, max: 80 });
-  // a solid 2.5D hammer: a steel head (box) on a long handle (box), pivoting at the grip; on line 2 it strikes on onsets
+  const in2 = prog(t, l2.start - 0.25, l2.start + 0.2, ease.inOutCubic);
+  cam(s, { x: W / 2, y: H / 2, z: 1, r: 0 });
+  lyric(s, l1.words, 150, { width: 1500, max: 88, alpha: 1 - in2 });
+  if (in2 > 0) lyric(s, l2.words, 150, { width: 1500, max: 80, alpha: in2 });
+  const ax = 1400, atop = 830;
+  // line 2 strikes: the hammer lifts then slams onto the anvil at every word from "hammer" on
   const strikes = l2.words.filter((w) => w.start >= ham2.start).map((w) => w.start);
-  let sw = 0; for (const st of strikes) sw = Math.max(sw, pulseAt(t, st, 0.09));
-  const ang = -0.34 * in2 + 0.42 * sw * in2;
-  const px = 700, py = 960;
-  const hk = prog(t, hw.start - 0.05, hw.start + 0.3, ease.outBack);
-  c.save(); c.translate(px, py); c.rotate(ang);
-  box(c, -24, -400 * hk, 48, 400 * hk, 30, col('graphite', 1), col('ink2', 1), col('ash', 0.6), col('ash', 0.5));
-  if (hk > 0) {
-    box(c, -290, -540, 580, 150, 70, col('ash', 1), col('graphite', 1), col('bone', 0.85), col('ink', 0.8), 2);
-    solidText(c, 'HAMMER', A(125, 900), 90, 0, -465, 6, mix('ink', 'signal', heat(hw, t)), col('ink', 0.5));
-  }
-  c.restore();
-  // line 1: HUMAN HAND as solid extruded type gripping the handle
-  const a1 = 1 - in2;
-  if (a1 > 0 && t >= hand.start - 0.06) solidText(c, 'HAND', A(125, 900), 160, px, py - 150, 26 * a1, mix('bone', 'signal', heat(hand, t), a1), col('graphite', a1), slam(hand, t, 1.4));
-  if (a1 > 0 && t >= hum.start - 0.06) solidText(c, 'HUMAN', A(62, 900), 80, px - 290, py - 290, 14, col('bone', a1), col('graphite', a1));
-  // line 2: an anvil; every strike forges one solid letter of HAND (white-hot, then cooling to bone)
+  let hit = 0;
+  for (const st of strikes) { const up_ = prog(t, st - 0.16, st, ease.inQuad), down = 1 - prog(t, st + 0.05, st + 0.32, ease.outCubic); hit = Math.max(hit, Math.min(up_, down)); }
+  const pivot = { x: 940, y: 860 };
+  const angRest = -0.12, angHit = 1.39; // radians from vertical; at angHit the striking face meets the anvil top
+  const ang = lerp(angRest, lerp(angRest, angHit, hit), in2);
+  // back to front: anvil, forged letters, hammer, the hand gripping it, sparks
   if (in2 > 0) {
-    const ax = 1380, ay = 830;
-    box(c, ax - 270, ay + 40, 540, 60, 60, col('graphite', 1), col('ink2', 1), col('ash', 0.7), col('ink', 0.6));
-    box(c, ax - 110, ay + 100, 220, 130, 50, col('graphite', 1), col('ink2', 1), col('ash', 0.6), col('ink', 0.6));
-    const letters = 'HAND', fam = A(125, 900), sz = 230, total = measure(letters, fam, sz);
+    c.save(); c.globalAlpha = in2; drawAnvil(s, ax, atop); c.restore();
+    const letters = 'HAND', fam = A(125, 900), sz = 170, total = measure(letters, fam, sz);
     const bst = [builds.start, (builds.start + hand2.start) / 2, hand2.start - 0.12, hand2.start];
     letters.split('').forEach((ch, i) => {
-      const k = prog(t, bst[i]!, bst[i]! + 0.2, ease.outBack);
-      if (k <= 0) return;
+      const k = prog(t, bst[i]!, bst[i]! + 0.3, ease.outCubic);
+      if (t < bst[i]! - 0.02) return;
       const cw = measure(letters.slice(0, i), fam, sz), chw = measure(ch, fam, sz);
-      const x = ax - total / 2 + cw + chw / 2, y = ay - 80, hot = pulseAt(t, bst[i]!, 0.35);
-      solidText(c, ch, fam, sz * k, x, y, 34 * k, mix('bone', 'ember', hot), mix('graphite', 'signal', hot));
-      if (hot > 0.05) solidText(g, ch, fam, sz * k, x, y, 0, col('ember', 0.5 * hot), col('ember', 0));
-      for (let q = 0; q < 10; q++) { const p = pulseAt(t, bst[i]!, 0.12); if (p < 0.05) break; const a = -Math.PI * hash(i, q); rule(g, x, ay + 40, x + Math.cos(a) * 160 * (1 - p), ay + 40 + Math.sin(a) * 160 * (1 - p), 1, col('ember', p), 3); }
+      const slotX = ax - total / 2 + cw + chw / 2, hitX = ax + 20;
+      const x = lerp(hitX, slotX, k), y = atop - (CAP * sz) / 2 - 4, hot = pulseAt(t, bst[i]!, 0.35);
+      label(s, ch, fam, sz, x, y, mix('bone', 'ember', hot));
+      if (hot > 0.05) label(s, ch, fam, sz, x, y, col('ember', 0.55 * hot), g);
     });
-    s.post.shake = [noise1(t * 60, 1) * 12 * sw * in2, noise1(t * 60, 2) * 12 * sw * in2];
   }
+  drawHammer(s, pivot.x, pivot.y, ang, prog(t, hw.start - 0.05, hw.start + 0.3, ease.outBack), hit, hw);
+  // the human hand grips the handle (drawn over it)
+  const a1 = 1 - in2;
+  if (t >= hand.start - 0.06) word(s, hand, 'HAND', A(125, 900), 100, pivot.x, pivot.y + 105, { sc: slam(hand, t, 1.4), alpha: lerp(1, 0.85, in2) });
+  if (a1 > 0 && t >= hum.start - 0.06) word(s, hum, 'HUMAN', A(62, 900), 60, pivot.x - 300, pivot.y + 105, { alpha: a1 });
+  // sparks at the moment of impact
+  for (const st of strikes) {
+    const p = pulseAt(t, st, 0.12); if (p < 0.05 || in2 <= 0) continue;
+    for (let q = 0; q < 14; q++) { const a = -Math.PI * (0.1 + 0.8 * hash(q, Math.round(st * 10))), r = 40 + 220 * (1 - p) * hash(q, 3); rule(g, ax + 20, atop, ax + 20 + Math.cos(a) * r, atop + Math.sin(a) * r, 1, col('ember', p), 3); }
+  }
+  s.post.shake = [noise1(t * 60, 1) * 12 * pulseAt(t, strikes.find((x) => x <= t) ?? -9, 0.08) * in2, 0];
 }
 
 // =================================================================== CHORUS
-/** An original, boxy 2.5D robot (legs, torso with a chest panel, arms, head with a visor slit), assembled bottom-up as
- *  `k` goes 0→1. Its right arm reaches out to `reach` (the child it is building) while `arm` > 0. */
-function robotFig(s: S, x: number, y: number, sc: number, k: number, hot: number, reach: [number, number] | null, arm: number) {
-  const { c, g } = s;
-  if (k <= 0) return;
-  const F_ = mix('ash', 'signal', hot), SD = col('graphite', 1), TP = mix('bone', 'ember', hot), E = col('ink', 0.7);
-  const part = (i: number) => clamp(k * 5 - i);
-  c.save(); c.translate(x, y); c.scale(sc, sc);
-  if (part(0) > 0) { box(c, -46, -90 * part(0), 34, 90 * part(0), 26, F_, SD, TP, E); box(c, 12, -90 * part(0), 34, 90 * part(0), 26, F_, SD, TP, E); }
-  if (part(1) > 0) { box(c, -70, -250, 140, 160 * part(1), 50, F_, SD, TP, E); c.fillStyle = col('ink', 0.85); c.fillRect(-42, -220, 84, 60); c.fillStyle = mix('graphite', 'signal', 0.4 + 0.6 * hot); for (let i = 0; i < 4; i++) c.fillRect(-34 + i * 20, -200, 12, 20); }
-  if (part(2) > 0) {
-    box(c, -110, -240, 36, 130 * part(2), 26, F_, SD, TP, E);
-    // the working arm: from the shoulder towards the child being built
-    const ex = reach ? lerp(110, (reach[0] - x) / sc, arm) : 110, ey = reach ? lerp(-120, (reach[1] - y) / sc, arm) : -120;
-    c.strokeStyle = col('ash', 1); c.lineWidth = 22; c.lineCap = 'round'; c.beginPath(); c.moveTo(92, -230); c.lineTo(lerp(92, ex, 0.5), lerp(-230, ey, 0.5) - 30 * arm); c.lineTo(ex, ey); c.stroke();
-    if (arm > 0.05 && reach) { g.fillStyle = col('ember', 0.8 * arm); g.beginPath(); g.arc(ex * sc + x, ey * sc + y, 14, 0, TAU); g.fill(); }
+// ROBOTS BUILDING ROBOTS as POINT CLOUDS: an original industrial robot modelled from 3D primitives (feet, legs, knee and
+// hip joints, pelvis, torso with chest panel and vents, shoulder pads, two-segment arms, claw hands, neck, head with a
+// visor band and side bolts, a back unit), sampled into a few thousand surface points, turned slowly and projected in
+// perspective. A new robot assembles part by part from a stream of points pouring out of its parent's hand.
+type RP = { x: number; y: number; z: number; part: number; tag: number }; // tag: 0 body, 1 joint, 2 visor/hot, 3 panel
+const robotCache = new Map<number, RP[]>();
+function robotModel(n: number): RP[] {
+  const hit_ = robotCache.get(n); if (hit_) return hit_;
+  const rnd = mulberry32(1234 + n);
+  const out: RP[] = [];
+  const area = (w: number, h: number, d: number) => 2 * (w * h + w * d + h * d);
+  const boxP = (cx: number, cy: number, cz: number, w: number, h: number, d: number, part: number, tag: number, wgt: number) => {
+    const m = Math.max(4, Math.round(n * wgt * area(w, h, d) / 400000));
+    for (let i = 0; i < m; i++) {
+      const f = rnd() * area(w, h, d); let x = rnd() - 0.5, y = rnd() - 0.5, z = rnd() - 0.5;
+      if (f < 2 * w * h) z = rnd() < 0.5 ? -0.5 : 0.5; else if (f < 2 * w * h + 2 * w * d) y = rnd() < 0.5 ? -0.5 : 0.5; else x = rnd() < 0.5 ? -0.5 : 0.5;
+      out.push({ x: cx + x * w, y: cy + y * h, z: cz + z * d, part, tag });
+    }
+  };
+  const ball = (cx: number, cy: number, cz: number, r: number, part: number, tag: number) => { for (let i = 0; i < Math.round(n * r * r / 2500); i++) { const u = rnd() * 2 - 1, a = rnd() * TAU, q = Math.sqrt(1 - u * u); out.push({ x: cx + r * q * Math.cos(a), y: cy + r * u, z: cz + r * q * Math.sin(a), part, tag }); } };
+  const rod = (x0: number, y0: number, z0: number, x1: number, y1: number, z1: number, r: number, part: number, tag: number) => { const L = Math.hypot(x1 - x0, y1 - y0, z1 - z0); for (let i = 0; i < Math.round(n * L * r / 6000); i++) { const k = rnd(), a = rnd() * TAU; out.push({ x: lerp(x0, x1, k) + r * Math.cos(a), y: lerp(y0, y1, k), z: lerp(z0, z1, k) + r * Math.sin(a), part, tag }); } };
+  for (const sx of [-1, 1]) {
+    boxP(sx * 44, -12, 18, 76, 24, 100, 0, 0, 1); // feet
+    rod(sx * 44, -24, 0, sx * 44, -100, 0, 20, 0, 0); ball(sx * 44, -104, 0, 22, 0, 1); rod(sx * 44, -104, 0, sx * 44, -180, 0, 22, 0, 0); // shin, knee, thigh
+    ball(sx * 44, -186, 0, 20, 1, 1); // hip joint
   }
-  if (part(3) > 0) { box(c, -54, -250 - 100 * part(3), 108, 90 * part(3), 40, F_, SD, TP, E); c.fillStyle = col('ink', 1); c.fillRect(-40, -320, 80, 18); c.fillStyle = mix('signal', 'ember', hot); c.fillRect(-36, -316, 72 * part(4), 10); }
-  c.restore();
-  if (hot > 0.05) { g.save(); g.translate(x, y); g.scale(sc, sc); g.fillStyle = col('ember', 0.25 * hot); g.fillRect(-70, -350, 140, 350); g.restore(); }
+  boxP(0, -200, 0, 150, 34, 74, 1, 0, 1); // pelvis
+  boxP(0, -300, 0, 200, 170, 104, 2, 0, 1); // torso
+  for (let r = 0; r < 4; r++) for (let q = 0; q < 6; q++) out.push({ x: -45 + q * 18, y: -340 + r * 16, z: 53, part: 2, tag: 3 }); // chest panel LEDs
+  for (let v = 0; v < 5; v++) for (let q = 0; q < 24; q++) out.push({ x: -60 + q * 5, y: -262 + v * 9, z: 53, part: 2, tag: 0 }); // vents
+  boxP(0, -300, -70, 140, 120, 40, 2, 0, 0.7); // back unit
+  for (const sx of [-1, 1]) {
+    boxP(sx * 122, -372, 0, 54, 34, 80, 3, 0, 1); ball(sx * 122, -350, 0, 24, 3, 1); // shoulder pad + joint
+    rod(sx * 126, -350, 0, sx * 136, -270, 14, 16, 3, 0); ball(sx * 136, -266, 14, 17, 3, 1); rod(sx * 136, -266, 14, sx * 140, -200, 60, 14, 3, 0); // upper arm, elbow, forearm
+    for (const f of [-1, 1]) rod(sx * 140 + f * 8, -200, 60, sx * 140 + f * 14, -176, 74, 6, 3, 1); // claw
+  }
+  rod(0, -385, 0, 0, -410, 0, 18, 4, 1); // neck
+  boxP(0, -456, 0, 124, 92, 104, 4, 0, 1); // head
+  for (let q = 0; q < 60; q++) for (let r = 0; r < 3; r++) out.push({ x: -50 + q * (100 / 60), y: -468 + r * 5, z: 53, part: 4, tag: 2 }); // visor band
+  for (const sx of [-1, 1]) ball(sx * 64, -456, 0, 12, 4, 1); // side bolts
+  robotCache.set(n, out);
+  return out;
 }
-// ROBOTS BUILDING ROBOTS: solid 2.5D robots, each one assembling the next generation with its arm (depth grows with n)
+/** Project and draw one robot cloud. k: assembly 0..1 (parts in order); src: screen point the stream pours from. Returns the
+ *  screen position of its right claw (where it pours the next robot from). */
+function robotCloud(s: S, cx: number, cy: number, sc: number, k: number, hot: number, ang: number, src: [number, number] | null, npts: number, seed: number) {
+  const { c, g } = s;
+  const P = robotModel(npts);
+  const D = 900, ca = Math.cos(ang), sa = Math.sin(ang);
+  const proj = (x: number, y: number, z: number) => { const xr = x * ca + z * sa, zr = -x * sa + z * ca; const f = D / (D - zr); return [cx + xr * f * sc, cy + y * f * sc, zr] as const; };
+  if (k > 0) for (let i = 0; i < P.length; i++) {
+    const p = P[i]!, kp = clamp(k * 5.5 - p.part * 1.1);
+    if (kp <= 0) continue;
+    const [x, y, z] = proj(p.x, p.y, p.z);
+    let X = x, Y = y;
+    if (kp < 1) { // in flight from the source (parent's claw or the ore pile), arcing
+      const e = ease.inOutCubic(kp), sx = src ? src[0] : cx + (hash(i, seed) - 0.5) * 600 * sc, sy = src ? src[1] : cy + 200;
+      X = lerp(sx, x, e) + Math.sin(e * Math.PI) * (hash(i, 7) - 0.5) * 120 * sc; Y = lerp(sy, y, e) - Math.sin(e * Math.PI) * 140 * sc;
+    }
+    const depth = clamp((z + 120) / 240), a = 0.35 + 0.65 * depth, sz = Math.max(1.2, (1.4 + 1.6 * depth) * Math.sqrt(sc) * 1.6);
+    const key = p.tag === 2 ? 'signal' : p.tag === 3 ? (hash(i, Math.floor(s.t * 6)) > 0.5 ? 'acid' : 'graphite') : p.tag === 1 ? 'ash' : 'bone';
+    c.fillStyle = p.tag === 0 ? mix('bone', 'signal', hot * 0.6, a) : col(key, a); c.fillRect(X, Y, sz, sz);
+    if (p.tag === 2 || (hot > 0.1 && p.tag === 0 && (i & 7) === 0)) { g.fillStyle = col('ember', p.tag === 2 ? 0.5 : 0.3 * hot); g.fillRect(X - 1, Y - 1, sz + 2, sz + 2); }
+  }
+  const [hx, hy] = proj(140, -180, 74);
+  return [hx, hy] as [number, number];
+}
 function robots(s: S) {
   const { t, sh, c, g } = s;
   const l = ln(s);
@@ -345,31 +422,32 @@ function robots(s: S) {
   const depth = 1 + n;
   cam(s, { x: W / 2, y: H / 2, z: 1, r: 0 });
   type Node = { x: number; y: number; sc: number; d: number; t0: number; parent: number };
-  const nodes: Node[] = [{ x: W / 2, y: 640, sc: 0.9, d: 0, t0: r1.start, parent: -1 }];
+  const nodes: Node[] = [{ x: W / 2, y: 770, sc: 0.95, d: 0, t0: r1.start, parent: -1 }];
   const span = Math.max(0.25, (suit.start - r2.start) / depth);
   for (let d = 1; d <= depth; d++) {
     const prev = nodes.map((q, i) => [q, i] as const).filter(([q]) => q.d === d - 1);
     prev.forEach(([p, pi], j) => {
-      for (const side of [-1, 1]) nodes.push({ x: p.x + side * (W / Math.pow(2, d + 1)) * 1.05, y: 640 + d * 120 + 20 * Math.min(d, 1), sc: 0.9 * Math.pow(0.55, d), d, t0: d === 1 ? (side < 0 ? bld.start : r2.start) : r2.start + (d - 1) * span + (j / prev.length) * span * 0.6, parent: pi });
+      for (const side of [-1, 1]) nodes.push({ x: p.x + side * (W / Math.pow(2, d + 1)) * 1.05, y: 770 + 220 * (1 - Math.pow(0.5, d)), sc: 0.95 * Math.pow(0.52, d), d, t0: d === 1 ? (side < 0 ? bld.start : r2.start) : r2.start + (d - 1) * span + (j / prev.length) * span * 0.6, parent: pi });
     });
   }
+  const hands: [number, number][] = [];
+  const dur = (q: Node) => (q.d === 0 ? Math.max(0.5, bld.start - r1.start + 0.3) : Math.max(0.35, span * 0.9));
   nodes.forEach((q, i) => {
-    const k = prog(t, q.t0 - 0.08, q.t0 + 0.35, ease.outCubic);
-    const hot = pulseAt(t, q.t0, 0.3);
-    // a parent's arm reaches to the child it is building while the child assembles
-    const kids = nodes.filter((ch) => ch.parent === i);
-    const building = kids.find((ch) => t >= ch.t0 - 0.1 && t < ch.t0 + 0.45);
-    const arm = building ? Math.sin(Math.PI * prog(t, building.t0 - 0.1, building.t0 + 0.45)) : 0;
-    robotFig(s, q.x, q.y, q.sc, k, hot, building ? [building.x, building.y - 160 * building.sc] : null, arm);
+    const k = prog(t, q.t0 - 0.05, q.t0 + dur(q), ease.linear);
+    const hot = pulseAt(t, q.t0 + dur(q), 0.4);
+    const ang = 0.45 * Math.sin(t * 0.7 + i * 1.3) + (q.d === 0 ? 0 : 0.25 * (q.x < W / 2 ? 1 : -1));
+    const npts = q.d === 0 ? 5200 : q.d === 1 ? 2600 : q.d === 2 ? 1100 : 500;
+    hands[i] = robotCloud(s, q.x, q.y, q.sc, k, hot, ang, q.parent >= 0 ? hands[q.parent] ?? null : null, npts, i);
+    // the pour: a stream of points from the parent's claw while this robot assembles
+    if (q.parent >= 0 && k > 0 && k < 1) { const src = hands[q.parent]!; for (let j = 0; j < 30; j++) { const f = (j / 30 + t * 3) % 1; g.fillStyle = col('ember', 0.7); g.fillRect(lerp(src[0], q.x, f) - 2, lerp(src[1], q.y - 250 * q.sc, f) - Math.sin(f * Math.PI) * 60 - 2, 4, 4); } }
   });
-  // the words: ROBOTS (solid, on the root), BUILDING, ROBOTS (on the first child), then the supply chain
-  if (t >= r1.start - 0.06) solidText(c, 'ROBOTS', A(125, 900), 150, W / 2, 140, 22, mix('bone', 'signal', heat(r1, t)), col('graphite', 1), slam(r1, t, 1.5));
-  word(s, bld, 'BUILDING', A(62, 300), 64, W / 2, 245, { sc: slam(bld, t, 1.3) });
+  if (t >= r1.start - 0.06) solidText(c, 'ROBOTS', A(125, 900), 140, W / 2, 125, 30, mix('bone', 'signal', heat(r1, t)), col('graphite', 1), slam(r1, t, 1.5));
+  word(s, bld, 'BUILDING', A(62, 300), 56, W / 2, 228, { sc: slam(bld, t, 1.3) });
   const c1 = nodes[2]!;
-  if (t >= r2.start - 0.06) solidText(c, 'ROBOTS', A(125, 900), 80, c1.x, c1.y - 330 * c1.sc - 40, 12, mix('bone', 'signal', heat(r2, t)), col('graphite', 1), slam(r2, t, 1.5));
+  if (t >= r2.start - 0.06) word(s, r2, 'ROBOTS', A(125, 900), 76, c1.x, c1.y - 480 * c1.sc - 30, { sc: slam(r2, t, 1.5) });
   const tail = from(l, /from/i);
-  if (t > ore.start - 0.4) { rule(c, 260, 1030, 1660, 1030, prog(t, ore.start, suit.start + 0.2), col('signal', 0.9), 4); rule(g, 260, 1030, 1660, 1030, prog(t, ore.start, suit.start + 0.2), col('ember', 0.4), 10); }
-  lyric(s, tail, 985, { width: 1200, max: 64, anno: false });
+  if (t > ore.start - 0.4) { rule(c, 260, 1058, 1660, 1058, prog(t, ore.start, suit.start + 0.2), col('signal', 0.9), 4); rule(g, 260, 1058, 1660, 1058, prog(t, ore.start, suit.start + 0.2), col('ember', 0.4), 10); }
+  lyric(s, tail, 1025, { width: 1000, max: 46, anno: false });
   void sh;
 }
 
@@ -662,7 +740,7 @@ function liftoff(s: S) {
 }
 
 /**
- * The ORACLE: an original 2.5D speaking machine — a rack monolith (oblique side + top faces) with blinking blade units, a
+ * The ORACLE: an original speaking machine drawn in 2D with one-point perspective — a rack monolith with blinking blade units, a
  * ringed speaker grille that pulses with the voice, and a plinth whose inscription is COMPUTE. "Thus" and "spoke" are
  * spoken: they leave the grille on sound-wave arcs and settle either side of it; COMPUTE ignites on the plinth.
  * The second statement re-speaks over the first (which drifts outward, smaller), and the camera pushes into the grille.
@@ -670,14 +748,10 @@ function liftoff(s: S) {
  */
 function machine(s: S, cx: number, top: number, sc: number, a: number, speak: number, lit: number, seed: number, flat = false) {
   const { c, g, t } = s;
-  const fw_ = 520 * sc, fh = 680 * sc, dx = 70 * sc, dy = -44 * sc, x0 = cx - fw_ / 2;
+  const fw_ = 520 * sc, fh = 680 * sc, x0 = cx - fw_ / 2;
   c.save(); c.globalAlpha = a;
-  // side + top faces (oblique projection, darker) then the front
-  c.fillStyle = col('ink', 1); c.beginPath(); c.moveTo(x0 + fw_, top); c.lineTo(x0 + fw_ + dx, top + dy); c.lineTo(x0 + fw_ + dx, top + fh + dy); c.lineTo(x0 + fw_, top + fh); c.closePath(); c.fill();
-  c.fillStyle = col('graphite', 0.55); c.beginPath(); c.moveTo(x0, top); c.lineTo(x0 + dx, top + dy); c.lineTo(x0 + fw_ + dx, top + dy); c.lineTo(x0 + fw_, top); c.closePath(); c.fill();
-  c.fillStyle = col('ink2', 1); c.fillRect(x0, top, fw_, fh);
-  c.strokeStyle = col('graphite', 1); c.lineWidth = 3 * sc; c.strokeRect(x0, top, fw_, fh);
-  c.beginPath(); c.moveTo(x0 + fw_, top); c.lineTo(x0 + fw_ + dx, top + dy); c.lineTo(x0 + fw_ + dx, top + fh + dy); c.lineTo(x0 + fw_, top + fh); c.moveTo(x0, top); c.lineTo(x0 + dx, top + dy); c.lineTo(x0 + fw_ + dx, top + dy); c.stroke();
+  // the monolith in one-point perspective (its sides recede toward the shared vanishing point)
+  box(c, x0, top, fw_, fh, 260 * sc, col('ink2', 1), col('ink', 1), col('graphite', 0.55), col('graphite', 1), 3 * sc);
   if (flat) { c.restore(); return; }
   // blade units: 3 above the grille, 4 below; LEDs blink (hash of time), more of them lit as `lit` grows
   const gy = top + fh * 0.44, R = 150 * sc;

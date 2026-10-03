@@ -133,14 +133,16 @@ function scurve(s: S) {
   const okk = prog(t, ok.start, ok.start + 0.3, ease.outBack);
   if (okk > 0) { label(s, 'OKAY.', F.mono(600), 60 * okk, x0 + w - 60, y0 - h * 0.85 + 70, col('graphite', 1)); }
   const but = fw(l2, /but/i);
-  const up = prog(t, but.start, cons.end + 1.0, ease.inQuart);
+  // the pen does not stop at the plateau: one smooth exponential continuation (leaves the plateau tangentially),
+  // bending on "But" and shooting off the top of the sheet across "consider"
+  const up = t < cons.start ? 0.22 * prog(t, but.start, cons.start, ease.outCubic) : 0.22 + 0.78 * prog(t, cons.start, cons.end + 0.15, ease.inCubic);
   if (up > 0) {
-    const ex = x0 + w, ey = y0 - S_(1) * h * 0.85;
-    const top = ey - up * 2200;
-    c.strokeStyle = col('blood', 1); c.lineWidth = 8;
-    c.beginPath(); c.moveTo(ex - 60, ey + 2); c.quadraticCurveTo(ex, ey, ex + 10, ey - 60); c.lineTo(ex + 22, top); c.stroke();
-    // the tear in the paper follows the pen
-    c.fillStyle = col('ink', clamp(up * 2)); c.beginPath(); c.moveTo(ex + 22, top); c.lineTo(ex + 22 + 30 * up, ey - 80); c.lineTo(ex + 22 + 6, ey - 60); c.closePath(); c.fill();
+    const ex = x0 + w, ey = y0 - S_(1) * h * 0.85, KX = 6;
+    const ept: [number, number][] = [];
+    for (let i = 0; i <= 90; i++) { const q = (i / 90) * up; ept.push([ex + 150 * q, ey - ((Math.exp(KX * q) - 1) / (Math.exp(KX) - 1)) * 2600 - 6 * q]); }
+    strokePts(c, ept, 1, col('blood', 1), 7);
+    const hd = ept[ept.length - 1]!;
+    c.fillStyle = col('blood', 1); c.beginPath(); c.arc(hd[0], hd[1], 10, 0, TAU); c.fill();
   }
   word(s, but, 'BUT', A(62, 300), 110, 380, 230, { sc: slam(but, t, 1.4) });
   word(s, cons, 'CONSIDER.', F.serif(600, true), 170, 960, 230, { sc: slam(cons, t, 1.4) });

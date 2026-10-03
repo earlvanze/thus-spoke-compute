@@ -114,27 +114,43 @@ export const sizeTo = (text: string, fam: string, width: number, max = 999) => M
 export const pulseAt = (t: number, t0: number, hl = 0.12) => (t < t0 ? 0 : Math.pow(0.5, (t - t0) / hl));
 export { mix as mixc, hotK as hot };
 
-// ------------------------------------------------------------------ 2.5D solids (oblique projection: depth goes up-right)
-export const OBL = { x: 0.62, y: -0.42 };
-/** A solid box: front face (x, y, w, h) plus top and right faces of depth d. Colours are CSS strings. */
-export function box(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, d: number, front: string, side: string, top: string, edge?: string, lw = 2) {
-  const dx = d * OBL.x, dy = d * OBL.y;
-  ctx.fillStyle = side; ctx.beginPath(); ctx.moveTo(x + w, y); ctx.lineTo(x + w + dx, y + dy); ctx.lineTo(x + w + dx, y + h + dy); ctx.lineTo(x + w, y + h); ctx.closePath(); ctx.fill();
-  ctx.fillStyle = top; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + dx, y + dy); ctx.lineTo(x + w + dx, y + dy); ctx.lineTo(x + w, y); ctx.closePath(); ctx.fill();
-  ctx.fillStyle = front; ctx.fillRect(x, y, w, h);
-  if (edge) {
-    ctx.strokeStyle = edge; ctx.lineWidth = lw; ctx.strokeRect(x, y, w, h);
-    ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + dx, y + dy); ctx.lineTo(x + w + dx, y + dy); ctx.lineTo(x + w + dx, y + h + dy); ctx.lineTo(x + w, y + h); ctx.moveTo(x + w, y); ctx.lineTo(x + w + dx, y + dy); ctx.stroke();
-  }
+// ------------------------------------------------------------------ solids in one-point perspective
+// Everything recedes toward ONE vanishing point fixed on screen (VP), whatever the camera or local transform: the VP is
+// mapped into the current local coordinates through the inverse canvas transform. Depth d is in local units.
+export const VP = { x: W / 2, y: 430, focal: 1500 };
+export const OBL = { x: 0.62, y: -0.42 }; // kept for callers that still want an oblique offset
+function localVP(ctx: CanvasRenderingContext2D) {
+  const m = ctx.getTransform(), inv = m.inverse();
+  const p = inv.transformPoint(new DOMPoint(VP.x, VP.y));
+  const scale = Math.sqrt(Math.abs(m.a * m.d - m.b * m.c)) || 1;
+  return { x: p.x, y: p.y, scale };
 }
-/** Extruded (solid) type centred on (x, cap-centre y): the side is stacked copies in `side`, then the face. */
+const recede = (d: number, scale: number) => { const ds = Math.max(0, d * scale); return ds / (ds + VP.focal); };
+/** A solid box seen in one-point perspective: front face (x, y, w, h) and the side faces that recede toward the VP. */
+export function box(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, d: number, front: string, side: string, top: string, edge?: string, lw = 2) {
+  const v = localVP(ctx), k = recede(d, v.scale);
+  const F_: [number, number][] = [[x, y], [x + w, y], [x + w, y + h], [x, y + h]];
+  const B = F_.map(([px, py]) => [px + (v.x - px) * k, py + (v.y - py) * k] as [number, number]);
+  // faces: top (0-1), right (1-2), bottom (2-3), left (3-0); the ones facing away fall inside the front and are covered
+  const faces: [number, number, string][] = [[0, 1, top], [1, 2, side], [2, 3, side], [3, 0, side]];
+  for (const [i, j, fill] of faces) {
+    ctx.fillStyle = fill; ctx.beginPath(); ctx.moveTo(F_[i]![0], F_[i]![1]); ctx.lineTo(F_[j]![0], F_[j]![1]); ctx.lineTo(B[j]![0], B[j]![1]); ctx.lineTo(B[i]![0], B[i]![1]); ctx.closePath(); ctx.fill();
+    if (edge) { ctx.strokeStyle = edge; ctx.lineWidth = lw; ctx.stroke(); }
+  }
+  ctx.fillStyle = front; ctx.fillRect(x, y, w, h);
+  if (edge) { ctx.strokeStyle = edge; ctx.lineWidth = lw; ctx.strokeRect(x, y, w, h); }
+}
+/** Solid type extruded toward the vanishing point, centred on (x, cap-centre y). */
 export function solidText(ctx: CanvasRenderingContext2D, text: string, fam: string, size: number, x: number, y: number, depth: number, face: string, side: string, sc = 1) {
   if (sc <= 0.001) return;
-  ctx.save(); ctx.translate(x, y); if (sc !== 1) ctx.scale(sc, sc);
+  const v = localVP(ctx);
+  const n = Math.max(2, Math.min(24, Math.round(depth / 2)));
   setFont(ctx, fam, size); ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
-  const n = Math.max(2, Math.round(depth / 2));
-  ctx.fillStyle = side;
-  for (let i = n; i >= 1; i--) ctx.fillText(text, (depth * OBL.x * i) / n, (CAP * size) / 2 + (depth * OBL.y * i) / n);
-  ctx.fillStyle = face; ctx.fillText(text, 0, (CAP * size) / 2);
-  ctx.restore();
+  for (let i = n; i >= 0; i--) {
+    const k = recede((depth * i) / n, v.scale * sc);
+    ctx.save(); ctx.translate(v.x, v.y); ctx.scale(1 - k, 1 - k); ctx.translate(-v.x, -v.y);
+    ctx.translate(x, y); if (sc !== 1) ctx.scale(sc, sc);
+    ctx.fillStyle = i === 0 ? face : side; ctx.fillText(text, 0, (CAP * size) / 2);
+    ctx.restore();
+  }
 }

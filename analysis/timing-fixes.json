@@ -2,113 +2,15 @@
  "fixes": [
   {
    "line": 0,
-   "words": [
-    [
-     2.24,
-     2.58
-    ],
-    [
-     2.58,
-     3.15
-    ],
-    [
-     3.15,
-     3.6
-    ],
-    [
-     3.6,
-     4.15
-    ],
-    [
-     4.15,
-     4.56
-    ],
-    [
-     4.56,
-     4.86
-    ],
-    [
-     4.86,
-     5.65
-    ],
-    [
-     5.65,
-     7.2
-    ]
-   ],
-   "why": "0:00 whisper put \"So\" 2 s early (caption cue 2.20) (pinned to caption-cue timing from analysis/timing_lite.py)"
+   "word": 0,
+   "start": 2.22,
+   "why": "0:00 whisper started \"So\" at 0.18 s inside the music; speech begins 2.34 s (vocal-band onset)"
   },
   {
-   "line": 1,
-   "words": [
-    [
-     7.26,
-     7.57
-    ],
-    [
-     7.57,
-     9.15
-    ],
-    [
-     9.15,
-     9.37
-    ],
-    [
-     9.37,
-     9.77
-    ],
-    [
-     9.77,
-     10.47
-    ],
-    [
-     10.47,
-     10.93
-    ],
-    [
-     10.93,
-     11.4
-    ],
-    [
-     11.4,
-     11.84
-    ],
-    [
-     11.84,
-     12.96
-    ]
-   ],
-   "why": "intro: whisper ~1.3 s early vs caption cue 7.20 (pinned to caption-cue timing from analysis/timing_lite.py)"
-  },
-  {
-   "line": 2,
-   "words": [
-    [
-     13.03,
-     13.29
-    ],
-    [
-     13.29,
-     14.23
-    ],
-    [
-     14.23,
-     15.25
-    ],
-    [
-     15.25,
-     15.66
-    ],
-    [
-     15.66,
-     17.35
-    ],
-    [
-     17.35,
-     18.36
-    ]
-   ],
-   "why": "intro: whisper ~0.9 s early vs caption cue 13.00 (pinned to caption-cue timing from analysis/timing_lite.py)"
+   "line": 3,
+   "word": 0,
+   "start": 18.55,
+   "why": "0:18 \"Okay.\" onset at 18.54 s (vocal-band onset), whisper had 18.91"
   },
   {
    "line": 4,

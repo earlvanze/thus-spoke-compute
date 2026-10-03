@@ -65,41 +65,69 @@ function wall(s: S) {
 }
 
 // ------------------------------------------------------------------ V2: the wall should get tenure; every flub becomes a post
-function tenure(s: S) {
-  const { t, c } = s;
-  const l1 = ln(s, 0), l2 = ln(s, 1);
-  const ten = fw(l1, /tenure/i), wl = fw(l1, /wall/i), adv = fw(l2, /adventure/i);
-  const sw = prog(t, l2.start - 0.2, l2.start + 0.25, ease.inOutCubic);
-  cam(s, { x: W / 2 + sw * 120, y: H / 2, z: lerp(1, 0.95, sw), r: 0 });
-  // the nameplate on a door: WALL, with a mortarboard
-  const a1 = 1 - 0.85 * sw;
-  const px = 560, py = 560;
-  c.strokeStyle = col('bone', 0.9 * a1); c.lineWidth = 5; c.strokeRect(px - 300, py - 330, 600, 760);
-  c.fillStyle = col('ink2', a1); c.fillRect(px - 220, py - 110, 440, 160); c.strokeRect(px - 220, py - 110, 440, 160);
-  word(s, wl, 'THE WALL', A(100, 900), 70, px, py - 30, { alpha: a1 });
-  const tk = prog(t, ten.start - 0.05, ten.start + 0.4, ease.outBack);
-  if (tk > 0) {
-    // mortarboard: a rhombus + cap + tassel, dropped onto the plate
-    const my = py - 170 - (1 - tk) * 300;
-    c.fillStyle = col('signal', a1); c.beginPath(); c.moveTo(px - 170, my); c.lineTo(px, my - 50); c.lineTo(px + 170, my); c.lineTo(px, my + 50); c.closePath(); c.fill();
-    c.fillRect(px - 80, my, 160, 60); rule(c, px + 120, my, px + 140, my + 110, 1, col('ember', a1), 4);
-    label(s, 'TENURED', F.mono(700), 34, px, py + 120, col('signal', a1 * tk));
+// An actual brick wall (running bond, mortar, per-brick tone, its ends receding in one-point perspective) on a ground line.
+// A brass plaque on it reads THE WALL; on "tenure" a mortarboard drops onto the wall's top and TENURED is engraved.
+// Line 2: post cards get pasted onto the wall one after another, each pinned, until ADVENTURE lands.
+function brickWall(s: S, x0: number, y0: number, x1: number, y1: number) {
+  const { c } = s;
+  box(c, x0, y0, x1 - x0, y1 - y0, 160, col('blood', 1), mix('blood', 'ink', 0.55), mix('blood', 'ash', 0.25), col('ink', 0.5), 1.5);
+  const bw = 120, bh = 46, m = 6;
+  c.save(); c.beginPath(); c.rect(x0, y0, x1 - x0, y1 - y0); c.clip();
+  c.fillStyle = col('graphite', 1); c.fillRect(x0, y0, x1 - x0, y1 - y0); // mortar
+  for (let r = 0; r * (bh + m) < y1 - y0; r++) for (let q = -1; q * (bw + m) < x1 - x0 + bw; q++) {
+    const x = x0 + q * (bw + m) + (r % 2 ? (bw + m) / 2 : 0), y = y0 + r * (bh + m) + m / 2;
+    const tone = hash(r, q, 11);
+    c.fillStyle = mix('blood', tone > 0.5 ? 'ink2' : 'signal', 0.12 + 0.25 * Math.abs(tone - 0.5)); c.fillRect(x, y, bw, bh);
+    c.fillStyle = col('bone', 0.07); c.fillRect(x, y, bw, 4); // lit top edge
+    c.fillStyle = col('ink', 0.25); c.fillRect(x, y + bh - 5, bw, 5); // shadow lip
   }
-  lyric(s, upto(l1, /tenure/i), 300, { x: 1340, width: 900, max: 84, alpha: a1 });
-  word(s, ten, 'TENURE.', F.serif(600, true), 200, 1340, 560, { sc: slam(ten, t, 1.4), alpha: Math.max(0.2, a1) });
-  // line 2: each beat after "flubs" another post card slides in; ADVENTURE is the headline of the last one
-  if (sw > 0) {
-    const fl = fw(l2, /flubs/i);
-    const cards = Math.floor(clamp((t - fl.start) / 0.14, 0, 14));
+  c.restore();
+  rule(c, 0, y1, W, y1, 1, col('graphite', 1), 3); // the ground line
+}
+function tenure(s: S) {
+  const { t, c, g } = s;
+  const l1 = ln(s, 0), l2 = ln(s, 1);
+  const ten = fw(l1, /tenure/i), wl = fw(l1, /wall/i), adv = fw(l2, /adventure/i), fl = fw(l2, /flubs/i);
+  cam(s, { x: W / 2, y: H / 2, z: 1 + 0.03 * prog(t, l1.start, l2.end), r: 0 });
+  const wx0 = 220, wx1 = W - 220, wy0 = 380, wy1 = 900;
+  brickWall(s, wx0, wy0, wx1, wy1);
+  // brass plaque: THE WALL (the sung word), TENURED engraved on "tenure"
+  const px = W / 2, py = 610, pw = 560, ph = 190;
+  c.fillStyle = mix('ember', 'signal', 0.35); c.fillRect(px - pw / 2, py - ph / 2, pw, ph);
+  c.strokeStyle = col('blood', 1); c.lineWidth = 4; c.strokeRect(px - pw / 2 + 10, py - ph / 2 + 10, pw - 20, ph - 20);
+  for (const [sx, sy] of [[-1, -1], [1, -1], [-1, 1], [1, 1]] as const) { c.fillStyle = col('blood', 1); c.beginPath(); c.arc(px + sx * (pw / 2 - 26), py + sy * (ph / 2 - 26), 7, 0, TAU); c.fill(); }
+  word(s, wl, 'THE WALL', A(100, 900), 74, px, py - 22, { base: 'ink', hot: 'blood' });
+  const tk = prog(t, ten.start - 0.05, ten.start + 0.45, ease.outCubic);
+  if (tk > 0) {
+    c.save(); c.beginPath(); c.rect(px - 200, py + 20, 400 * tk, 60); c.clip();
+    label(s, 'TENURED · EST. 2022', F.mono(700), 30, px, py + 50, col('blood', 1)); c.restore();
+    // the mortarboard drops onto the wall's top edge
+    const my = lerp(wy0 - 600, wy0 - 34, ease.outBack(prog(t, ten.start - 0.05, ten.start + 0.35)));
+    c.fillStyle = col('ink', 1); c.beginPath(); c.moveTo(px - 260, my); c.lineTo(px, my - 70); c.lineTo(px + 260, my); c.lineTo(px, my + 70); c.closePath(); c.fill();
+    c.strokeStyle = col('graphite', 1); c.lineWidth = 3; c.stroke();
+    c.fillStyle = col('ink2', 1); c.fillRect(px - 120, my + 4, 240, 34);
+    rule(c, px, my, px + 190, my + 30, 1, col('signal', 1), 5); rule(c, px + 190, my + 30, px + 196, my + 130, 1, col('signal', 1), 5);
+    g.fillStyle = col('ember', 0.5); g.fillRect(px + 186, my + 100, 20, 36);
+  }
+  const a1 = 1 - prog(t, l2.start - 0.2, l2.start + 0.2);
+  lyric(s, upto(l1, /tenure/i), 150, { width: 1200, max: 80, alpha: a1, x: 820 });
+  word(s, ten, 'tenure.', F.serif(600, true), 150, 1560, 140, { sc: slam(ten, t, 1.3), alpha: a1 });
+  // line 2: post cards pasted onto the wall, each pinned; ADVENTURE is the last headline
+  if (t > l2.start - 0.3) {
+    const cards = Math.floor(clamp((t - fl.start) / 0.12 + 1, 0, 16));
     for (let i = 0; i < cards; i++) {
-      const x = 1000 + (i % 7) * 70 + 120, y = 380 + i * 34;
-      c.fillStyle = col('bone', 0.95); c.fillRect(x, y, 600, 220); c.strokeStyle = col('graphite', 1); c.lineWidth = 2; c.strokeRect(x, y, 600, 220);
-      setFont(c, F.mono(700), 22); c.fillStyle = col('ink', 1); c.textAlign = 'left'; c.fillText(`NEW POST · #${(i + 1) * 37}`, x + 24, y + 44);
-      for (let k = 0; k < 3; k++) { c.fillStyle = col('graphite', 0.3); c.fillRect(x + 24, y + 80 + k * 34, 480 - k * 90, 14); }
+      const cx = wx0 + 140 + hash(i, 1) * (wx1 - wx0 - 280), cy = wy0 + 90 + hash(i, 2) * (wy1 - wy0 - 200);
+      if (Math.abs(cx - px) < pw / 2 + 120 && Math.abs(cy - py) < ph / 2 + 80) continue; // keep the plaque readable
+      const k = prog(t, fl.start + i * 0.12, fl.start + i * 0.12 + 0.15, ease.outBack);
+      c.save(); c.translate(cx, cy); c.rotate((hash(i, 3) - 0.5) * 0.3); c.scale(k, k);
+      c.fillStyle = col('bone', 0.97); c.fillRect(-120, -80, 240, 160);
+      setFont(c, F.mono(700), 18); c.fillStyle = col('ink', 1); c.textAlign = 'left'; c.fillText(`NEW POST #${(i + 1) * 37}`, -104, -46);
+      for (let q = 0; q < 3; q++) { c.fillStyle = col('graphite', 0.35); c.fillRect(-104, -20 + q * 30, 200 - q * 50, 12); }
+      c.fillStyle = col('signal', 1); c.beginPath(); c.arc(0, -80, 9, 0, TAU); c.fill();
+      c.restore();
     }
-    lyric(s, upto(l2, /flubs/i).concat([fl]), 220, { x: 760, width: 1200, max: 90 });
-    lyric(s, from(l2, /becomes/i, /adventure/i), 860, { x: 560, width: 700, max: 70, anno: false });
-    word(s, adv, 'ADVENTURE', A(125, 900), 120, 560, 980, { sc: slam(adv, t, 1.6) });
+    lyric(s, upto(l2, /adventure/i), 150, { width: 1500, max: 76, alpha: 1 - a1 });
+    word(s, adv, 'ADVENTURE', A(125, 900), sizeTo('ADVENTURE', A(125, 900), 1100, 150), W / 2, 990, { sc: slam(adv, t, 1.5) });
   }
 }
 
