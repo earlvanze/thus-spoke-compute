@@ -11,6 +11,7 @@ import { clean, snapCam } from '../scenes/kit';
 import { row } from '../scenes/typeset';
 import { hash, mulberry32, noise1 } from '../engine/util';
 import { BRAND } from './brand';
+import { textPath2D, textPoints } from '../engine/type';
 
 const nOf = (s: S) => Math.max(1, Math.min(3, s.sh.o.n ?? 1));
 /** Glow copy of a stroke (only signal/ember/acid go on the glow layer). */
@@ -500,39 +501,74 @@ function tractor(s: S, x: number, y: number, sz: number, a: number, hot: number,
   if (textOn) { const f = A(100, 900), fs = sizeTo('TRACTOR', f, 128, 28); setFont(c, f, fs); c.fillStyle = col('ink', 1); c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('TRACTOR', -3, -42); }
   c.restore();
 }
-// YOU MODELED A TRACTOR, NOW THE TRACTORS BUILD THE FLEET: one becomes many. Doublings land on the sung words
-// (tractors / build / the / fleet) and then on every beat; the fleet lives in its own band so no type overlaps it.
+// YOU MODELED A TRACTOR, NOW THE TRACTORS BUILD THE FLEET: one becomes many, and on "fleet" the tractors drive into
+// formation and SPELL the word — FLEET made of tractors. Doublings land on the sung words, then keep coming on the beat,
+// filling the letters until they are solid with machines.
+const fleetSlotCache = new Map<string, { x: number; y: number }[]>();
+function fleetSlots(fam: string, size: number, step: number) {
+  const key = `${fam}|${size}|${step}`;
+  let pts = fleetSlotCache.get(key);
+  if (!pts) {
+    const raw = textPoints('FLEET', fam, size, step / 4, 7), wd = measure('FLEET', fam, size);
+    // snap to a tidy parking grid (one bay per cell), centred on (0, cap-centre), shuffled so all letters fill evenly
+    const seen = new Set<string>(), grid: { x: number; y: number; h: number }[] = [];
+    for (const p of raw) { const gx = Math.round(p.x / step), gy = Math.round(p.y / (step * 0.8)); const k = gx + ',' + gy; if (seen.has(k)) continue; seen.add(k); grid.push({ x: gx * step - wd / 2, y: gy * step * 0.8 + (CAP * size) / 2, h: hash(gx, gy, 91) }); }
+    pts = grid.sort((a, b) => a.h - b.h).map(({ x, y }) => ({ x, y }));
+    fleetSlotCache.set(key, pts);
+  }
+  return pts;
+}
 function fleet(s: S) {
   const { t, c } = s;
   const l = ln(s);
   const n = nOf(s);
   const tr = l.words.find((w) => /^tractor$/i.test(clean(w.w))) ?? fw(l, /tractor/i), trs = fw(l, /tractors/i), flt = l.words[l.words.length - 1]!;
   const steps = l.words.filter((w) => w.start >= trs.start).map((w) => w.start);
-  const beats = s.au.beats.filter((b) => b > flt.start + 0.1);
-  const all = [...steps, ...beats].slice(0, 6 + n);
+  // after "fleet" the doubling keeps going every half-beat until the letters are full
+  const beats = s.au.beats.flatMap((b, i, B) => [b, (b + (B[i + 1] ?? b + 0.4)) / 2]).filter((b) => b > flt.start + 0.15);
+  const all = [...steps, ...beats].slice(0, 8 + n);
   let G = 0; for (const st of all) if (t >= st - 0.04) G++;
   const count = Math.pow(2, G);
-  const born = G > 0 ? pulseAt(t, all[G - 1]!, 0.18) : 0;
+  const bornAt = (i: number) => { let g = 0; while (Math.pow(2, g) <= i) g++; return all[g - 1] ?? 0; }; // when tractor i appeared
   cam(s, { x: W / 2, y: H / 2, z: 1, r: 0 });
-  // band: y 430..870 for machines; rows of text above, FLEET below
   const bx0 = 140, bx1 = W - 140, by0 = 440, by1 = 860;
+  const gridPos = (i: number, cnt: number) => {
+    const cellW = 200, cellH = 150, aspect = (bx1 - bx0) / (by1 - by0);
+    const per = Math.max(1, Math.ceil(Math.sqrt(cnt * aspect * cellH / cellW))), rowsN = Math.ceil(cnt / per);
+    const scl = Math.min(3.0, (bx1 - bx0) / (per * cellW), (by1 - by0) / (rowsN * cellH));
+    const q = i % per, r = Math.floor(i / per);
+    return { x: W / 2 + (q - (per - 1) / 2) * cellW * scl, y: (by0 + by1) / 2 + (r - (rowsN - 1) / 2) * cellH * scl + 50 * scl, sc: scl * 0.9 };
+  };
+  // the letters: condensed heavy FLEET spanning the band; one tractor per slot
+  const lfam = A(62, 900), lsize = sizeTo('FLEET', lfam, 1560, 620), step = 44;
+  const slots = fleetSlots(lfam, lsize, step), LX = W / 2, LY = (by0 + by1) / 2 + 20, tsc = (step / 200) * 1.05;
+  const form = prog(t, flt.start - 0.08, flt.start + 0.55, ease.inOutCubic);
+  let G0 = 0; for (const st of all) if (st < flt.start - 0.04) G0++;
+  const count0 = Math.pow(2, G0); // how many tractors existed when "fleet" was sung
+  // the letters' bays, painted on the ground like parking lines: the word reads before every bay is filled
+  if (form > 0) {
+    c.save(); c.globalAlpha = 0.55 * form; c.strokeStyle = col('graphite', 1); c.lineWidth = 3; c.setLineDash([14, 10]);
+    c.stroke(textPath2D('FLEET', lfam, lsize, LX - measure('FLEET', lfam, lsize) / 2, LY + (CAP * lsize) / 2)); c.restore();
+  }
   if (G === 0) tractor(s, W / 2, 780, 3.0, prog(t, tr.start - 0.05, tr.start + 0.25, ease.outBack), pulseAt(t, tr.start, 0.3), true);
   else {
-    const cellW = 200, cellH = 150, aspect = (bx1 - bx0) / (by1 - by0);
-    const per = Math.max(1, Math.ceil(Math.sqrt(count * aspect * cellH / cellW)));
-    const rowsN = Math.ceil(count / per);
-    const scl = Math.min(3.0, (bx1 - bx0) / (per * cellW), (by1 - by0) / (rowsN * cellH));
-    const showText = scl * 0.9 > 0.55;
-    for (let i = 0; i < count; i++) {
-      const q = i % per, r = Math.floor(i / per);
-      const x = W / 2 + (q - (per - 1) / 2) * cellW * scl, y = (by0 + by1) / 2 + (r - (rowsN - 1) / 2) * cellH * scl + 50 * scl;
-      tractor(s, x, y, scl * 0.9, 1, i >= count / 2 ? born : 0, showText);
+    const shown = form > 0 ? Math.min(count, slots.length) : count;
+    for (let i = 0; i < shown; i++) {
+      const born = pulseAt(t, bornAt(i), 0.18);
+      if (form <= 0 || i >= slots.length) { const p = gridPos(i, count); tractor(s, p.x, p.y, p.sc, 1, i >= count / 2 ? born : 0, p.sc > 0.55); continue; }
+      const sl = slots[i]!, tx = LX + sl.x, ty = LY + sl.y + 14 * tsc;
+      if (i < count0) { // drive from the grid into its letter slot (a small arc, scale down to letter size)
+        const p = gridPos(i, count0), e = clamp(form * 1.15 - (hash(i, 5) * 0.15));
+        const x = lerp(p.x, tx, e), y = lerp(p.y, ty, e) - Math.sin(e * Math.PI) * 60, sc = lerp(p.sc, tsc, e);
+        tractor(s, x, y, sc, 1, pulseAt(t, flt.start, 0.4), sc > 0.55);
+      } else tractor(s, tx, ty, tsc * ease.outBack(prog(t, bornAt(i) - 0.04, bornAt(i) + 0.2)), 1, born, false);
     }
   }
   lyric(s, upto(l, /now/i), 170, { width: 1300, max: 100 });
   lyric(s, from(l, /now/i).slice(0, -1), 330, { width: 1100, max: 80, anno: false });
-  word(s, flt, 'FLEET.', A(125, 900), sizeTo('FLEET.', A(125, 900), 700, 170), W / 2, 965, { sc: slam(flt, t, 1.8) });
-  note(c, `×${count.toLocaleString('en-US')}`, W - 150, 1000, G > 0 ? 1 : 0, 34, 'signal', 'right');
+  // the sung word: set small under the formation while the tractors spell it
+  word(s, flt, 'FLEET.', A(125, 900), sizeTo('FLEET.', A(125, 900), 420, 80), W / 2, 980, { sc: slam(flt, t, 1.6) });
+  note(c, `×${Math.min(count, form > 0 ? slots.length : count).toLocaleString('en-US')} TRACTORS`, W - 150, 1000, G > 0 ? 1 : 0, 30, 'signal', 'right');
 }
 
 // YOUR BOTTLENECK'S A SPEED BUMP ON A HYPERBOLIC ROUTE: the camera drives the acid curve; the bump is tiny
@@ -603,27 +639,47 @@ function compound(s: S) {
   const all = sh.lines.flatMap((l) => l.words);
   const n = nOf(s);
   const ref = all.find((w) => /referee/i.test(w.w)) ?? all[0]!;
-  const comp = all.find((w) => /compound/i.test(w.w)) ?? all[all.length - 2]!;
-  const rate = all[all.length - 1]!;
-  const up = prog(t, comp.start - 0.2, sh.end, ease.inQuad);
-  cam(s, { x: W / 2 + 200 * up, y: H / 2 - 900 * up, z: lerp(1, 0.75, up), r: -0.04 * up });
-  const pts: [number, number][] = []; for (let i = 0; i <= 120; i++) { const u = i / 120; pts.push([150 + u * 1700, 960 - (Math.exp(u * 4.2) - 1) / (Math.exp(4.2) - 1) * 2300]); }
-  const k = prog(t, sh.start, rate.end + 0.3, ease.inOutQuad);
-  strokePts(c, pts, k, col('acid', 1), 7); glowPts(s, pts, k, 'acid', 20, 0.45);
-  for (let d = 1; d <= 6 + 2 * n; d++) {
-    const u = Math.log(1 + (Math.pow(2, d) / Math.pow(2, 6 + 2 * n)) * (Math.exp(4.2) - 1)) / 4.2;
-    if (u > k) break;
+  // FUSE STYLE: the curve is a fuse cord; the line's words sit ON it, in order; a spark burns along it word by word
+  // (lit behind, dashed cord ahead) and the camera rides the spark. The referees are left standing at its start.
+  const X0 = 300, Y0 = 940, CW = 3000, CH = 1500, KX = 3.2;
+  const cy = (u: number) => Y0 - CH * (Math.exp(KX * u) - 1) / (Math.exp(KX) - 1);
+  const pts: [number, number][] = []; for (let i = 0; i <= 240; i++) { const u = i / 240; pts.push([X0 + CW * u, cy(u)]); }
+  // lay the words along the cord by their widths (arc-length fractions)
+  const fams = all.map((w) => (/compound|rate|curve|wait/i.test(w.w) ? A(100, 900) : /referee/i.test(w.w) ? A(87, 900) : A(62, 500)));
+  const szs = all.map((w) => (/compound|rate|curve|wait/i.test(w.w) ? 110 : /referee/i.test(w.w) ? 84 : 60));
+  const wds = all.map((w, i) => measure(txt(w), fams[i]!, szs[i]!) + 46);
+  const tot = wds.reduce((x, y) => x + y, 0);
+  const us: number[] = []; let acc0 = 0; for (const wd of wds) { us.push(0.06 + 0.88 * (acc0 + wd / 2) / tot); acc0 += wd; }
+  const pos = us.map((u) => along(pts, u));
+  // the spark: at the current word, travelling through it over its sung duration, then on to the next
+  let cur = -1; all.forEach((w, i) => { if (t >= w.start) cur = i; });
+  const lit = cur < 0 ? 0.02 * prog(t, sh.start, all[0]!.start) : lerp(us[cur]! - wds[cur]! / tot * 0.44, us[cur]! + wds[cur]! / tot * 0.44, prog(t, all[cur]!.start, Math.max(all[cur]!.start + 0.12, all[cur]!.end), ease.linear));
+  const spark = along(pts, Math.max(0.001, lit));
+  const times = [sh.start, ...all.map((w) => w.start - 0.07)];
+  const targets = [{ x: pos[0]!.x + 120, y: pos[0]!.y - 120, z: 1, r: 0 }, ...pos.map((p) => ({ x: p.x + 40, y: p.y - 170, z: 0.86 + 0.04 * (n - 1), r: -clamp(p.a, -0.6, 0.6) * 0.3 }))];
+  cam(s, snapCam(t, times, targets, 0.38));
+  // cord ahead (dashed, unlit), burnt-in cord behind (acid + glow)
+  c.save(); c.setLineDash([16, 12]); strokePts(c, pts, 1, col('graphite', 0.9), 5); c.restore();
+  strokePts(c, pts, lit, col('acid', 1), 7); strokePts(g, pts, lit, col('acid', 0.45), 20);
+  // doublings tick along the burnt part
+  for (let d = 1; d <= 8 + 2 * n; d++) {
+    const u = Math.log(1 + (Math.pow(2, d) / Math.pow(2, 8 + 2 * n)) * (Math.exp(KX) - 1)) / KX;
+    if (u > lit) break;
     const p = along(pts, u);
-    note(c, `×${Math.pow(2, d)}`, p.x - 20, p.y, 0.9, 26, 'signal', 'right');
-    g.fillStyle = col('ember', 0.6); g.beginPath(); g.arc(p.x, p.y, 10, 0, TAU); g.fill();
+    note(c, `×${Math.pow(2, d)}`, p.x + 18, p.y + 40, 0.85, 24, 'signal', 'left');
   }
-  referees(s, ref, 1);
-  const ci = all.findIndex((w) => /^it$/i.test(clean(w.w)) || /compound/i.test(w.w));
-  const head = all.slice(0, ci > 0 ? ci : Math.ceil(all.length / 2));
-  const tail = all.slice(head.length);
-  lyric(s, head, 240, { width: 1500, max: 110, alpha: 1 - prog(up, 0.08, 0.25) });
-  const ty = H / 2 - 900 * up + 220 / lerp(1, 0.75, up), tx = W / 2 + 200 * up - 180;
-  if (tail.length) row(s, tail, A(125, 900), 1300 / lerp(1, 0.75, up), 190 / lerp(1, 0.75, up), tx, ty, { from: 1.6 });
+  // the spark head: an ember with flying sparks
+  g.fillStyle = col('ember', 0.95); g.beginPath(); g.arc(spark.x, spark.y, 24, 0, TAU); g.fill();
+  for (let i = 0; i < 12; i++) { const a2 = hash(i, Math.floor(t * 60)) * TAU, r2 = 20 + hash(i, 3, Math.floor(t * 60)) * 60; rule(g, spark.x, spark.y, spark.x + Math.cos(a2) * r2, spark.y + Math.sin(a2) * r2, 1, col('signal', 0.8), 3); }
+  c.fillStyle = col('ember', 1); c.beginPath(); c.arc(spark.x, spark.y, 9, 0, TAU); c.fill();
+  // the words ride the cord, rotated with it, sitting just above it
+  all.forEach((w, i) => {
+    if (t < w.start - 0.45) return;
+    const p = pos[i]!, rot = clamp(p.a, -0.75, 0.75);
+    word(s, w, txt(w), fams[i]!, szs[i]!, p.x + Math.sin(rot) * (szs[i]! * 0.55 + 14), p.y - Math.cos(rot) * (szs[i]! * 0.55 + 14), { rot, sc: slam(w, t, 1.5), ghost: 0.14 });
+  });
+  // the referees, left on the ground at the start of the fuse
+  c.save(); c.translate(X0 - 260 - 260, Y0 - 1000); referees(s, ref, 1); c.restore();
 }
 
 /** Three small referees with a flag at the foot of the curve (scale k keeps them readable when the camera zooms out). */

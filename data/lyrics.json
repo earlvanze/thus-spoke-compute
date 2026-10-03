@@ -825,47 +825,47 @@
      "w": "concludes",
      "start": 64.25,
      "conf": 1.0,
-     "end": 64.56
+     "end": 65.15
     },
     {
      "w": "go",
-     "start": 64.57,
+     "start": 65.17,
      "conf": 0.0,
-     "end": 64.88
+     "end": 65.38
     },
     {
      "w": "put",
-     "start": 64.89,
+     "start": 65.39,
      "conf": 1.0,
-     "end": 65.16
+     "end": 65.57
     },
     {
      "w": "away",
-     "start": 65.17,
+     "start": 65.58,
      "conf": 1.0,
-     "end": 65.54
+     "end": 65.85
     },
     {
      "w": "the",
-     "start": 65.55,
+     "start": 65.86,
      "conf": 1.0,
-     "end": 65.82
+     "end": 66.25
     },
     {
      "w": "party",
-     "start": 65.83,
+     "start": 66.26,
      "conf": 1.0,
-     "end": 66.29
+     "end": 66.69
     },
     {
      "w": "hats",
-     "start": 66.3,
+     "start": 66.7,
      "conf": 1.0,
-     "end": 66.61
+     "end": 66.93
     }
    ],
    "start": 63.79,
-   "end": 66.61
+   "end": 66.93
   },
   {
    "text": "Permits take a year, the grid upgrade takes ten,",

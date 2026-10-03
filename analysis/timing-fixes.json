@@ -439,6 +439,52 @@
     ]
    ],
    "why": "outro \"Cute.\" ~2.6 s early (pinned to caption-cue timing from analysis/timing_lite.py)"
+  },
+  {
+   "line": 13,
+   "words": [
+    [
+     63.79,
+     63.87
+    ],
+    [
+     63.88,
+     63.94
+    ],
+    [
+     63.93,
+     64.24
+    ],
+    [
+     64.25,
+     65.15
+    ],
+    [
+     65.17,
+     65.38
+    ],
+    [
+     65.39,
+     65.57
+    ],
+    [
+     65.58,
+     65.85
+    ],
+    [
+     65.86,
+     66.25
+    ],
+    [
+     66.26,
+     66.69
+    ],
+    [
+     66.7,
+     66.93
+    ]
+   ],
+   "why": "1:05 \"go put away the party hats\": whisper put \"go\" at 64.57 s inside the held \"concludes\"; the remaining words pinned to vocal-band onsets 65.17 / 65.39 / 65.58 / 65.86 / 66.26 / 66.70 s"
   }
  ]
 }
