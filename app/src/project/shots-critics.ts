@@ -7,7 +7,7 @@ import {
 box,
 } from './common';
 import { cam } from '../scenes/shots';
-import { clean } from '../scenes/kit';
+import { clean, lerpCam, snapCam } from '../scenes/kit';
 import { hash, noise1 } from '../engine/util';
 
 /** Fixed screen camera (composition coords = screen coords) with a slow push. */
@@ -44,11 +44,11 @@ function wall(s: S) {
   }
   // the gold medal on "gold"
   const gk = prog(t, gold.start - 0.05, gold.start + 0.35, ease.outBack);
-  if (gk > 0) {
+  if (gk > 0.001) {
     // hung on the wall's face from a nail in the top course (y 400), right of the break-through, swinging as it lands
     const fall = 1 - boom, nx = 1650, ny = 400, swing = Math.sin((t - gold.start) * 9) * 0.25 * pulseAt(t, gold.start, 0.5);
     const mx = nx + Math.sin(swing) * 210, my = ny + Math.cos(swing) * 210 - (1 - gk) * 260 + boom * boom * 900;
-    if (fall > 0.02) {
+    if (fall > 0.02 && gk > 0.001) {
       c.fillStyle = col('bone', 1); c.beginPath(); c.arc(nx, ny, 9, 0, TAU); c.fill();
       c.strokeStyle = col('signal', 1); c.lineWidth = 10; c.beginPath(); c.moveTo(nx - 6, ny); c.lineTo(mx - 40, my - 70); c.moveTo(nx + 6, ny); c.lineTo(mx + 40, my - 70); c.stroke();
       c.fillStyle = col('signal', 1); c.beginPath(); c.arc(mx, my, 92 * gk, 0, TAU); c.fill();
@@ -60,7 +60,7 @@ function wall(s: S) {
   }
   // line 2 set at the top; THROUGH punches through the hole
   lyric(s, l2.words.slice(0, -1), 150, { width: 1600, max: 74, alpha: t > l2.start - 0.4 ? 1 : 0 });
-  word(s, thr, 'THROUGH', A(125, 900), 260 * lerp(0.3, 1, boom), W / 2, 520, { sc: slam(thr, t, 2.4) });
+  if (t >= brk.start - 0.04) word(s, thr, 'THROUGH', A(125, 900), 260 * lerp(0.35, 1, boom), W / 2, 520, { ghost: 1, sc: t >= thr.start - 0.06 ? slam(thr, t, 1.6) : 1 });
   s.post.shake = [noise1(t * 60, 1) * 20 * pulseAt(t, brk.start, 0.12), noise1(t * 60, 2) * 20 * pulseAt(t, brk.start, 0.12)];
 }
 
@@ -98,7 +98,7 @@ function tenure(s: S) {
   for (const [sx, sy] of [[-1, -1], [1, -1], [-1, 1], [1, 1]] as const) { c.fillStyle = col('blood', 1); c.beginPath(); c.arc(px + sx * (pw / 2 - 26), py + sy * (ph / 2 - 26), 7, 0, TAU); c.fill(); }
   word(s, wl, 'THE WALL', A(100, 900), 74, px, py - 22, { base: 'ink', hot: 'blood' });
   const tk = prog(t, ten.start - 0.05, ten.start + 0.45, ease.outCubic);
-  if (tk > 0) {
+  if (tk > 0.001) {
     c.save(); c.beginPath(); c.rect(px - 200, py + 20, 400 * tk, 60); c.clip();
     label(s, 'TENURED · EST. 2022', F.mono(700), 30, px, py + 50, col('blood', 1)); c.restore();
     // the mortarboard drops onto the wall's top edge
@@ -150,7 +150,7 @@ function stoppedClock(s: S) {
   rule(c, cx, cy, cx + Math.cos(ha) * R * 0.5, cy + Math.sin(ha) * R * 0.5, 1, col('bone', 1), 14);
   rule(c, cx, cy, cx + Math.cos(ma) * R * 0.8, cy + Math.sin(ma) * R * 0.8, 1, col('bone', 1), 8);
   const ck = prog(t, tw.start, tw.start + 0.3, ease.outBack);
-  if (ck > 0) { label(s, '✓ 10:10', F.mono(700), 40 * ck, cx, cy + 160, col('signal', 1)); label(s, '✓ 22:10', F.mono(700), 40 * ck, cx, cy + 210, col('signal', 1)); }
+  if (ck > 0.001) { label(s, '✓ 10:10', F.mono(700), 40 * ck, cx, cy + 160, col('signal', 1)); label(s, '✓ 22:10', F.mono(700), 40 * ck, cx, cy + 210, col('signal', 1)); }
   // lines on the right
   { const hi = l1.words.findIndex((w) => /^he$/i.test(clean(w.w))); const a = hi > 0 ? hi : 5; lyric(s, l1.words.slice(0, a), 220, { x: 1400, width: 820, max: 96, alpha: 1 - 0.7 * sw }); lyric(s, l1.words.slice(a), 360, { x: 1400, width: 820, max: 96, alpha: 1 - 0.7 * sw, anno: false }); }
   if (sw > 0) {
@@ -185,7 +185,7 @@ function offramp(s: S) {
   const rk = prog(t, off.start - 0.15, off.start + 0.5, ease.outCubic);
   const ramp: [number, number][] = [], rampIn: [number, number][] = [];
   for (let i = 0; i <= 30; i++) { const z = 1 - i / 30 * 0.72; const a = P(1, z), b = P(1.6, z); const bend = Math.pow(i / 30, 2) * 900; ramp.push([b.x + bend, b.y - bend * 0.08]); rampIn.push([a.x + bend * 0.85, a.y - bend * 0.07]); }
-  if (rk > 0) {
+  if (rk > 0.001) {
     c.globalAlpha = rk; c.fillStyle = col('ink2', 1); c.beginPath(); ramp.forEach(([x, y], i) => (i ? c.lineTo(x, y) : c.moveTo(x, y))); for (let i = rampIn.length - 1; i >= 0; i--) c.lineTo(rampIn[i]![0], rampIn[i]![1]); c.closePath(); c.fill(); c.globalAlpha = 1;
     strokePts(c, ramp, rk, col('signal', 0.9), 5); strokePts(g, ramp, rk, col('ember', 0.3), 12);
     // gore chevrons where the ramp splits
@@ -200,7 +200,7 @@ function offramp(s: S) {
   }
   // overhead gantry with the sign (2.5D boxes): EXIT → OFF-RAMP / NOT THE ROAD
   const sk = prog(t, l1.start - 0.1, l1.start + 0.35, ease.outBack);
-  if (sk > 0) {
+  if (sk > 0.001) {
     const gz = 0.55, gl = P(-1.15, gz), gr = P(1.75, gz), gy = gl.y - 560 * Math.pow(gz, 1.8) - 90;
     box(c, gl.x - 10, gy, 20, gl.y - gy, 12, col('graphite', 1), col('ink2', 1), col('ash', 0.5));
     box(c, gr.x - 10, gy, 20, gr.y - gy, 12, col('graphite', 1), col('ink2', 1), col('ash', 0.5));
@@ -305,7 +305,7 @@ function cat(s: S) {
   catArt(s, 520, 700, 1.25, prog(t, ct.start - 0.1, ct.start + 0.4, ease.outCubic), blink);
   // the badge, clipped on when hired
   const hk = prog(t, hire.start, hire.start + 0.35, ease.outBack);
-  if (hk > 0) { rule(c, 470, 640, 520, 760, hk, col('signal', 1), 4); rule(c, 570, 640, 520, 760, hk, col('signal', 1), 4); c.fillStyle = col('signal', 1); c.fillRect(470, 760, 100 * hk, 70 * hk); label(s, 'STAFF', F.mono(700), 22 * hk, 520, 795, col('ink', 1)); }
+  if (hk > 0.001) { rule(c, 470, 640, 520, 760, hk, col('signal', 1), 4); rule(c, 570, 640, 520, 760, hk, col('signal', 1), 4); c.fillStyle = col('signal', 1); c.fillRect(470, 760, 100 * hk, 70 * hk); label(s, 'STAFF', F.mono(700), 22 * hk, 520, 795, col('ink', 1)); }
   stamp(s, 'HIRED', 820, 420, hire.start + 0.15, 70, 0.14, 'signal');
   const a1 = 1 - prog(t, l2.start - 0.2, l2.start + 0.2);
   lyric(s, l1.words, 170, { width: 1600, max: 80, alpha: Math.max(0.15, a1) });
@@ -392,7 +392,7 @@ function rails(s: S) {
   });
   // a top hat for the tycoons — it fades; the tracks remain
   const tk = prog(t, tyc.start, tyc.start + 0.3, ease.outBack) * (1 - prog(t, tyc.end + 0.1, tyc.end + 1.2));
-  if (tk > 0) { c.fillStyle = col('bone', tk); c.fillRect(vx - 60, hy - 170, 120, 110); c.fillRect(vx - 100, hy - 66, 200, 16); }
+  if (tk > 0.001) { c.fillStyle = col('bone', tk); c.fillRect(vx - 60, hy - 170, 120, 110); c.fillRect(vx - 100, hy - 66, 200, 16); }
   if (t > bust.start) note(c, '1873 · 1893 · PANIC', 150, 140, prog(t, bust.start, bust.start + 0.3), 22, 'ash');
   // line 2: datacentre blocks rise along both sides of the line, lit windows; LANDING SOON blinks
   if (t > l2.start - 0.2) {
@@ -495,7 +495,7 @@ function swarm(s: S) {
     if (ek) label(s, '=', A(100, 900), 300, 760, 470, col('ember', 0.4 * pulseAt(t, eq.start, 0.3)), g);
     label(s, 'NP', A(125, 900), 300, 1200, 470, col('bone', in2));
     const vk = prog(t, vault.start - 0.1, vault.start + 0.3, ease.outBack), open = prog(t, storm.start - 0.1, storm.start + 0.5, ease.outCubic);
-    if (vk > 0) {
+    if (vk > 0.001) {
       const vx = 1540, vy = 640;
       c.strokeStyle = col('bone', 0.9); c.lineWidth = 8; c.beginPath(); c.arc(vx, vy, 170 * vk, 0, TAU); c.stroke();
       c.save(); c.translate(vx - 170 * open, vy); c.scale(1 - 0.85 * open, 1);
@@ -537,7 +537,7 @@ function lean(s: S) {
     });
     lyric(s, l2.words, 170, { width: 1600, max: 80 });
     const rk = prog(t, kid.start, kid.start + 0.4, ease.outBack);
-    if (rk > 0) stamp(s, 'REFEREE: NOTHING TO ADD', 1250, 960, kid.start, 44, -0.06, 'signal');
+    if (rk > 0.001) stamp(s, 'REFEREE: NOTHING TO ADD', 1250, 960, kid.start, 44, -0.06, 'signal');
     void g;
   }
   void sh;
@@ -675,27 +675,62 @@ function rope(s: S) {
     word(s, fab, 'FAB', A(125, 900), 140, wx, wy + R + 110, {});
     // ballot box
     const vk = prog(t, vote.start - 0.1, vote.start + 0.3, ease.outBack);
-    if (vk > 0) { c.strokeStyle = col('bone', 0.9); c.lineWidth = 5; c.strokeRect(1300, 560, 340 * vk, 280); c.fillStyle = col('ink', 1); c.fillRect(1380, 548, 180 * vk, 22); word(s, vote, 'VOTE', A(100, 900), 90, 1470, 720, {}); rule(c, 1280, 560, 1660, 860, prog(t, vote.start + 0.15, vote.start + 0.45, ease.outExpo), col('signal', 1), 10); }
+    if (vk > 0.001) { c.strokeStyle = col('bone', 0.9); c.lineWidth = 5; c.strokeRect(1300, 560, 340 * vk, 280); c.fillStyle = col('ink', 1); c.fillRect(1380, 548, 180 * vk, 22); word(s, vote, 'VOTE', A(100, 900), 90, 1470, 720, {}); rule(c, 1280, 560, 1660, 860, prog(t, vote.start + 0.15, vote.start + 0.45, ease.outExpo), col('signal', 1), 10); }
     lyric(s, l1.words.slice(0, -1), 180, { width: 1600, max: 74 });
   }
-  // panel B: a rope slung between ANIMAL and OVERMAN; the line's words walk it; then a price tag swings on
+  // panel B: an actual rope (twisted strands) slung between ANIMAL and OVERMAN. Fuse style: the words sit ON the rope, a
+  // spark burns along it word by word, the camera rides it zoomed in — then pulls back before "out here pricing rope" to
+  // show the whole span, and a price tag swings onto it.
   {
     const oy = H;
-    const ax = 220, bx = W - 220, py = oy + 420, sag = 260;
-    const rk = prog(t, zar.start - 0.1, zar.start + 0.5, ease.outCubic);
-    const pts: [number, number][] = []; for (let i = 0; i <= 60; i++) { const u = i / 60; pts.push([lerp(ax, bx, u), py + sag * 4 * u * (1 - u)]); }
-    strokePts(c, pts, rk, col('bone', 0.95), 8);
-    for (const [x, lab] of [[ax, 'ANIMAL'], [bx, 'OVERMAN']] as const) { rule(c, x, py - 40, x, oy + 980, rk, col('graphite', 1), 12); note(c, lab, x, py - 60, rk, 24, 'ash', 'center'); }
+    const ax = 170, bx = W - 170, py = oy + 360, sag = 320;
+    const pts: [number, number][] = []; for (let i = 0; i <= 200; i++) { const u = i / 200; pts.push([lerp(ax, bx, u), py + sag * 4 * u * (1 - u)]); }
     const ws = l2.words;
+    const outW = ws.find((w) => /^out$/i.test(clean(w.w))) ?? ws[Math.max(0, ws.length - 4)]!;
     const bigs = ws.map((w) => /rope|zarathustra|man|pricing/i.test(w.w));
-    const wds = ws.map((w, i) => measure(txt(w), A(bigs[i] ? 100 : 62, bigs[i] ? 900 : 500), bigs[i] ? 60 : 40) + 64);
-    const tot = wds.reduce((a, b) => a + b, 0); let acc0 = 0;
+    const fams = ws.map((_, i) => A(bigs[i] ? 100 : 62, bigs[i] ? 900 : 500)), szs = ws.map((_, i) => (bigs[i] ? 46 : 30));
+    const wds = ws.map((w, i) => measure(txt(w), fams[i]!, szs[i]!) + 26);
+    const tot = wds.reduce((x, y) => x + y, 0); const us: number[] = []; let acc0 = 0;
+    for (const wd of wds) { us.push(0.05 + 0.82 * (acc0 + wd / 2) / tot); acc0 += wd; }
+    const pos = us.map((u) => along(pts, u));
+    let cur = -1; ws.forEach((w, i) => { if (t >= w.start) cur = i; });
+    const lit = cur < 0 ? 0.03 * prog(t, l2.start - 0.3, ws[0]!.start) : lerp(us[cur]! - (wds[cur]! / tot) * 0.41, us[cur]! + (wds[cur]! / tot) * 0.41, prog(t, ws[cur]!.start, Math.max(ws[cur]!.start + 0.1, ws[cur]!.end)));
+    // camera: ride the words zoomed in; the pull-back starts just before "out"
+    const ride = ws.filter((w) => w.start < outW.start);
+    const times = [l2.start - 0.3, ...ride.map((w) => w.start - 0.07), outW.start - 0.4];
+    const targets = [{ x: pos[0]!.x + 60, y: pos[0]!.y - 60, z: 2.1, r: 0 }, ...ride.map((_, i) => ({ x: pos[i]!.x + 50, y: pos[i]!.y - 60, z: 2.1, r: -clamp(pos[i]!.a, -0.5, 0.5) * 0.3 })), { x: W / 2, y: oy + H / 2 - 20, z: 1, r: 0 }];
+    const kB = snapCam(t, times, targets, 0.5);
+    const kA = { x: W / 2, y: H / 2, z: 1, r: 0 };
+    cam(s, lerpCam(kA, kB, sw));
+    // posts
+    for (const [x, lab] of [[ax, 'ANIMAL'], [bx, 'OVERMAN']] as const) { c.fillStyle = col('graphite', 1); c.fillRect(x - 10, py - 30, 20, oy + 1000 - py); c.fillStyle = col('ash', 1); c.beginPath(); c.arc(x, py, 16, 0, TAU); c.fill(); note(c, lab, x, py - 50, 1, 22, 'ash', 'center'); }
+    // the rope: thick core, twisted strand marks every ~14 px (charred and glowing behind the spark), a highlight
+    strokePts(c, pts, 1, col('graphite', 1), 22); strokePts(c, pts, 1, col('ash', 1), 16);
+    let L = 0;
+    for (let i = 1; i < pts.length; i++) {
+      const [x0, y0] = pts[i - 1]!, [x1, y1] = pts[i]!, seg = Math.hypot(x1 - x0, y1 - y0), an = Math.atan2(y1 - y0, x1 - x0);
+      for (let d = (14 - (L % 14)) % 14; d < seg; d += 14) {
+        const px = x0 + Math.cos(an) * d, py2 = y0 + Math.sin(an) * d, u = (i - 1 + d / seg) / (pts.length - 1);
+        const nx = -Math.sin(an), ny = Math.cos(an), tx = Math.cos(an), ty = Math.sin(an);
+        const burnt = u < lit;
+        c.strokeStyle = burnt ? mix('blood', 'signal', 0.6) : col('graphite', 1); c.lineWidth = 3;
+        c.beginPath(); c.moveTo(px - nx * 8 - tx * 6, py2 - ny * 8 - ty * 6); c.lineTo(px + nx * 8 + tx * 6, py2 + ny * 8 + ty * 6); c.stroke();
+        if (burnt && (Math.floor(L + d) % 28) < 14) { g.strokeStyle = col('ember', 0.35); g.lineWidth = 6; g.beginPath(); g.moveTo(px - nx * 8, py2 - ny * 8); g.lineTo(px + nx * 8, py2 + ny * 8); g.stroke(); }
+      }
+      L += seg;
+    }
+    // the spark head
+    const sp = along(pts, Math.max(0.001, lit));
+    g.fillStyle = col('ember', 0.95); g.beginPath(); g.arc(sp.x, sp.y, 16, 0, TAU); g.fill();
+    for (let i = 0; i < 10; i++) { const a2 = hash(i, Math.floor(t * 60)) * TAU, r2 = 12 + hash(i, 3, Math.floor(t * 60)) * 40; rule(g, sp.x, sp.y, sp.x + Math.cos(a2) * r2, sp.y + Math.sin(a2) * r2, 1, col('signal', 0.8), 2); }
+    c.fillStyle = col('ember', 1); c.beginPath(); c.arc(sp.x, sp.y, 6, 0, TAU); c.fill();
+    // the words sit on the rope, rotated with it
     ws.forEach((w, i) => {
-      const u = 0.04 + 0.8 * (acc0 + wds[i]! / 2) / tot; acc0 += wds[i]!;
-      const p = along(pts, u);
-      word(s, w, txt(w), A(bigs[i] ? 100 : 62, bigs[i] ? 900 : 500), bigs[i] ? 60 : 40, p.x, p.y - 55, { rot: p.a * 0.35, sc: slam(w, t, 1.4) });
+      if (t < w.start - 0.45) return;
+      const p = pos[i]!, rot = clamp(p.a, -0.6, 0.6), off = szs[i]! * 0.55 + 14;
+      word(s, w, txt(w), fams[i]!, szs[i]!, p.x + Math.sin(rot) * off, p.y - Math.cos(rot) * off, { rot, sc: slam(w, t, 1.4), ghost: 0.12 });
     });
-    // the price tag on "pricing"
+    // the price tag swings onto the rope on "pricing"
     const pk = prog(t, pr.start, pr.start + 0.5, ease.outElastic);
     if (pk > 0) {
       const tp = along(pts, 0.93); const sway = Math.sin((t - pr.start) * 5) * 0.2 * (1 - prog(t, pr.start, pr.start + 2));
@@ -704,7 +739,7 @@ function rope(s: S) {
       setFont(c, F.mono(700), 34 * pk); c.fillStyle = col('ink', 1); c.textAlign = 'center'; c.fillText('$ / FT', 0, 182 * pk); c.restore();
       g.fillStyle = col('ember', 0.3 * pk); g.fillRect(tp.x - 90, tp.y + 120, 180, 100);
     }
-    void rp;
+    void rp; void zar;
   }
 }
 

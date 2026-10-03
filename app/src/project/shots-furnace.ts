@@ -81,7 +81,7 @@ function sarcasm(s: S) {
   word(s, nw, 'NORMAL', fam, sz, W / 2, 560, { sc: slam(nw, t, 1.6) });
   // the air quotes pop on either side a beat after the word
   const qk = prog(t, nw.start + 0.12, nw.start + 0.4, ease.outBack);
-  if (qk > 0) {
+  if (qk > 0.001) {
     const ww = measure('NORMAL', fam, sz) / 2;
     label(s, '“', F.serif(600, false), 420 * qk, W / 2 - ww - 90, 520, col('signal', 1));
     label(s, '”', F.serif(600, false), 420 * qk, W / 2 + ww + 90, 520, col('signal', 1));
@@ -482,7 +482,7 @@ function minds(s: S) {
   lyric(s, tail, 700, { width: 1300, max: 100, anno: false });
   // never sleep: a "z" that is struck through, a 24/7 bar always lit
   const zk = prog(t, sleep.start, sleep.start + 0.3, ease.outBack);
-  if (zk > 0) { label(s, 'z z z', F.serif(600, true), 90 * zk, 1640, 700, col('graphite', 1)); rule(c, 1520, 720, 1760, 670, prog(t, sleep.start + 0.15, sleep.start + 0.4, ease.outExpo), col('signal', 1), 8); }
+  if (zk > 0.001) { label(s, 'z z z', F.serif(600, true), 90 * zk, 1640, 700, col('graphite', 1)); rule(c, 1520, 720, 1760, 670, prog(t, sleep.start + 0.15, sleep.start + 0.4, ease.outExpo), col('signal', 1), 8); }
   if (t > nev.start) note(c, 'UPTIME 24/7 · 365', W / 2, 860, prog(t, nev.start, nev.start + 0.3), 24, 'signal', 'center');
   void sh;
 }

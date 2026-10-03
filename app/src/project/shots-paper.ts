@@ -79,7 +79,7 @@ function analogies(s: S) {
       setFont(c, F.mono(500), 20); c.textAlign = 'right';
       for (let r = 0; r < 6; r++) for (let q = 0; q < 5; q++) {
         const kk = prog(t, n.start + (r * 5 + q) * 0.025, n.start + (r * 5 + q) * 0.025 + 0.1);
-        if (kk > 0) { c.fillStyle = col(r === 5 ? 'blood' : base(s), 0.8 * kk); c.fillText(r === 5 ? 'Σ' : String(Math.floor(hash(r, q) * 900 + 100)), gx + q * 68 + 62, gy + r * 40 + 28); }
+        if (kk > 0.001) { c.fillStyle = col(r === 5 ? 'blood' : base(s), 0.8 * kk); c.fillText(r === 5 ? 'Σ' : String(Math.floor(hash(r, q) * 900 + 100)), gx + q * 68 + 62, gy + r * 40 + 28); }
       }
     } else { // a fax: the machine, and a sheet curling out of it on "machine"
       const fk = prog(t, mach.start, mach.end + 0.6, ease.outCubic);
@@ -131,7 +131,7 @@ function scurve(s: S) {
   // "Okay." — a tick mark at the plateau; "But consider." — the pen keeps going: straight up, through the top of the sheet
   const ok = fw(l2, /okay/i);
   const okk = prog(t, ok.start, ok.start + 0.3, ease.outBack);
-  if (okk > 0) { label(s, 'OKAY.', F.mono(600), 60 * okk, x0 + w - 60, y0 - h * 0.85 + 70, col('graphite', 1)); }
+  if (okk > 0.001) { label(s, 'OKAY.', F.mono(600), 60 * okk, x0 + w - 60, y0 - h * 0.85 + 70, col('graphite', 1)); }
   const but = fw(l2, /but/i);
   // the pen does not stop at the plateau: one smooth exponential continuation (leaves the plateau tangentially),
   // bending on "But" and shooting off the top of the sheet across "consider"
@@ -190,7 +190,7 @@ function tfp(s: S) {
   const mk = prog(t, nob.start - 0.05, nob.start + 0.35, ease.outBack);
   const sy = 380;
   rule(c, 1380, sy + 120, 1770, sy + 120, prog(t, shelf.start - 0.1, shelf.start + 0.3, ease.outExpo), col(base(s), 0.9), 6);
-  if (mk > 0) {
+  if (mk > 0.001) {
     c.strokeStyle = col('blood', a1); c.lineWidth = 6;
     c.beginPath(); c.moveTo(1540, sy - 100); c.lineTo(1575, sy - 10); c.lineTo(1610, sy - 100); c.stroke();
     c.fillStyle = col('blood', 0.9 * a1); c.beginPath(); c.arc(1575, sy + 40 - (1 - mk) * 40, 70 * mk, 0, TAU); c.fill();
@@ -320,8 +320,8 @@ function clay(s: S) {
     setFont(c, F.mono(600), CLAY[i]!.length > 12 ? 15 : 22); c.fillStyle = col(base(s), 0.9); c.textAlign = 'center';
     c.fillText(CLAY[i]!, x + cw / 2, y + 50);
     const mk = prog(t, mil.start + i * 0.07, each.start + i * 0.05);
-    if (mk > 0) label(s, '$1,000,000', F.mono(700), 26, x + cw / 2, y + 150, col('blood', mk));
-    if (solved) { const sk = prog(t, later.start, later.start + 0.4, ease.outBack); if (sk > 0) label(s, '✓', A(100, 900), 130 * sk, x + cw / 2, y + 220, col('blood', 1)); }
+    if (mk > 0.001) label(s, '$1,000,000', F.mono(700), 26, x + cw / 2, y + 150, col('blood', mk));
+    if (solved) { const sk = prog(t, later.start, later.start + 0.4, ease.outBack); if (sk > 0.001) label(s, '✓', A(100, 900), 130 * sk, x + cw / 2, y + 220, col('blood', 1)); }
   }
   // a quarter century goes by on the clock
   const yr = Math.round(lerp(2000, 2025, prog(t, l2.start - 0.2, later.end, ease.outCubic)));
@@ -351,7 +351,7 @@ function cute(s: S) {
   }
   // the reply, in the margin, in red pencil
   const kk = prog(t, cw.start - 0.04, cw.start + 0.5, ease.outBack);
-  if (kk > 0) {
+  if (kk > 0.001) {
     label(s, 'Cute.', F.serif(600, true), 260 * kk, W / 2, 600, col('blood', 1 - ck));
     c.strokeStyle = col('blood', 0.8 * (1 - ck)); c.lineWidth = 4; c.beginPath(); c.ellipse(W / 2, 600, 330, 150, -0.08, 0, TAU * prog(t, cw.start + 0.2, cw.start + 1.0, ease.outCubic)); c.stroke();
   }
