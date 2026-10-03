@@ -1,13 +1,13 @@
-// Per-project palette. Keep the key names: the engine's GLSL constants (C_INK, C_SIGNAL...) are built from them.
-// signal = the sung word / the only colour that blooms; acid = one rare accent owned by one motif.
+// Two worlds: the economists' PAPER (bone sheet, ink, a dried-blood accent) and the FURNACE of compute (near-black, molten
+// orange that blooms). signal = the sung word; acid = the hyperbolic curve only (the one motif that owns it).
 export const HEX = {
-  ink: '#080B10', // background
-  ink2: '#121822', // raised panels
-  graphite: '#4E5664', // dim lines, secondary text
-  ash: '#98A0AA', // mid grey
-  bone: '#F1EBDD', // primary type
-  signal: '#F2A93B', // sung word, light
-  ember: '#FFD488', // hot core of signal
-  blood: '#9A4E14', // deep shadow of signal (and the ink colour on paper sheets)
-  acid: '#6FD08C', // rare accent
+  ink: '#07080B', // background (furnace dark)
+  ink2: '#14161C', // raised panels
+  graphite: '#4A505C', // dim lines, secondary text
+  ash: '#9AA0A8', // mid grey annotations
+  bone: '#EFE9DC', // primary type / paper
+  signal: '#FF6A21', // sung word: molten orange
+  ember: '#FFC58F', // hot core of signal
+  blood: '#7E2410', // deep shadow of signal; ink accent on paper
+  acid: '#8CF5D2', // rare: the hyperbolic curve
 } as const;

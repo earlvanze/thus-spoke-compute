@@ -1,19 +1,32 @@
-// The edit, by SECTION. The director reads the [section] tags of data/lyrics.json and asks each section (by base name, digits
-// stripped) for its shots: (occurrence, lineCount) => [kind, lines, options][]. The specs must cover the section's lines exactly
-// (otherwise it falls back to 2-line slams and warns). Shot kinds: LIBRARY in scenes/shots.ts + EXTRA in project/shots.ts.
-// Options every shot understands: bg {paper, grid, glow, gx, gy, stars, warm}, wash [topKey, bottomKey, alpha],
-// plate '<kind>' (+ plateLabel, plateHot, plateLines, plateDark, plateStamps, plateTokens), holdAfter s (+ holdClamp).
-// Count-0 specs are INSTRUMENTAL shots: ['kind', 0, { at: seconds }] or ['kind', 0, { afterPrev: seconds after the last sung word }].
-// (A fixed `export const SCRIPT: Spec[]` list is also supported: the director uses SECTIONS when it is exported.)
+// The edit, by SECTION (see STORYBOARD.md). Every kind here is a bespoke composition in project/shots*.ts unless noted.
+// Two worlds: PAPER (the "normal technology" argument: bone sheets, ink, footnotes, slow charts) and FURNACE (compute:
+// near-black, molten orange, the acid hyperbolic curve). Paper owns the intro, the economists and the bridge's proofs;
+// the furnace owns every chorus and takes over the frame as the song goes on. The outro returns to paper for one word.
 export type Spec = [kind: string, lines: number, opts?: Record<string, any>];
 
-const chorus = (n: number, c: number): Spec[] => (c >= 2 ? [['title', 1, { variant: 0, plate: 'guilloche' }], ['slam', c - 1, { maxChars: 10 }]] : [['slam', c]]);
+const P = { bg: { paper: 1 } }; // paper sheet: words stay solid ink (see WORKFLOW "paper plates")
+
+/** Chorus: robots → minds → fleet, then the hyperbolic route → footnotes → compounding curve. `n` grows each time. */
+function chorus(n: number, c: number): Spec[] {
+  if (c === 6) return [['robots', 1, { n }], ['minds', 1, { n }], ['fleet', 1, { n }], ['hyper', 1, { n }], ['footnotes', 1, { n }], ['compound', 1, { n }]];
+  if (c === 8) return [['oracle', 1, { n }], ['robots', 1, { n }], ['minds', 1, { n }], ['fleet', 1, { n }], ['oracle', 1, { n, v: 1 }], ['hyper', 1, { n }], ['footnotes', 1, { n }], ['compound', 1, { n }]];
+  if (c === 9) return [['oracle', 1, { n }], ['robots', 1, { n }], ['minds', 1, { n }], ['fleet', 1, { n }], ['oracle', 1, { n, v: 1 }], ['hyper', 1, { n }], ['footnotes', 1, { n }], ['compound', 2, { n }]];
+  return [['slam', c]];
+}
 
 export const SECTIONS: Record<string, (occ: number, count: number) => Spec[]> = {
-  intro: (_o, c) => [['intro', 0, { at: 0 }], ['slam', c, { plate: 'halftone' }]],
-  verse: (o, c) => [['anchor', Math.min(c, 3), { head: 1, plate: o % 2 ? 'blueprint' : 'contour' }], ...(c > 3 ? ([['slam', c - 3, { plate: 'scope' }]] as Spec[]) : [])],
+  // spoken prologue on a clean paper sheet; the S-curve breaks upward on "consider", then the instrumental takes off
+  intro: () => [['paperTitle', 1, P], ['analogies', 1, P], ['scurve', 2, P], ['takeoff', 0, { afterPrev: 1.2 }]],
+  verse: (o, c) => {
+    if (o === 1) return [['sarcasm', 1], ['dynamo', 1], ['factory', 1], ['stampShot', 1, P], ['tfp', 2, P], ['tasks', 2], ['solow', 2], ['gantt', 2, P]];
+    if (o === 2) return [['wall', 2], ['tenure', 2], ['stoppedClock', 2], ['offramp', 2], ['family', 2], ['cat', 2]];
+    if (o === 3) return [['bubble', 2], ['rails', 2]];
+    if (o === 4) return [['shenzhen', 2], ['assembly', 2], ['returns', 2], ['rope', 2]];
+    return [['slam', c]];
+  },
+  pre: () => [['baumol', 2, P], ['hammer', 2]],
   chorus: (n, c) => chorus(n, c),
-  final: (n, c) => chorus(n + 1, c),
-  bridge: (_o, c) => [['serif', c, { plate: 'engrave' }]],
-  outro: (_o, c) => [['outro', c]],
+  final: (_n, c) => chorus(3, c),
+  bridge: () => [['clay', 2, P], ['hilbert', 2], ['swarm', 2], ['lean', 2]],
+  outro: () => [['cute', 2, P]],
 };

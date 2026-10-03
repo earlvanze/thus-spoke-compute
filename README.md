@@ -4,6 +4,30 @@ A kinetic-typography production workspace for **“AI is a normal technology?”
 
 > **Caption note:** `source/captions/` contains YouTube automatic captions. Review and force-align a corrected canonical lyric sheet before producing a lyric-synchronized render.
 
+## Render it (macOS, iMac GPU)
+Everything the renderer needs is committed: the lyric sheet (`lyrics.txt`), word timing (`data/lyrics.json`), the beat grid
+and envelopes (`data/audio.json`), the edit (`app/src/project/script.ts`) and the compositions (`app/src/project/shots-*.ts`).
+```sh
+brew install ffmpeg && curl -fsSL https://bun.sh/install | bash     # once (plus Google Chrome)
+./render-mac.sh setup                     # bun install, master audio, typecheck
+./render-mac.sh sheet                     # contact sheet of every cut → out/wip/sheet.png
+./render-mac.sh review v1                 # fast 960×540 review with audio → out/review/v1-half.mp4
+./render-mac.sh final thus-spoke-compute.mp4   # 1080p30, motion blur, QA → out/final/, qa/report.md
+./render-mac.sh preview                   # live preview in the browser, scrub the timeline
+```
+Chrome is driven headless through Metal (`--use-angle=metal`). If it fails to boot, try
+`PDOOM_GL_ARGS="--use-angle=gl" ./render-mac.sh review`. If the final is slow, use `MAXS=4` (fewer motion-blur sub-frames).
+
+See [`STORYBOARD.md`](STORYBOARD.md) for the treatment, shot by shot, and [`LYRICS-REVIEW.md`](LYRICS-REVIEW.md) for the
+caption lines that were corrected by context and are worth checking by ear.
+
+### Re-timing (after editing `lyrics.txt`)
+- Lightweight (no ML models): `cd analysis && uv run --with librosa --with soundfile python timing_lite.py && python3 fix_timing.py timing-fixes.json`
+  It uses the caption cue times plus vocal-band onset snapping, accurate to about ±0.15 s.
+- Full pipeline (Demucs + whisper + MMS forced alignment, frame-accurate): convert the master to WAV and run
+  `WHISPER_MODEL=~/models/ggml-medium.en.bin ./swap-audio.sh master.wav`. See `WORKFLOW.md` §2.
+  The edit is keyed by line order and word regexes, so the shots re-time automatically.
+
 ## Renderer template
 
 

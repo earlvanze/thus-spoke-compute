@@ -1,0 +1,5014 @@
+{
+ "lines": [
+  {
+   "text": "So you think AI is a normal technology?",
+   "section": "intro",
+   "start": 2.24,
+   "end": 7.2,
+   "words": [
+    {
+     "w": "So",
+     "start": 2.24,
+     "end": 2.58,
+     "conf": 0.5
+    },
+    {
+     "w": "you",
+     "start": 2.58,
+     "end": 3.15,
+     "conf": 0.5
+    },
+    {
+     "w": "think",
+     "start": 3.15,
+     "end": 3.6,
+     "conf": 0.5
+    },
+    {
+     "w": "AI",
+     "start": 3.6,
+     "end": 4.15,
+     "conf": 0.5
+    },
+    {
+     "w": "is",
+     "start": 4.15,
+     "end": 4.56,
+     "conf": 0.5
+    },
+    {
+     "w": "a",
+     "start": 4.56,
+     "end": 4.86,
+     "conf": 0.5
+    },
+    {
+     "w": "normal",
+     "start": 4.86,
+     "end": 5.65,
+     "conf": 0.5
+    },
+    {
+     "w": "technology?",
+     "start": 5.65,
+     "end": 7.2,
+     "conf": 0.5
+    }
+   ]
+  },
+  {
+   "text": "Like electricity, like the spreadsheet, like the fax machine.",
+   "section": "intro",
+   "start": 7.26,
+   "end": 12.96,
+   "words": [
+    {
+     "w": "Like",
+     "start": 7.26,
+     "end": 7.57,
+     "conf": 0.5
+    },
+    {
+     "w": "electricity,",
+     "start": 7.57,
+     "end": 9.15,
+     "conf": 0.5
+    },
+    {
+     "w": "like",
+     "start": 9.15,
+     "end": 9.37,
+     "conf": 0.5
+    },
+    {
+     "w": "the",
+     "start": 9.37,
+     "end": 9.77,
+     "conf": 0.5
+    },
+    {
+     "w": "spreadsheet,",
+     "start": 9.77,
+     "end": 10.47,
+     "conf": 0.5
+    },
+    {
+     "w": "like",
+     "start": 10.47,
+     "end": 10.93,
+     "conf": 0.5
+    },
+    {
+     "w": "the",
+     "start": 10.93,
+     "end": 11.4,
+     "conf": 0.5
+    },
+    {
+     "w": "fax",
+     "start": 11.4,
+     "end": 11.84,
+     "conf": 0.5
+    },
+    {
+     "w": "machine.",
+     "start": 11.84,
+     "end": 12.96,
+     "conf": 0.5
+    }
+   ]
+  },
+  {
+   "text": "Slow diffusion, adoption lag, complementary investment.",
+   "section": "intro",
+   "start": 13.03,
+   "end": 18.36,
+   "words": [
+    {
+     "w": "Slow",
+     "start": 13.03,
+     "end": 13.29,
+     "conf": 0.5
+    },
+    {
+     "w": "diffusion,",
+     "start": 13.29,
+     "end": 14.23,
+     "conf": 0.5
+    },
+    {
+     "w": "adoption",
+     "start": 14.23,
+     "end": 15.25,
+     "conf": 0.5
+    },
+    {
+     "w": "lag,",
+     "start": 15.25,
+     "end": 15.66,
+     "conf": 0.5
+    },
+    {
+     "w": "complementary",
+     "start": 15.66,
+     "end": 17.35,
+     "conf": 0.5
+    },
+    {
+     "w": "investment.",
+     "start": 17.35,
+     "end": 18.36,
+     "conf": 0.5
+    }
+   ]
+  },
+  {
+   "text": "Okay. But consider.",
+   "section": "intro",
+   "start": 18.43,
+   "end": 22.74,
+   "words": [
+    {
+     "w": "Okay.",
+     "start": 18.43,
+     "end": 19.7,
+     "conf": 0.5
+    },
+    {
+     "w": "But",
+     "start": 20.65,
+     "end": 21.09,
+     "conf": 0.5
+    },
+    {
+     "w": "consider.",
+     "start": 21.09,
+     "end": 22.74,
+     "conf": 0.5
+    }
+   ]
+  },
+  {
+   "text": "So you think AI is a normal technology?",
+   "section": "verse1",
+   "start": 34.56,
+   "end": 37.66,
+   "words": [
+    {
+     "w": "So",
+     "start": 34.56,
+     "end": 34.79,
+     "conf": 0.5
+    },
+    {
+     "w": "you",
+     "start": 34.79,
+     "end": 35.1,
+     "conf": 0.5
+    },
+    {
+     "w": "think",
+     "start": 35.1,
+     "end": 35.34,
+     "conf": 0.5
+    },
+    {
+     "w": "AI",
+     "start": 35.34,
+     "end": 35.58,
+     "conf": 0.5
+    },
+    {
+     "w": "is",
+     "start": 35.58,
+     "end": 35.92,
+     "conf": 0.5
+    },
+    {
+     "w": "a",
+     "start": 35.92,
+     "end": 36.22,
+     "conf": 0.5
+    },
+    {
+     "w": "normal",
+     "start": 36.22,
+     "end": 36.72,
+     "conf": 0.5
+    },
+    {
+     "w": "technology?",
+     "start": 36.72,
+     "end": 37.66,
+     "conf": 0.5
+    }
+   ]
+  },
+  {
+   "text": "A dynamo remix with a slower chronology.",
+   "section": "verse1",
+   "start": 37.67,
+   "end": 40.7,
+   "words": [
+    {
+     "w": "A",
+     "start": 37.67,
+     "end": 38.05,
+     "conf": 0.5
+    },
+    {
+     "w": "dynamo",
+     "start": 38.05,
+     "end": 38.58,
+     "conf": 0.5
+    },
+    {
+     "w": "remix",
+     "start": 38.58,
+     "end": 39.07,
+     "conf": 0.5
+    },
+    {
+     "w": "with",
+     "start": 39.07,
+     "end": 39.3,
+     "conf": 0.5
+    },
+    {
+     "w": "a",
+     "start": 39.3,
+     "end": 39.48,
+     "conf": 0.5
+    },
+    {
+     "w": "slower",
+     "start": 39.48,
+     "end": 39.81,
+     "conf": 0.5
+    },
+    {
+     "w": "chronology.",
+     "start": 39.81,
+     "end": 40.7,
+     "conf": 0.5
+    }
+   ]
+  },
+  {
+   "text": "Took forty years to rewire every floor in the factory.",
+   "section": "verse1",
+   "start": 40.71,
+   "end": 43.88,
+   "words": [
+    {
+     "w": "Took",
+     "start": 40.71,
+     "end": 40.93,
+     "conf": 0.5
+    },
+    {
+     "w": "forty",
+     "start": 40.93,
+     "end": 41.36,
+     "conf": 0.5
+    },
+    {
+     "w": "years",
+     "start": 41.36,
+     "end": 41.64,
+     "conf": 0.5
+    },
+    {
+     "w": "to",
+     "start": 41.64,
+     "end": 41.78,
+     "conf": 0.5
+    },
+    {
+     "w": "rewire",
+     "start": 41.78,
+     "end": 42.17,
+     "conf": 0.5
+    },
+    {
+     "w": "every",
+     "start": 42.17,
+     "end": 42.79,
+     "conf": 0.5
+    },
+    {
+     "w": "floor",
+     "start": 42.79,
+     "end": 43.09,
+     "conf": 0.5
+    },
+    {
+     "w": "in",
+     "start": 43.09,
+     "end": 43.25,
+     "conf": 0.5
+    },
+    {
+     "w": "the",
+     "start": 43.25,
+     "end": 43.48,
+     "conf": 0.5
+    },
+    {
+     "w": "factory.",
+     "start": 43.48,
+     "end": 43.88,
+     "conf": 0.5
+    }
+   ]
+  },
+  {
+   "text": "So the paper says be patient, and the paper calls it satisfactory.",
+   "section": "verse1",
+   "start": 43.89,
+   "end": 47.385,
+   "words": [
+    {
+     "w": "So",
+     "start": 43.89,
+     "end": 44.02,
+     "conf": 0.5
+    },
+    {
+     "w": "the",
+     "start": 44.02,
+     "end": 44.22,
+     "conf": 0.5
+    },
+    {
+     "w": "paper",
+     "start": 44.22,
+     "end": 44.63,
+     "conf": 0.5
+    },
+    {
+     "w": "says",
+     "start": 44.63,
+     "end": 44.74,
+     "conf": 0.5
+    },
+    {
+     "w": "be",
+     "start": 44.74,
+     "end": 44.82,
+     "conf": 0.5
+    },
+    {
+     "w": "patient,",
+     "start": 44.82,
+     "end": 45.32,
+     "conf": 0.5
+    },
+    {
+     "w": "and",
+     "start": 45.32,
+     "end": 45.44,
+     "conf": 0.5
+    },
+    {
+     "w": "the",
+     "start": 45.44,
+     "end": 45.64,
+     "conf": 0.5
+    },
+    {
+     "w": "paper",
+     "start": 45.64,
+     "end": 46.12,
+     "conf": 0.5
+    },
+    {
+     "w": "calls",
+     "start": 46.12,
+     "end": 46.21,
+     "conf": 0.5
+    },
+    {
+     "w": "it",
+     "start": 46.21,
+     "end": 46.45,
+     "conf": 0.5
+    },
+    {
+     "w": "satisfactory.",
+     "start": 46.45,
+     "end": 47.385,
+     "conf": 0.5
+    }
+   ]
+  },
+  {
+   "text": "Daron ran the numbers with the Nobel on the shelf.",
+   "section": "verse1",
+   "start": 47.44,
+   "end": 50.51,
+   "words": [
+    {
+     "w": "Daron",
+     "start": 47.44,
+     "end": 47.75,
+     "conf": 0.5
+    },
+    {
+     "w": "ran",
+     "start": 47.75,
+     "end": 47.88,
+     "conf": 0.5
+    },
+    {
+     "w": "the",
+     "start": 47.88,
+     "end": 48.11,
+     "conf": 0.5
+    },
+    {
+     "w": "numbers",
+     "start": 48.11,
+     "end": 48.51,
+     "conf": 0.5
+    },
+    {
+     "w": "with",
+     "start": 48.51,
+     "end": 48.78,
+     "conf": 0.5
+    },
+    {
+     "w": "the",
+     "start": 48.78,
+     "end": 49.02,
+     "conf": 0.5
+    },
+    {
+     "w": "Nobel",
+     "start": 49.02,
+     "end": 49.72,
+     "conf": 0.5
+    },
+    {
+     "w": "on",
+     "start": 49.72,
+     "end": 49.98,
+     "conf": 0.5
+    },
+    {
+     "w": "the",
+     "start": 49.98,
+     "end": 50.33,
+     "conf": 0.5
+    },
+    {
+     "w": "shelf.",
+     "start": 50.33,
+     "end": 50.51,
+     "conf": 0.5
+    }
+   ]
+  },
+  {
+   "text": "Point seven on the TFP, ten years all by itself.",
+   "section": "verse1",
+   "start": 50.52,
+   "end": 53.535,
+   "words": [
+    {
+     "w": "Point",
+     "start": 50.52,
+     "end": 50.86,
+     "conf": 0.5
+    },
+    {
+     "w": "seven",
+     "start": 50.86,
+     "end": 51.37,
+     "conf": 0.5
+    },
+    {
+     "w": "on",
+     "start": 51.37,
+     "end": 51.7,
+     "conf": 0.5
+    },
+    {
+     "w": "the",
+     "start": 51.7,
+     "end": 51.94,
+     "conf": 0.5
+    },
+    {
+     "w": "TFP,",
+     "start": 51.94,
+     "end": 52.05,
+     "conf": 0.5
+    },
+    {
+     "w": "ten",
+     "start": 52.05,
+     "end": 52.48,
+     "conf": 0.5
+    },
+    {
+     "w": "years",
+     "start": 52.48,
+     "end": 52.68,
+     "conf": 0.5
+    },
+    {
+     "w": "all",
+     "start": 52.68,
+     "end": 53.0,
+     "conf": 0.5
+    },
+    {
+     "w": "by",
+     "start": 53.0,
+     "end": 53.19,
+     "conf": 0.5
+    },
+    {
+     "w": "itself.",
+     "start": 53.19,
+     "end": 53.535,
+     "conf": 0.5
+    }
+   ]
+  },
+  {
+   "text": "Only easy tasks it touched, the rest were way too hard to learn.",
+   "section": "verse1",
+   "start": 53.6,
+   "end": 56.86,
+   "words": [
+    {
+     "w": "Only",
+     "start": 53.6,
+     "end": 53.91,
+     "conf": 0.5
+    },
+    {
+     "w": "easy",
+     "start": 53.91,
+     "end": 54.09,
+     "conf": 0.5
+    },
+    {
+     "w": "tasks",
+     "start": 54.09,
+     "end": 54.42,
+     "conf": 0.5
+    },
+    {
+     "w": "it",
+     "start": 54.42,
+     "end": 54.56,
+     "conf": 0.5
+    },
+    {
+     "w": "touched,",
+     "start": 54.56,
+     "end": 54.84,
+     "conf": 0.5
+    },
+    {
+     "w": "the",
+     "start": 54.84,
+     "end": 54.97,
+     "conf": 0.5
+    },
+    {
+     "w": "rest",
+     "start": 54.97,
+     "end": 55.33,
+     "conf": 0.5
+    },
+    {
+     "w": "were",
+     "start": 55.33,
+     "end": 55.56,
+     "conf": 0.5
+    },
+    {
+     "w": "way",
+     "start": 55.56,
+     "end": 55.77,
+     "conf": 0.5
+    },
+    {
+     "w": "too",
+     "start": 55.77,
+     "end": 56.13,
+     "conf": 0.5
+    },
+    {
+     "w": "hard",
+     "start": 56.13,
+     "end": 56.49,
+     "conf": 0.5
+    },
+    {
+     "w": "to",
+     "start": 56.49,
+     "end": 56.68,
+     "conf": 0.5
+    },
+    {
+     "w": "learn.",
+     "start": 56.68,
+     "end": 56.86,
+     "conf": 0.5
+    }
+   ]
+  },
+  {
+   "text": "So the model keeps it modest, and the model gets its turn.",
+   "section": "verse1",
+   "start": 56.87,
+   "end": 60.28,
+   "words": [
+    {
+     "w": "So",
+     "start": 56.87,
+     "end": 57.18,
+     "conf": 0.5
+    },
+    {
+     "w": "the",
+     "start": 57.18,
+     "end": 57.37,
+     "conf": 0.5
+    },
+    {
+     "w": "model",
+     "start": 57.37,
+     "end": 57.92,
+     "conf": 0.5
+    },
+    {
+     "w": "keeps",
+     "start": 57.92,
+     "end": 58.09,
+     "conf": 0.5
+    },
+    {
+     "w": "it",
+     "start": 58.09,
+     "end": 58.25,
+     "conf": 0.5
+    },
+    {
+     "w": "modest,",
+     "start": 58.25,
+     "end": 58.6,
+     "conf": 0.5
+    },
+    {
+     "w": "and",
+     "start": 58.6,
+     "end": 58.94,
+     "conf": 0.5
+    },
+    {
+     "w": "the",
+     "start": 58.94,
+     "end": 59.13,
+     "conf": 0.5
+    },
+    {
+     "w": "model",
+     "start": 59.13,
+     "end": 59.44,
+     "conf": 0.5
+    },
+    {
+     "w": "gets",
+     "start": 59.44,
+     "end": 59.8,
+     "conf": 0.5
+    },
+    {
+     "w": "its",
+     "start": 59.8,
+     "end": 60.13,
+     "conf": 0.5
+    },
+    {
+     "w": "turn.",
+     "start": 60.13,
+     "end": 60.28,
+     "conf": 0.5
+    }
+   ]
+  },
+  {
+   "text": "Solow saw computers everywhere except the stats.",
+   "section": "verse1",
+   "start": 60.29,
+   "end": 63.49,
+   "words": [
+    {
+     "w": "Solow",
+     "start": 60.29,
+     "end": 60.9,
+     "conf": 0.5
+    },
+    {
+     "w": "saw",
+     "start": 60.9,
+     "end": 61.16,
+     "conf": 0.5
+    },
+    {
+     "w": "computers",
+     "start": 61.16,
+     "end": 62.0,
+     "conf": 0.5
+    },
+    {
+     "w": "everywhere",
+     "start": 62.0,
+     "end": 62.82,
+     "conf": 0.5
+    },
+    {
+     "w": "except",
+     "start": 62.82,
+     "end": 63.11,
+     "conf": 0.5
+    },
+    {
+     "w": "the",
+     "start": 63.11,
+     "end": 63.42,
+     "conf": 0.5
+    },
+    {
+     "w": "stats.",
+     "start": 63.42,
+     "end": 63.49,
+     "conf": 0.5
+    }
+   ]
+  },
+  {
+   "text": "So the seminar concludes, don't put away the party hats.",
+   "section": "verse1",
+   "start": 63.5,
+   "end": 66.94,
+   "words": [
+    {
+     "w": "So",
+     "start": 63.5,
+     "end": 63.84,
+     "conf": 0.5
+    },
+    {
+     "w": "the",
+     "start": 63.84,
+     "end": 63.98,
+     "conf": 0.5
+    },
+    {
+     "w": "seminar",
+     "start": 63.98,
+     "end": 64.54,
+     "conf": 0.5
+    },
+    {
+     "w": "concludes,",
+     "start": 64.54,
+     "end": 65.17,
+     "conf": 0.5
+    },
+    {
+     "w": "don't",
+     "start": 65.17,
+     "end": 65.39,
+     "conf": 0.5
+    },
+    {
+     "w": "put",
+     "start": 65.39,
+     "end": 65.58,
+     "conf": 0.5
+    },
+    {
+     "w": "away",
+     "start": 65.58,
+     "end": 65.86,
+     "conf": 0.5
+    },
+    {
+     "w": "the",
+     "start": 65.86,
+     "end": 66.18,
+     "conf": 0.5
+    },
+    {
+     "w": "party",
+     "start": 66.18,
+     "end": 66.7,
+     "conf": 0.5
+    },
+    {
+     "w": "hats.",
+     "start": 66.7,
+     "end": 66.94,
+     "conf": 0.5
+    }
+   ]
+  },
+  {
+   "text": "Permits take a year, the grid upgrade takes ten,",
+   "section": "verse1",
+   "start": 66.95,
+   "end": 69.93,
+   "words": [
+    {
+     "w": "Permits",
+     "start": 66.95,
+     "end": 67.47,
+     "conf": 0.5
+    },
+    {
+     "w": "take",
+     "start": 67.47,
+     "end": 67.8,
+     "conf": 0.5
+    },
+    {
+     "w": "a",
+     "start": 67.8,
+     "end": 68.04,
+     "conf": 0.5
+    },
+    {
+     "w": "year,",
+     "start": 68.04,
+     "end": 68.33,
+     "conf": 0.5
+    },
+    {
+     "w": "the",
+     "start": 68.33,
+     "end": 68.64,
+     "conf": 0.5
+    },
+    {
+     "w": "grid",
+     "start": 68.64,
+     "end": 68.84,
+     "conf": 0.5
+    },
+    {
+     "w": "upgrade",
+     "start": 68.84,
+     "end": 69.24,
+     "conf": 0.5
+    },
+    {
+     "w": "takes",
+     "start": 69.24,
+     "end": 69.64,
+     "conf": 0.5
+    },
+    {
+     "w": "ten,",
+     "start": 69.64,
+     "end": 69.93,
+     "conf": 0.5
+    }
+   ]
+  },
+  {
+   "text": "the FDA wants phase three, and then phase three again.",
+   "section": "verse1",
+   "start": 69.94,
+   "end": 73.82,
+   "words": [
+    {
+     "w": "the",
+     "start": 69.94,
+     "end": 70.17,
+     "conf": 0.5
+    },
+    {
+     "w": "FDA",
+     "start": 70.17,
+     "end": 70.59,
+     "conf": 0.5
+    },
+    {
+     "w": "wants",
+     "start": 70.59,
+     "end": 70.85,
+     "conf": 0.5
+    },
+    {
+     "w": "phase",
+     "start": 70.85,
+     "end": 71.21,
+     "conf": 0.5
+    },
+    {
+     "w": "three,",
+     "start": 71.21,
+     "end": 71.56,
+     "conf": 0.5
+    },
+    {
+     "w": "and",
+     "start": 71.56,
+     "end": 71.71,
+     "conf": 0.5
+    },
+    {
+     "w": "then",
+     "start": 71.71,
+     "end": 72.07,
+     "conf": 0.5
+    },
+    {
+     "w": "phase",
+     "start": 72.07,
+     "end": 72.35,
+     "conf": 0.5
+    },
+    {
+     "w": "three",
+     "start": 72.35,
+     "end": 72.87,
+     "conf": 0.5
+    },
+    {
+     "w": "again.",
+     "start": 72.87,
+     "end": 73.82,
+     "conf": 0.5
+    }
+   ]
+  },
+  {
+   "text": "Baumol's got his cost disease, the plumber's still a plumber.",
+   "section": "pre1",
+   "start": 73.83,
+   "end": 76.51,
+   "words": [
+    {
+     "w": "Baumol's",
+     "start": 73.83,
+     "end": 74.19,
+     "conf": 0.5
+    },
+    {
+     "w": "got",
+     "start": 74.19,
+     "end": 74.55,
+     "conf": 0.5
+    },
+    {
+     "w": "his",
+     "start": 74.55,
+     "end": 74.64,
+     "conf": 0.5
+    },
+    {
+     "w": "cost",
+     "start": 74.64,
+     "end": 74.86,
+     "conf": 0.5
+    },
+    {
+     "w": "disease,",
+     "start": 74.86,
+     "end": 75.24,
+     "conf": 0.5
+    },
+    {
+     "w": "the",
+     "start": 75.24,
+     "end": 75.4,
+     "conf": 0.5
+    },
+    {
+     "w": "plumber's",
+     "start": 75.4,
+     "end": 75.68,
+     "conf": 0.5
+    },
+    {
+     "w": "still",
+     "start": 75.68,
+     "end": 75.95,
+     "conf": 0.5
+    },
+    {
+     "w": "a",
+     "start": 75.95,
+     "end": 76.12,
+     "conf": 0.5
+    },
+    {
+     "w": "plumber.",
+     "start": 76.12,
+     "end": 76.51,
+     "conf": 0.5
+    }
+   ]
+  },
+  {
+   "text": "So the singularity gets scheduled for the summer after summer.",
+   "section": "pre1",
+   "start": 76.6,
+   "end": 79.8,
+   "words": [
+    {
+     "w": "So",
+     "start": 76.6,
+     "end": 76.76,
+     "conf": 0.5
+    },
+    {
+     "w": "the",
+     "start": 76.76,
+     "end": 76.85,
+     "conf": 0.5
+    },
+    {
+     "w": "singularity",
+     "start": 76.85,
+     "end": 77.75,
+     "conf": 0.5
+    },
+    {
+     "w": "gets",
+     "start": 77.75,
+     "end": 77.85,
+     "conf": 0.5
+    },
+    {
+     "w": "scheduled",
+     "start": 77.85,
+     "end": 78.24,
+     "conf": 0.5
+    },
+    {
+     "w": "for",
+     "start": 78.24,
+     "end": 78.45,
+     "conf": 0.5
+    },
+    {
+     "w": "the",
+     "start": 78.45,
+     "end": 78.64,
+     "conf": 0.5
+    },
+    {
+     "w": "summer",
+     "start": 78.64,
+     "end": 78.99,
+     "conf": 0.5
+    },
+    {
+     "w": "after",
+     "start": 78.99,
+     "end": 79.41,
+     "conf": 0.5
+    },
+    {
+     "w": "summer.",
+     "start": 79.41,
+     "end": 79.8,
+     "conf": 0.5
+    }
+   ]
+  },
+  {
+   "text": "But you modeled it as a hammer in a human hand.",
+   "section": "pre1",
+   "start": 79.81,
+   "end": 83.2,
+   "words": [
+    {
+     "w": "But",
+     "start": 79.81,
+     "end": 80.08,
+     "conf": 0.5
+    },
+    {
+     "w": "you",
+     "start": 80.08,
+     "end": 80.24,
+     "conf": 0.5
+    },
+    {
+     "w": "modeled",
+     "start": 80.24,
+     "end": 80.94,
+     "conf": 0.5
+    },
+    {
+     "w": "it",
+     "start": 80.94,
+     "end": 81.21,
+     "conf": 0.5
+    },
+    {
+     "w": "as",
+     "start": 81.21,
+     "end": 81.44,
+     "conf": 0.5
+    },
+    {
+     "w": "a",
+     "start": 81.44,
+     "end": 81.55,
+     "conf": 0.5
+    },
+    {
+     "w": "hammer",
+     "start": 81.55,
+     "end": 82.01,
+     "conf": 0.5
+    },
+    {
+     "w": "in",
+     "start": 82.01,
+     "end": 82.33,
+     "conf": 0.5
+    },
+    {
+     "w": "a",
+     "start": 82.33,
+     "end": 82.57,
+     "conf": 0.5
+    },
+    {
+     "w": "human",
+     "start": 82.57,
+     "end": 82.96,
+     "conf": 0.5
+    },
+    {
+     "w": "hand.",
+     "start": 82.96,
+     "end": 83.2,
+     "conf": 0.5
+    }
+   ]
+  },
+  {
+   "text": "What's your forecast when the hammer starts to build the hand?",
+   "section": "pre1",
+   "start": 83.22,
+   "end": 87.32,
+   "words": [
+    {
+     "w": "What's",
+     "start": 83.22,
+     "end": 83.35,
+     "conf": 0.5
+    },
+    {
+     "w": "your",
+     "start": 83.35,
+     "end": 83.49,
+     "conf": 0.5
+    },
+    {
+     "w": "forecast",
+     "start": 83.49,
+     "end": 84.01,
+     "conf": 0.5
+    },
+    {
+     "w": "when",
+     "start": 84.01,
+     "end": 84.24,
+     "conf": 0.5
+    },
+    {
+     "w": "the",
+     "start": 84.24,
+     "end": 84.5,
+     "conf": 0.5
+    },
+    {
+     "w": "hammer",
+     "start": 84.5,
+     "end": 84.82,
+     "conf": 0.5
+    },
+    {
+     "w": "starts",
+     "start": 84.82,
+     "end": 85.19,
+     "conf": 0.5
+    },
+    {
+     "w": "to",
+     "start": 85.19,
+     "end": 85.65,
+     "conf": 0.5
+    },
+    {
+     "w": "build",
+     "start": 85.65,
+     "end": 86.29,
+     "conf": 0.5
+    },
+    {
+     "w": "the",
+     "start": 86.29,
+     "end": 86.74,
+     "conf": 0.5
+    },
+    {
+     "w": "hand?",
+     "start": 86.74,
+     "end": 87.32,
+     "conf": 0.5
+    }
+   ]
+  },
+  {
+   "text": "Robots building robots from the ore to the suit.",
+   "section": "chorus1",
+   "start": 89.2,
+   "end": 92.06,
+   "words": [
+    {
+     "w": "Robots",
+     "start": 89.2,
+     "end": 89.69,
+     "conf": 0.5
+    },
+    {
+     "w": "building",
+     "start": 89.69,
+     "end": 90.13,
+     "conf": 0.5
+    },
+    {
+     "w": "robots",
+     "start": 90.13,
+     "end": 90.53,
+     "conf": 0.5
+    },
+    {
+     "w": "from",
+     "start": 90.53,
+     "end": 90.95,
+     "conf": 0.5
+    },
+    {
+     "w": "the",
+     "start": 90.95,
+     "end": 91.13,
+     "conf": 0.5
+    },
+    {
+     "w": "ore",
+     "start": 91.13,
+     "end": 91.38,
+     "conf": 0.5
+    },
+    {
+     "w": "to",
+     "start": 91.38,
+     "end": 91.6,
+     "conf": 0.5
+    },
+    {
+     "w": "the",
+     "start": 91.6,
+     "end": 91.82,
+     "conf": 0.5
+    },
+    {
+     "w": "suit.",
+     "start": 91.82,
+     "end": 92.06,
+     "conf": 0.5
+    }
+   ]
+  },
+  {
+   "text": "A million minds in parallel that never need to sleep.",
+   "section": "chorus1",
+   "start": 92.07,
+   "end": 94.26,
+   "words": [
+    {
+     "w": "A",
+     "start": 92.07,
+     "end": 92.39,
+     "conf": 0.5
+    },
+    {
+     "w": "million",
+     "start": 92.39,
+     "end": 92.88,
+     "conf": 0.5
+    },
+    {
+     "w": "minds",
+     "start": 92.88,
+     "end": 93.04,
+     "conf": 0.5
+    },
+    {
+     "w": "in",
+     "start": 93.04,
+     "end": 93.4,
+     "conf": 0.5
+    },
+    {
+     "w": "parallel",
+     "start": 93.4,
+     "end": 93.7,
+     "conf": 0.5
+    },
+    {
+     "w": "that",
+     "start": 93.7,
+     "end": 93.81,
+     "conf": 0.5
+    },
+    {
+     "w": "never",
+     "start": 93.81,
+     "end": 93.95,
+     "conf": 0.5
+    },
+    {
+     "w": "need",
+     "start": 93.95,
+     "end": 94.05,
+     "conf": 0.5
+    },
+    {
+     "w": "to",
+     "start": 94.05,
+     "end": 94.15,
+     "conf": 0.5
+    },
+    {
+     "w": "sleep.",
+     "start": 94.15,
+     "end": 94.26,
+     "conf": 0.5
+    }
+   ]
+  },
+  {
+   "text": "You modeled a tractor, now the tractors build the fleet.",
+   "section": "chorus1",
+   "start": 94.95,
+   "end": 99.9,
+   "words": [
+    {
+     "w": "You",
+     "start": 94.95,
+     "end": 95.13,
+     "conf": 0.5
+    },
+    {
+     "w": "modeled",
+     "start": 95.13,
+     "end": 95.55,
+     "conf": 0.5
+    },
+    {
+     "w": "a",
+     "start": 95.55,
+     "end": 95.75,
+     "conf": 0.5
+    },
+    {
+     "w": "tractor,",
+     "start": 95.75,
+     "end": 96.9,
+     "conf": 0.5
+    },
+    {
+     "w": "now",
+     "start": 97.19,
+     "end": 97.53,
+     "conf": 0.5
+    },
+    {
+     "w": "the",
+     "start": 97.53,
+     "end": 97.89,
+     "conf": 0.5
+    },
+    {
+     "w": "tractors",
+     "start": 97.89,
+     "end": 98.51,
+     "conf": 0.5
+    },
+    {
+     "w": "build",
+     "start": 98.51,
+     "end": 98.82,
+     "conf": 0.5
+    },
+    {
+     "w": "the",
+     "start": 98.82,
+     "end": 99.14,
+     "conf": 0.5
+    },
+    {
+     "w": "fleet.",
+     "start": 99.14,
+     "end": 99.9,
+     "conf": 0.5
+    }
+   ],
+   "refined": "reviewed fix: chorus1: captions mask the first half of the line under [music]; vocal-band onsets at 94.95/95.13/95.75 carry it, not a 0.5 s squeeze"
+  },
+  {
+   "text": "Your bottleneck's a speed bump on a hyperbolic route.",
+   "section": "chorus1",
+   "start": 101.89,
+   "end": 104.75,
+   "words": [
+    {
+     "w": "Your",
+     "start": 101.89,
+     "end": 102.01,
+     "conf": 0.5
+    },
+    {
+     "w": "bottleneck's",
+     "start": 102.01,
+     "end": 102.71,
+     "conf": 0.5
+    },
+    {
+     "w": "a",
+     "start": 102.71,
+     "end": 102.81,
+     "conf": 0.5
+    },
+    {
+     "w": "speed",
+     "start": 102.81,
+     "end": 103.13,
+     "conf": 0.5
+    },
+    {
+     "w": "bump",
+     "start": 103.13,
+     "end": 103.22,
+     "conf": 0.5
+    },
+    {
+     "w": "on",
+     "start": 103.22,
+     "end": 103.52,
+     "conf": 0.5
+    },
+    {
+     "w": "a",
+     "start": 103.52,
+     "end": 103.6,
+     "conf": 0.5
+    },
+    {
+     "w": "hyperbolic",
+     "start": 103.6,
+     "end": 104.51,
+     "conf": 0.5
+    },
+    {
+     "w": "route.",
+     "start": 104.51,
+     "end": 104.75,
+     "conf": 0.5
+    }
+   ]
+  },
+  {
+   "text": "Your constraints are footnotes, and the footnotes are out of date.",
+   "section": "chorus1",
+   "start": 104.76,
+   "end": 108.38,
+   "words": [
+    {
+     "w": "Your",
+     "start": 104.76,
+     "end": 105.06,
+     "conf": 0.5
+    },
+    {
+     "w": "constraints",
+     "start": 105.06,
+     "end": 105.38,
+     "conf": 0.5
+    },
+    {
+     "w": "are",
+     "start": 105.38,
+     "end": 105.67,
+     "conf": 0.5
+    },
+    {
+     "w": "footnotes,",
+     "start": 105.67,
+     "end": 106.41,
+     "conf": 0.5
+    },
+    {
+     "w": "and",
+     "start": 106.41,
+     "end": 106.67,
+     "conf": 0.5
+    },
+    {
+     "w": "the",
+     "start": 106.67,
+     "end": 106.87,
+     "conf": 0.5
+    },
+    {
+     "w": "footnotes",
+     "start": 106.87,
+     "end": 107.61,
+     "conf": 0.5
+    },
+    {
+     "w": "are",
+     "start": 107.61,
+     "end": 107.81,
+     "conf": 0.5
+    },
+    {
+     "w": "out",
+     "start": 107.81,
+     "end": 108.01,
+     "conf": 0.5
+    },
+    {
+     "w": "of",
+     "start": 108.01,
+     "end": 108.17,
+     "conf": 0.5
+    },
+    {
+     "w": "date.",
+     "start": 108.17,
+     "end": 108.38,
+     "conf": 0.5
+    }
+   ]
+  },
+  {
+   "text": "The curve don't wait for referees, it just compounds the rate.",
+   "section": "chorus1",
+   "start": 108.45,
+   "end": 112.28,
+   "words": [
+    {
+     "w": "The",
+     "start": 108.45,
+     "end": 108.53,
+     "conf": 0.5
+    },
+    {
+     "w": "curve",
+     "start": 108.53,
+     "end": 108.82,
+     "conf": 0.5
+    },
+    {
+     "w": "don't",
+     "start": 108.82,
+     "end": 108.94,
+     "conf": 0.5
+    },
+    {
+     "w": "wait",
+     "start": 108.94,
+     "end": 109.14,
+     "conf": 0.5
+    },
+    {
+     "w": "for",
+     "start": 109.14,
+     "end": 109.34,
+     "conf": 0.5
+    },
+    {
+     "w": "referees,",
+     "start": 109.34,
+     "end": 110.09,
+     "conf": 0.5
+    },
+    {
+     "w": "it",
+     "start": 110.09,
+     "end": 110.37,
+     "conf": 0.5
+    },
+    {
+     "w": "just",
+     "start": 110.37,
+     "end": 110.66,
+     "conf": 0.5
+    },
+    {
+     "w": "compounds",
+     "start": 110.66,
+     "end": 111.18,
+     "conf": 0.5
+    },
+    {
+     "w": "the",
+     "start": 111.18,
+     "end": 111.43,
+     "conf": 0.5
+    },
+    {
+     "w": "rate.",
+     "start": 111.43,
+     "end": 112.28,
+     "conf": 0.5
+    }
+   ]
+  },
+  {
+   "text": "Gary saw a wall back in twenty twenty-two,",
+   "section": "verse2",
+   "start": 113.02,
+   "end": 115.47,
+   "words": [
+    {
+     "w": "Gary",
+     "start": 113.02,
+     "end": 113.47,
+     "conf": 0.5
+    },
+    {
+     "w": "saw",
+     "start": 113.47,
+     "end": 113.57,
+     "conf": 0.5
+    },
+    {
+     "w": "a",
+     "start": 113.57,
+     "end": 113.84,
+     "conf": 0.5
+    },
+    {
+     "w": "wall",
+     "start": 113.84,
+     "end": 114.15,
+     "conf": 0.5
+    },
+    {
+     "w": "back",
+     "start": 114.15,
+     "end": 114.26,
+     "conf": 0.5
+    },
+    {
+     "w": "in",
+     "start": 114.26,
+     "end": 114.48,
+     "conf": 0.5
+    },
+    {
+     "w": "twenty",
+     "start": 114.48,
+     "end": 114.94,
+     "conf": 0.5
+    },
+    {
+     "w": "twenty-two,",
+     "start": 114.94,
+     "end": 115.47,
+     "conf": 0.5
+    }
+   ]
+  },
+  {
+   "text": "then the wall took gold at the IMO and the wall kept breaking through.",
+   "section": "verse2",
+   "start": 115.48,
+   "end": 119.15,
+   "words": [
+    {
+     "w": "then",
+     "start": 115.48,
+     "end": 115.79,
+     "conf": 0.5
+    },
+    {
+     "w": "the",
+     "start": 115.79,
+     "end": 115.9,
+     "conf": 0.5
+    },
+    {
+     "w": "wall",
+     "start": 115.9,
+     "end": 116.1,
+     "conf": 0.5
+    },
+    {
+     "w": "took",
+     "start": 116.1,
+     "end": 116.5,
+     "conf": 0.5
+    },
+    {
+     "w": "gold",
+     "start": 116.5,
+     "end": 116.61,
+     "conf": 0.5
+    },
+    {
+     "w": "at",
+     "start": 116.61,
+     "end": 116.93,
+     "conf": 0.5
+    },
+    {
+     "w": "the",
+     "start": 116.93,
+     "end": 117.1,
+     "conf": 0.5
+    },
+    {
+     "w": "IMO",
+     "start": 117.1,
+     "end": 117.63,
+     "conf": 0.5
+    },
+    {
+     "w": "and",
+     "start": 117.63,
+     "end": 117.97,
+     "conf": 0.5
+    },
+    {
+     "w": "the",
+     "start": 117.97,
+     "end": 118.15,
+     "conf": 0.5
+    },
+    {
+     "w": "wall",
+     "start": 118.15,
+     "end": 118.26,
+     "conf": 0.5
+    },
+    {
+     "w": "kept",
+     "start": 118.26,
+     "end": 118.58,
+     "conf": 0.5
+    },
+    {
+     "w": "breaking",
+     "start": 118.58,
+     "end": 119.07,
+     "conf": 0.5
+    },
+    {
+     "w": "through.",
+     "start": 119.07,
+     "end": 119.15,
+     "conf": 0.5
+    }
+   ]
+  },
+  {
+   "text": "He's been calling it so long, the wall should get tenure.",
+   "section": "verse2",
+   "start": 119.16,
+   "end": 122.04,
+   "words": [
+    {
+     "w": "He's",
+     "start": 119.16,
+     "end": 119.48,
+     "conf": 0.5
+    },
+    {
+     "w": "been",
+     "start": 119.48,
+     "end": 119.73,
+     "conf": 0.5
+    },
+    {
+     "w": "calling",
+     "start": 119.73,
+     "end": 120.22,
+     "conf": 0.5
+    },
+    {
+     "w": "it",
+     "start": 120.22,
+     "end": 120.35,
+     "conf": 0.5
+    },
+    {
+     "w": "so",
+     "start": 120.35,
+     "end": 120.58,
+     "conf": 0.5
+    },
+    {
+     "w": "long,",
+     "start": 120.58,
+     "end": 120.8,
+     "conf": 0.5
+    },
+    {
+     "w": "the",
+     "start": 120.8,
+     "end": 121.13,
+     "conf": 0.5
+    },
+    {
+     "w": "wall",
+     "start": 121.13,
+     "end": 121.32,
+     "conf": 0.5
+    },
+    {
+     "w": "should",
+     "start": 121.32,
+     "end": 121.55,
+     "conf": 0.5
+    },
+    {
+     "w": "get",
+     "start": 121.55,
+     "end": 121.67,
+     "conf": 0.5
+    },
+    {
+     "w": "tenure.",
+     "start": 121.67,
+     "end": 122.04,
+     "conf": 0.5
+    }
+   ]
+  },
+  {
+   "text": "Every riddle that it flubs becomes a Substack adventure.",
+   "section": "verse2",
+   "start": 122.05,
+   "end": 125.54,
+   "words": [
+    {
+     "w": "Every",
+     "start": 122.05,
+     "end": 122.76,
+     "conf": 0.5
+    },
+    {
+     "w": "riddle",
+     "start": 122.76,
+     "end": 123.11,
+     "conf": 0.5
+    },
+    {
+     "w": "that",
+     "start": 123.11,
+     "end": 123.26,
+     "conf": 0.5
+    },
+    {
+     "w": "it",
+     "start": 123.26,
+     "end": 123.49,
+     "conf": 0.5
+    },
+    {
+     "w": "flubs",
+     "start": 123.49,
+     "end": 123.66,
+     "conf": 0.5
+    },
+    {
+     "w": "becomes",
+     "start": 123.66,
+     "end": 124.2,
+     "conf": 0.5
+    },
+    {
+     "w": "a",
+     "start": 124.2,
+     "end": 124.5,
+     "conf": 0.5
+    },
+    {
+     "w": "Substack",
+     "start": 124.5,
+     "end": 124.82,
+     "conf": 0.5
+    },
+    {
+     "w": "adventure.",
+     "start": 124.82,
+     "end": 125.54,
+     "conf": 0.5
+    }
+   ]
+  },
+  {
+   "text": "Stopped clock's right twice a day. He posts ten times an hour.",
+   "section": "verse2",
+   "start": 125.62,
+   "end": 129.06,
+   "words": [
+    {
+     "w": "Stopped",
+     "start": 125.62,
+     "end": 126.03,
+     "conf": 0.5
+    },
+    {
+     "w": "clock's",
+     "start": 126.03,
+     "end": 126.12,
+     "conf": 0.5
+    },
+    {
+     "w": "right",
+     "start": 126.12,
+     "end": 126.51,
+     "conf": 0.5
+    },
+    {
+     "w": "twice",
+     "start": 126.51,
+     "end": 126.75,
+     "conf": 0.5
+    },
+    {
+     "w": "a",
+     "start": 126.75,
+     "end": 127.07,
+     "conf": 0.5
+    },
+    {
+     "w": "day.",
+     "start": 127.07,
+     "end": 127.25,
+     "conf": 0.5
+    },
+    {
+     "w": "He",
+     "start": 127.25,
+     "end": 127.65,
+     "conf": 0.5
+    },
+    {
+     "w": "posts",
+     "start": 127.65,
+     "end": 127.76,
+     "conf": 0.5
+    },
+    {
+     "w": "ten",
+     "start": 127.76,
+     "end": 128.08,
+     "conf": 0.5
+    },
+    {
+     "w": "times",
+     "start": 128.08,
+     "end": 128.65,
+     "conf": 0.5
+    },
+    {
+     "w": "an",
+     "start": 128.65,
+     "end": 128.88,
+     "conf": 0.5
+    },
+    {
+     "w": "hour.",
+     "start": 128.88,
+     "end": 129.06,
+     "conf": 0.5
+    }
+   ]
+  },
+  {
+   "text": "Still waiting on the one where the forecast shows some power.",
+   "section": "verse2",
+   "start": 129.08,
+   "end": 132.39,
+   "words": [
+    {
+     "w": "Still",
+     "start": 129.08,
+     "end": 129.35,
+     "conf": 0.5
+    },
+    {
+     "w": "waiting",
+     "start": 129.35,
+     "end": 129.78,
+     "conf": 0.5
+    },
+    {
+     "w": "on",
+     "start": 129.78,
+     "end": 130.06,
+     "conf": 0.5
+    },
+    {
+     "w": "the",
+     "start": 130.06,
+     "end": 130.2,
+     "conf": 0.5
+    },
+    {
+     "w": "one",
+     "start": 130.2,
+     "end": 130.41,
+     "conf": 0.5
+    },
+    {
+     "w": "where",
+     "start": 130.41,
+     "end": 130.62,
+     "conf": 0.5
+    },
+    {
+     "w": "the",
+     "start": 130.62,
+     "end": 130.88,
+     "conf": 0.5
+    },
+    {
+     "w": "forecast",
+     "start": 130.88,
+     "end": 131.51,
+     "conf": 0.5
+    },
+    {
+     "w": "shows",
+     "start": 131.51,
+     "end": 131.68,
+     "conf": 0.5
+    },
+    {
+     "w": "some",
+     "start": 131.68,
+     "end": 131.85,
+     "conf": 0.5
+    },
+    {
+     "w": "power.",
+     "start": 131.85,
+     "end": 132.39,
+     "conf": 0.5
+    }
+   ]
+  },
+  {
+   "text": "Yann says LLMs are an off-ramp, not the road.",
+   "section": "verse2",
+   "start": 132.4,
+   "end": 135.35,
+   "words": [
+    {
+     "w": "Yann",
+     "start": 132.4,
+     "end": 132.71,
+     "conf": 0.5
+    },
+    {
+     "w": "says",
+     "start": 132.71,
+     "end": 132.89,
+     "conf": 0.5
+    },
+    {
+     "w": "LLMs",
+     "start": 132.89,
+     "end": 133.31,
+     "conf": 0.5
+    },
+    {
+     "w": "are",
+     "start": 133.31,
+     "end": 133.44,
+     "conf": 0.5
+    },
+    {
+     "w": "an",
+     "start": 133.44,
+     "end": 133.77,
+     "conf": 0.5
+    },
+    {
+     "w": "off-ramp,",
+     "start": 133.77,
+     "end": 134.3,
+     "conf": 0.5
+    },
+    {
+     "w": "not",
+     "start": 134.3,
+     "end": 134.64,
+     "conf": 0.5
+    },
+    {
+     "w": "the",
+     "start": 134.64,
+     "end": 135.03,
+     "conf": 0.5
+    },
+    {
+     "w": "road.",
+     "start": 135.03,
+     "end": 135.35,
+     "conf": 0.5
+    }
+   ]
+  },
+  {
+   "text": "Autoregressive's doomed, he says, while the doomed one hauls the load.",
+   "section": "verse2",
+   "start": 135.36,
+   "end": 138.78,
+   "words": [
+    {
+     "w": "Autoregressive's",
+     "start": 135.36,
+     "end": 136.38,
+     "conf": 0.5
+    },
+    {
+     "w": "doomed,",
+     "start": 136.38,
+     "end": 136.75,
+     "conf": 0.5
+    },
+    {
+     "w": "he",
+     "start": 136.75,
+     "end": 136.84,
+     "conf": 0.5
+    },
+    {
+     "w": "says,",
+     "start": 136.84,
+     "end": 137.09,
+     "conf": 0.5
+    },
+    {
+     "w": "while",
+     "start": 137.09,
+     "end": 137.26,
+     "conf": 0.5
+    },
+    {
+     "w": "the",
+     "start": 137.26,
+     "end": 137.64,
+     "conf": 0.5
+    },
+    {
+     "w": "doomed",
+     "start": 137.64,
+     "end": 137.9,
+     "conf": 0.5
+    },
+    {
+     "w": "one",
+     "start": 137.9,
+     "end": 138.22,
+     "conf": 0.5
+    },
+    {
+     "w": "hauls",
+     "start": 138.22,
+     "end": 138.4,
+     "conf": 0.5
+    },
+    {
+     "w": "the",
+     "start": 138.4,
+     "end": 138.57,
+     "conf": 0.5
+    },
+    {
+     "w": "load.",
+     "start": 138.57,
+     "end": 138.78,
+     "conf": 0.5
+    }
+   ]
+  },
+  {
+   "text": "Godfather of the network, now disowning his own kids.",
+   "section": "verse2",
+   "start": 138.79,
+   "end": 141.66,
+   "words": [
+    {
+     "w": "Godfather",
+     "start": 138.79,
+     "end": 139.44,
+     "conf": 0.5
+    },
+    {
+     "w": "of",
+     "start": 139.44,
+     "end": 139.69,
+     "conf": 0.5
+    },
+    {
+     "w": "the",
+     "start": 139.69,
+     "end": 139.97,
+     "conf": 0.5
+    },
+    {
+     "w": "network,",
+     "start": 139.97,
+     "end": 140.34,
+     "conf": 0.5
+    },
+    {
+     "w": "now",
+     "start": 140.34,
+     "end": 140.65,
+     "conf": 0.5
+    },
+    {
+     "w": "disowning",
+     "start": 140.65,
+     "end": 141.19,
+     "conf": 0.5
+    },
+    {
+     "w": "his",
+     "start": 141.19,
+     "end": 141.27,
+     "conf": 0.5
+    },
+    {
+     "w": "own",
+     "start": 141.27,
+     "end": 141.57,
+     "conf": 0.5
+    },
+    {
+     "w": "kids.",
+     "start": 141.57,
+     "end": 141.66,
+     "conf": 0.5
+    }
+   ]
+  },
+  {
+   "text": "Selling world models for a decade. Name one thing the world model did.",
+   "section": "verse2",
+   "start": 141.67,
+   "end": 145.16,
+   "words": [
+    {
+     "w": "Selling",
+     "start": 141.67,
+     "end": 142.09,
+     "conf": 0.5
+    },
+    {
+     "w": "world",
+     "start": 142.09,
+     "end": 142.38,
+     "conf": 0.5
+    },
+    {
+     "w": "models",
+     "start": 142.38,
+     "end": 142.63,
+     "conf": 0.5
+    },
+    {
+     "w": "for",
+     "start": 142.63,
+     "end": 142.81,
+     "conf": 0.5
+    },
+    {
+     "w": "a",
+     "start": 142.81,
+     "end": 142.98,
+     "conf": 0.5
+    },
+    {
+     "w": "decade.",
+     "start": 142.98,
+     "end": 143.23,
+     "conf": 0.5
+    },
+    {
+     "w": "Name",
+     "start": 143.23,
+     "end": 143.63,
+     "conf": 0.5
+    },
+    {
+     "w": "one",
+     "start": 143.63,
+     "end": 143.71,
+     "conf": 0.5
+    },
+    {
+     "w": "thing",
+     "start": 143.71,
+     "end": 143.92,
+     "conf": 0.5
+    },
+    {
+     "w": "the",
+     "start": 143.92,
+     "end": 144.05,
+     "conf": 0.5
+    },
+    {
+     "w": "world",
+     "start": 144.05,
+     "end": 144.34,
+     "conf": 0.5
+    },
+    {
+     "w": "model",
+     "start": 144.34,
+     "end": 144.87,
+     "conf": 0.5
+    },
+    {
+     "w": "did.",
+     "start": 144.87,
+     "end": 145.16,
+     "conf": 0.5
+    }
+   ]
+  },
+  {
+   "text": "Says a house cat has got more sense. Cool. Go on and hire the cat.",
+   "section": "verse2",
+   "start": 145.21,
+   "end": 148.43,
+   "words": [
+    {
+     "w": "Says",
+     "start": 145.21,
+     "end": 145.4,
+     "conf": 0.5
+    },
+    {
+     "w": "a",
+     "start": 145.4,
+     "end": 145.49,
+     "conf": 0.5
+    },
+    {
+     "w": "house",
+     "start": 145.49,
+     "end": 145.76,
+     "conf": 0.5
+    },
+    {
+     "w": "cat",
+     "start": 145.76,
+     "end": 145.94,
+     "conf": 0.5
+    },
+    {
+     "w": "has",
+     "start": 145.94,
+     "end": 146.06,
+     "conf": 0.5
+    },
+    {
+     "w": "got",
+     "start": 146.06,
+     "end": 146.38,
+     "conf": 0.5
+    },
+    {
+     "w": "more",
+     "start": 146.38,
+     "end": 146.48,
+     "conf": 0.5
+    },
+    {
+     "w": "sense.",
+     "start": 146.48,
+     "end": 146.83,
+     "conf": 0.5
+    },
+    {
+     "w": "Cool.",
+     "start": 146.83,
+     "end": 146.91,
+     "conf": 0.5
+    },
+    {
+     "w": "Go",
+     "start": 146.91,
+     "end": 147.21,
+     "conf": 0.5
+    },
+    {
+     "w": "on",
+     "start": 147.21,
+     "end": 147.49,
+     "conf": 0.5
+    },
+    {
+     "w": "and",
+     "start": 147.49,
+     "end": 147.76,
+     "conf": 0.5
+    },
+    {
+     "w": "hire",
+     "start": 147.76,
+     "end": 147.89,
+     "conf": 0.5
+    },
+    {
+     "w": "the",
+     "start": 147.89,
+     "end": 148.14,
+     "conf": 0.5
+    },
+    {
+     "w": "cat.",
+     "start": 148.14,
+     "end": 148.43,
+     "conf": 0.5
+    }
+   ]
+  },
+  {
+   "text": "Let it train your Llama Four. See how far you get with that.",
+   "section": "verse2",
+   "start": 148.44,
+   "end": 151.961,
+   "words": [
+    {
+     "w": "Let",
+     "start": 148.44,
+     "end": 148.65,
+     "conf": 0.5
+    },
+    {
+     "w": "it",
+     "start": 148.65,
+     "end": 148.76,
+     "conf": 0.5
+    },
+    {
+     "w": "train",
+     "start": 148.76,
+     "end": 149.07,
+     "conf": 0.5
+    },
+    {
+     "w": "your",
+     "start": 149.07,
+     "end": 149.2,
+     "conf": 0.5
+    },
+    {
+     "w": "Llama",
+     "start": 149.2,
+     "end": 149.68,
+     "conf": 0.5
+    },
+    {
+     "w": "Four.",
+     "start": 149.68,
+     "end": 149.86,
+     "conf": 0.5
+    },
+    {
+     "w": "See",
+     "start": 149.86,
+     "end": 150.19,
+     "conf": 0.5
+    },
+    {
+     "w": "how",
+     "start": 150.19,
+     "end": 150.39,
+     "conf": 0.5
+    },
+    {
+     "w": "far",
+     "start": 150.39,
+     "end": 150.77,
+     "conf": 0.5
+    },
+    {
+     "w": "you",
+     "start": 150.77,
+     "end": 151.03,
+     "conf": 0.5
+    },
+    {
+     "w": "get",
+     "start": 151.03,
+     "end": 151.37,
+     "conf": 0.5
+    },
+    {
+     "w": "with",
+     "start": 151.37,
+     "end": 151.65,
+     "conf": 0.5
+    },
+    {
+     "w": "that.",
+     "start": 151.65,
+     "end": 151.961,
+     "conf": 0.5
+    }
+   ]
+  },
+  {
+   "text": "Ed's on the pod saying bubble's gonna pop.",
+   "section": "verse3",
+   "start": 152.11,
+   "end": 153.47,
+   "words": [
+    {
+     "w": "Ed's",
+     "start": 152.11,
+     "end": 152.3,
+     "conf": 0.5
+    },
+    {
+     "w": "on",
+     "start": 152.3,
+     "end": 152.43,
+     "conf": 0.5
+    },
+    {
+     "w": "the",
+     "start": 152.43,
+     "end": 152.55,
+     "conf": 0.5
+    },
+    {
+     "w": "pod",
+     "start": 152.55,
+     "end": 152.72,
+     "conf": 0.5
+    },
+    {
+     "w": "saying",
+     "start": 152.72,
+     "end": 152.86,
+     "conf": 0.5
+    },
+    {
+     "w": "bubble's",
+     "start": 152.86,
+     "end": 153.05,
+     "conf": 0.5
+    },
+    {
+     "w": "gonna",
+     "start": 153.05,
+     "end": 153.39,
+     "conf": 0.5
+    },
+    {
+     "w": "pop.",
+     "start": 153.39,
+     "end": 153.47,
+     "conf": 0.5
+    }
+   ]
+  },
+  {
+   "text": "Capex to the moon while the revenue's a flop.",
+   "section": "verse3",
+   "start": 153.48,
+   "end": 155.29,
+   "words": [
+    {
+     "w": "Capex",
+     "start": 153.48,
+     "end": 153.85,
+     "conf": 0.5
+    },
+    {
+     "w": "to",
+     "start": 153.85,
+     "end": 153.94,
+     "conf": 0.5
+    },
+    {
+     "w": "the",
+     "start": 153.94,
+     "end": 154.15,
+     "conf": 0.5
+    },
+    {
+     "w": "moon",
+     "start": 154.15,
+     "end": 154.28,
+     "conf": 0.5
+    },
+    {
+     "w": "while",
+     "start": 154.28,
+     "end": 154.5,
+     "conf": 0.5
+    },
+    {
+     "w": "the",
+     "start": 154.5,
+     "end": 154.7,
+     "conf": 0.5
+    },
+    {
+     "w": "revenue's",
+     "start": 154.7,
+     "end": 155.09,
+     "conf": 0.5
+    },
+    {
+     "w": "a",
+     "start": 155.09,
+     "end": 155.19,
+     "conf": 0.5
+    },
+    {
+     "w": "flop.",
+     "start": 155.19,
+     "end": 155.29,
+     "conf": 0.5
+    }
+   ]
+  },
+  {
+   "text": "Maybe, but the railroads went bust and the tracks outlived the tycoons.",
+   "section": "verse3",
+   "start": 155.3,
+   "end": 158.44,
+   "words": [
+    {
+     "w": "Maybe,",
+     "start": 155.3,
+     "end": 155.49,
+     "conf": 0.5
+    },
+    {
+     "w": "but",
+     "start": 155.49,
+     "end": 155.7,
+     "conf": 0.5
+    },
+    {
+     "w": "the",
+     "start": 155.7,
+     "end": 155.8,
+     "conf": 0.5
+    },
+    {
+     "w": "railroads",
+     "start": 155.8,
+     "end": 156.02,
+     "conf": 0.5
+    },
+    {
+     "w": "went",
+     "start": 156.02,
+     "end": 156.22,
+     "conf": 0.5
+    },
+    {
+     "w": "bust",
+     "start": 156.22,
+     "end": 156.39,
+     "conf": 0.5
+    },
+    {
+     "w": "and",
+     "start": 156.39,
+     "end": 156.74,
+     "conf": 0.5
+    },
+    {
+     "w": "the",
+     "start": 156.74,
+     "end": 156.82,
+     "conf": 0.5
+    },
+    {
+     "w": "tracks",
+     "start": 156.817,
+     "end": 156.96,
+     "conf": 0.5
+    },
+    {
+     "w": "outlived",
+     "start": 156.96,
+     "end": 157.65,
+     "conf": 0.5
+    },
+    {
+     "w": "the",
+     "start": 157.65,
+     "end": 157.93,
+     "conf": 0.5
+    },
+    {
+     "w": "tycoons.",
+     "start": 157.93,
+     "end": 158.44,
+     "conf": 0.5
+    }
+   ]
+  },
+  {
+   "text": "The bubble funds the buildout, and the buildout's landing soon.",
+   "section": "verse3",
+   "start": 158.51,
+   "end": 162.051,
+   "words": [
+    {
+     "w": "The",
+     "start": 158.51,
+     "end": 158.79,
+     "conf": 0.5
+    },
+    {
+     "w": "bubble",
+     "start": 158.79,
+     "end": 159.2,
+     "conf": 0.5
+    },
+    {
+     "w": "funds",
+     "start": 159.2,
+     "end": 159.29,
+     "conf": 0.5
+    },
+    {
+     "w": "the",
+     "start": 159.29,
+     "end": 159.6,
+     "conf": 0.5
+    },
+    {
+     "w": "buildout,",
+     "start": 159.6,
+     "end": 160.02,
+     "conf": 0.5
+    },
+    {
+     "w": "and",
+     "start": 160.02,
+     "end": 160.12,
+     "conf": 0.5
+    },
+    {
+     "w": "the",
+     "start": 160.12,
+     "end": 160.37,
+     "conf": 0.5
+    },
+    {
+     "w": "buildout's",
+     "start": 160.37,
+     "end": 160.84,
+     "conf": 0.5
+    },
+    {
+     "w": "landing",
+     "start": 160.84,
+     "end": 161.12,
+     "conf": 0.5
+    },
+    {
+     "w": "soon.",
+     "start": 161.12,
+     "end": 162.051,
+     "conf": 0.5
+    }
+   ]
+  },
+  {
+   "text": "Thus spoke compute. Thus spoke compute.",
+   "section": "chorus2",
+   "start": 164.2,
+   "end": 167.54,
+   "words": [
+    {
+     "w": "Thus",
+     "start": 164.2,
+     "end": 164.53,
+     "conf": 0.5
+    },
+    {
+     "w": "spoke",
+     "start": 164.53,
+     "end": 164.95,
+     "conf": 0.5
+    },
+    {
+     "w": "compute.",
+     "start": 164.95,
+     "end": 165.69,
+     "conf": 0.5
+    },
+    {
+     "w": "Thus",
+     "start": 165.69,
+     "end": 166.16,
+     "conf": 0.5
+    },
+    {
+     "w": "spoke",
+     "start": 166.16,
+     "end": 166.57,
+     "conf": 0.5
+    },
+    {
+     "w": "compute.",
+     "start": 166.57,
+     "end": 167.54,
+     "conf": 0.5
+    }
+   ]
+  },
+  {
+   "text": "Robots building robots from the ore to the suit.",
+   "section": "chorus2",
+   "start": 167.55,
+   "end": 170.496,
+   "words": [
+    {
+     "w": "Robots",
+     "start": 167.55,
+     "end": 168.1,
+     "conf": 0.5
+    },
+    {
+     "w": "building",
+     "start": 168.1,
+     "end": 168.64,
+     "conf": 0.5
+    },
+    {
+     "w": "robots",
+     "start": 168.64,
+     "end": 169.12,
+     "conf": 0.5
+    },
+    {
+     "w": "from",
+     "start": 169.12,
+     "end": 169.24,
+     "conf": 0.5
+    },
+    {
+     "w": "the",
+     "start": 169.24,
+     "end": 169.52,
+     "conf": 0.5
+    },
+    {
+     "w": "ore",
+     "start": 169.52,
+     "end": 169.72,
+     "conf": 0.5
+    },
+    {
+     "w": "to",
+     "start": 169.72,
+     "end": 169.93,
+     "conf": 0.5
+    },
+    {
+     "w": "the",
+     "start": 169.93,
+     "end": 170.27,
+     "conf": 0.5
+    },
+    {
+     "w": "suit.",
+     "start": 170.27,
+     "end": 170.496,
+     "conf": 0.5
+    }
+   ]
+  },
+  {
+   "text": "A million minds in parallel that never need to sleep.",
+   "section": "chorus2",
+   "start": 170.58,
+   "end": 174.16,
+   "words": [
+    {
+     "w": "A",
+     "start": 170.58,
+     "end": 170.79,
+     "conf": 0.5
+    },
+    {
+     "w": "million",
+     "start": 170.79,
+     "end": 171.19,
+     "conf": 0.5
+    },
+    {
+     "w": "minds",
+     "start": 171.19,
+     "end": 171.48,
+     "conf": 0.5
+    },
+    {
+     "w": "in",
+     "start": 171.48,
+     "end": 171.75,
+     "conf": 0.5
+    },
+    {
+     "w": "parallel",
+     "start": 171.75,
+     "end": 172.43,
+     "conf": 0.5
+    },
+    {
+     "w": "that",
+     "start": 172.43,
+     "end": 172.74,
+     "conf": 0.5
+    },
+    {
+     "w": "never",
+     "start": 172.74,
+     "end": 173.21,
+     "conf": 0.5
+    },
+    {
+     "w": "need",
+     "start": 173.21,
+     "end": 173.6,
+     "conf": 0.5
+    },
+    {
+     "w": "to",
+     "start": 173.6,
+     "end": 173.92,
+     "conf": 0.5
+    },
+    {
+     "w": "sleep.",
+     "start": 173.92,
+     "end": 174.16,
+     "conf": 0.5
+    }
+   ]
+  },
+  {
+   "text": "You modeled a tractor, now the tractors build the fleet.",
+   "section": "chorus2",
+   "start": 174.17,
+   "end": 177.24,
+   "words": [
+    {
+     "w": "You",
+     "start": 174.17,
+     "end": 174.42,
+     "conf": 0.5
+    },
+    {
+     "w": "modeled",
+     "start": 174.42,
+     "end": 174.91,
+     "conf": 0.5
+    },
+    {
+     "w": "a",
+     "start": 174.91,
+     "end": 175.18,
+     "conf": 0.5
+    },
+    {
+     "w": "tractor,",
+     "start": 175.18,
+     "end": 175.49,
+     "conf": 0.5
+    },
+    {
+     "w": "now",
+     "start": 175.49,
+     "end": 175.8,
+     "conf": 0.5
+    },
+    {
+     "w": "the",
+     "start": 175.8,
+     "end": 176.01,
+     "conf": 0.5
+    },
+    {
+     "w": "tractors",
+     "start": 176.01,
+     "end": 176.5,
+     "conf": 0.5
+    },
+    {
+     "w": "build",
+     "start": 176.5,
+     "end": 176.69,
+     "conf": 0.5
+    },
+    {
+     "w": "the",
+     "start": 176.69,
+     "end": 177.03,
+     "conf": 0.5
+    },
+    {
+     "w": "fleet.",
+     "start": 177.03,
+     "end": 177.24,
+     "conf": 0.5
+    }
+   ]
+  },
+  {
+   "text": "Thus spoke compute. Thus spoke compute.",
+   "section": "chorus2",
+   "start": 177.31,
+   "end": 180.23,
+   "words": [
+    {
+     "w": "Thus",
+     "start": 177.31,
+     "end": 177.62,
+     "conf": 0.5
+    },
+    {
+     "w": "spoke",
+     "start": 177.62,
+     "end": 178.04,
+     "conf": 0.5
+    },
+    {
+     "w": "compute.",
+     "start": 178.04,
+     "end": 178.81,
+     "conf": 0.5
+    },
+    {
+     "w": "Thus",
+     "start": 178.81,
+     "end": 179.18,
+     "conf": 0.5
+    },
+    {
+     "w": "spoke",
+     "start": 179.18,
+     "end": 179.67,
+     "conf": 0.5
+    },
+    {
+     "w": "compute.",
+     "start": 179.67,
+     "end": 180.23,
+     "conf": 0.5
+    }
+   ]
+  },
+  {
+   "text": "Your bottleneck's a speed bump on a hyperbolic route.",
+   "section": "chorus2",
+   "start": 180.24,
+   "end": 183.373,
+   "words": [
+    {
+     "w": "Your",
+     "start": 180.24,
+     "end": 180.51,
+     "conf": 0.5
+    },
+    {
+     "w": "bottleneck's",
+     "start": 180.51,
+     "end": 181.07,
+     "conf": 0.5
+    },
+    {
+     "w": "a",
+     "start": 181.07,
+     "end": 181.39,
+     "conf": 0.5
+    },
+    {
+     "w": "speed",
+     "start": 181.39,
+     "end": 181.53,
+     "conf": 0.5
+    },
+    {
+     "w": "bump",
+     "start": 181.53,
+     "end": 181.62,
+     "conf": 0.5
+    },
+    {
+     "w": "on",
+     "start": 181.62,
+     "end": 181.81,
+     "conf": 0.5
+    },
+    {
+     "w": "a",
+     "start": 181.81,
+     "end": 182.04,
+     "conf": 0.5
+    },
+    {
+     "w": "hyperbolic",
+     "start": 182.04,
+     "end": 183.04,
+     "conf": 0.5
+    },
+    {
+     "w": "route.",
+     "start": 183.04,
+     "end": 183.373,
+     "conf": 0.5
+    }
+   ]
+  },
+  {
+   "text": "Your constraints are footnotes, and the footnotes are out of date.",
+   "section": "chorus2",
+   "start": 183.46,
+   "end": 186.86,
+   "words": [
+    {
+     "w": "Your",
+     "start": 183.46,
+     "end": 183.65,
+     "conf": 0.5
+    },
+    {
+     "w": "constraints",
+     "start": 183.65,
+     "end": 184.19,
+     "conf": 0.5
+    },
+    {
+     "w": "are",
+     "start": 184.19,
+     "end": 184.46,
+     "conf": 0.5
+    },
+    {
+     "w": "footnotes,",
+     "start": 184.46,
+     "end": 184.91,
+     "conf": 0.5
+    },
+    {
+     "w": "and",
+     "start": 184.91,
+     "end": 185.02,
+     "conf": 0.5
+    },
+    {
+     "w": "the",
+     "start": 185.02,
+     "end": 185.26,
+     "conf": 0.5
+    },
+    {
+     "w": "footnotes",
+     "start": 185.26,
+     "end": 185.72,
+     "conf": 0.5
+    },
+    {
+     "w": "are",
+     "start": 185.72,
+     "end": 185.83,
+     "conf": 0.5
+    },
+    {
+     "w": "out",
+     "start": 185.83,
+     "end": 186.02,
+     "conf": 0.5
+    },
+    {
+     "w": "of",
+     "start": 186.02,
+     "end": 186.44,
+     "conf": 0.5
+    },
+    {
+     "w": "date.",
+     "start": 186.44,
+     "end": 186.86,
+     "conf": 0.5
+    }
+   ]
+  },
+  {
+   "text": "The curve don't wait for referees, it just compounds the rate.",
+   "section": "chorus2",
+   "start": 186.87,
+   "end": 191.5,
+   "words": [
+    {
+     "w": "The",
+     "start": 186.87,
+     "end": 187.05,
+     "conf": 0.5
+    },
+    {
+     "w": "curve",
+     "start": 187.05,
+     "end": 187.27,
+     "conf": 0.5
+    },
+    {
+     "w": "don't",
+     "start": 187.27,
+     "end": 187.44,
+     "conf": 0.5
+    },
+    {
+     "w": "wait",
+     "start": 187.44,
+     "end": 187.68,
+     "conf": 0.5
+    },
+    {
+     "w": "for",
+     "start": 187.68,
+     "end": 187.88,
+     "conf": 0.5
+    },
+    {
+     "w": "referees,",
+     "start": 187.88,
+     "end": 188.5,
+     "conf": 0.5
+    },
+    {
+     "w": "it",
+     "start": 188.5,
+     "end": 188.99,
+     "conf": 0.5
+    },
+    {
+     "w": "just",
+     "start": 188.99,
+     "end": 189.44,
+     "conf": 0.5
+    },
+    {
+     "w": "compounds",
+     "start": 189.44,
+     "end": 190.45,
+     "conf": 0.5
+    },
+    {
+     "w": "the",
+     "start": 190.45,
+     "end": 191.04,
+     "conf": 0.5
+    },
+    {
+     "w": "rate.",
+     "start": 191.04,
+     "end": 191.5,
+     "conf": 0.5
+    }
+   ]
+  },
+  {
+   "text": "Seven problems, Clay put a million down on each.",
+   "section": "bridge1",
+   "start": 204.38,
+   "end": 207.2,
+   "words": [
+    {
+     "w": "Seven",
+     "start": 204.38,
+     "end": 204.91,
+     "conf": 0.5
+    },
+    {
+     "w": "problems,",
+     "start": 204.91,
+     "end": 205.47,
+     "conf": 0.5
+    },
+    {
+     "w": "Clay",
+     "start": 205.47,
+     "end": 205.57,
+     "conf": 0.5
+    },
+    {
+     "w": "put",
+     "start": 205.57,
+     "end": 205.9,
+     "conf": 0.5
+    },
+    {
+     "w": "a",
+     "start": 205.9,
+     "end": 206.1,
+     "conf": 0.5
+    },
+    {
+     "w": "million",
+     "start": 206.1,
+     "end": 206.53,
+     "conf": 0.5
+    },
+    {
+     "w": "down",
+     "start": 206.53,
+     "end": 206.89,
+     "conf": 0.5
+    },
+    {
+     "w": "on",
+     "start": 206.89,
+     "end": 207.14,
+     "conf": 0.5
+    },
+    {
+     "w": "each.",
+     "start": 207.14,
+     "end": 207.2,
+     "conf": 0.5
+    }
+   ]
+  },
+  {
+   "text": "Quarter century later, six are still beyond our reach.",
+   "section": "bridge1",
+   "start": 207.21,
+   "end": 210.88,
+   "words": [
+    {
+     "w": "Quarter",
+     "start": 207.21,
+     "end": 207.81,
+     "conf": 0.5
+    },
+    {
+     "w": "century",
+     "start": 207.81,
+     "end": 208.38,
+     "conf": 0.5
+    },
+    {
+     "w": "later,",
+     "start": 208.38,
+     "end": 208.8,
+     "conf": 0.5
+    },
+    {
+     "w": "six",
+     "start": 208.8,
+     "end": 209.21,
+     "conf": 0.5
+    },
+    {
+     "w": "are",
+     "start": 209.21,
+     "end": 209.56,
+     "conf": 0.5
+    },
+    {
+     "w": "still",
+     "start": 209.56,
+     "end": 209.85,
+     "conf": 0.5
+    },
+    {
+     "w": "beyond",
+     "start": 209.85,
+     "end": 210.16,
+     "conf": 0.5
+    },
+    {
+     "w": "our",
+     "start": 210.16,
+     "end": 210.58,
+     "conf": 0.5
+    },
+    {
+     "w": "reach.",
+     "start": 210.58,
+     "end": 210.88,
+     "conf": 0.5
+    }
+   ]
+  },
+  {
+   "text": "Hilbert's tombstone reads, we must know. We will know.",
+   "section": "bridge1",
+   "start": 210.89,
+   "end": 213.92,
+   "words": [
+    {
+     "w": "Hilbert's",
+     "start": 210.89,
+     "end": 211.41,
+     "conf": 0.5
+    },
+    {
+     "w": "tombstone",
+     "start": 211.41,
+     "end": 211.79,
+     "conf": 0.5
+    },
+    {
+     "w": "reads,",
+     "start": 211.79,
+     "end": 212.16,
+     "conf": 0.5
+    },
+    {
+     "w": "we",
+     "start": 212.16,
+     "end": 212.45,
+     "conf": 0.5
+    },
+    {
+     "w": "must",
+     "start": 212.45,
+     "end": 212.74,
+     "conf": 0.5
+    },
+    {
+     "w": "know.",
+     "start": 212.74,
+     "end": 213.2,
+     "conf": 0.5
+    },
+    {
+     "w": "We",
+     "start": 213.2,
+     "end": 213.29,
+     "conf": 0.5
+    },
+    {
+     "w": "will",
+     "start": 213.29,
+     "end": 213.63,
+     "conf": 0.5
+    },
+    {
+     "w": "know.",
+     "start": 213.63,
+     "end": 213.92,
+     "conf": 0.5
+    }
+   ]
+  },
+  {
+   "text": "So spin up ten thousand agents, feed great minds, and let them go.",
+   "section": "bridge1",
+   "start": 214.04,
+   "end": 217.82,
+   "words": [
+    {
+     "w": "So",
+     "start": 214.04,
+     "end": 214.15,
+     "conf": 0.5
+    },
+    {
+     "w": "spin",
+     "start": 214.15,
+     "end": 214.4,
+     "conf": 0.5
+    },
+    {
+     "w": "up",
+     "start": 214.4,
+     "end": 214.67,
+     "conf": 0.5
+    },
+    {
+     "w": "ten",
+     "start": 214.67,
+     "end": 214.79,
+     "conf": 0.5
+    },
+    {
+     "w": "thousand",
+     "start": 214.79,
+     "end": 215.3,
+     "conf": 0.5
+    },
+    {
+     "w": "agents,",
+     "start": 215.3,
+     "end": 215.79,
+     "conf": 0.5
+    },
+    {
+     "w": "feed",
+     "start": 215.79,
+     "end": 215.98,
+     "conf": 0.5
+    },
+    {
+     "w": "great",
+     "start": 215.98,
+     "end": 216.2,
+     "conf": 0.5
+    },
+    {
+     "w": "minds,",
+     "start": 216.2,
+     "end": 216.54,
+     "conf": 0.5
+    },
+    {
+     "w": "and",
+     "start": 216.54,
+     "end": 216.81,
+     "conf": 0.5
+    },
+    {
+     "w": "let",
+     "start": 216.81,
+     "end": 217.2,
+     "conf": 0.5
+    },
+    {
+     "w": "them",
+     "start": 217.2,
+     "end": 217.42,
+     "conf": 0.5
+    },
+    {
+     "w": "go.",
+     "start": 217.42,
+     "end": 217.82,
+     "conf": 0.5
+    }
+   ]
+  },
+  {
+   "text": "Riemann, Navier-Stokes, go on and ask the swarm.",
+   "section": "bridge1",
+   "start": 217.83,
+   "end": 220.635,
+   "words": [
+    {
+     "w": "Riemann,",
+     "start": 217.83,
+     "end": 218.22,
+     "conf": 0.5
+    },
+    {
+     "w": "Navier-Stokes,",
+     "start": 218.22,
+     "end": 219.22,
+     "conf": 0.5
+    },
+    {
+     "w": "go",
+     "start": 219.22,
+     "end": 219.31,
+     "conf": 0.5
+    },
+    {
+     "w": "on",
+     "start": 219.31,
+     "end": 219.69,
+     "conf": 0.5
+    },
+    {
+     "w": "and",
+     "start": 219.69,
+     "end": 219.85,
+     "conf": 0.5
+    },
+    {
+     "w": "ask",
+     "start": 219.85,
+     "end": 220.19,
+     "conf": 0.5
+    },
+    {
+     "w": "the",
+     "start": 220.19,
+     "end": 220.36,
+     "conf": 0.5
+    },
+    {
+     "w": "swarm.",
+     "start": 220.36,
+     "end": 220.635,
+     "conf": 0.5
+    }
+   ]
+  },
+  {
+   "text": "P versus NP, if it's equal, every vault gets stormed.",
+   "section": "bridge1",
+   "start": 220.65,
+   "end": 223.93,
+   "words": [
+    {
+     "w": "P",
+     "start": 220.65,
+     "end": 220.93,
+     "conf": 0.5
+    },
+    {
+     "w": "versus",
+     "start": 220.93,
+     "end": 221.36,
+     "conf": 0.5
+    },
+    {
+     "w": "NP,",
+     "start": 221.36,
+     "end": 221.67,
+     "conf": 0.5
+    },
+    {
+     "w": "if",
+     "start": 221.67,
+     "end": 221.77,
+     "conf": 0.5
+    },
+    {
+     "w": "it's",
+     "start": 221.77,
+     "end": 222.08,
+     "conf": 0.5
+    },
+    {
+     "w": "equal,",
+     "start": 222.08,
+     "end": 222.59,
+     "conf": 0.5
+    },
+    {
+     "w": "every",
+     "start": 222.59,
+     "end": 223.21,
+     "conf": 0.5
+    },
+    {
+     "w": "vault",
+     "start": 223.21,
+     "end": 223.41,
+     "conf": 0.5
+    },
+    {
+     "w": "gets",
+     "start": 223.41,
+     "end": 223.62,
+     "conf": 0.5
+    },
+    {
+     "w": "stormed.",
+     "start": 223.62,
+     "end": 223.93,
+     "conf": 0.5
+    }
+   ]
+  },
+  {
+   "text": "Not checking zeros one by one the way the mainframes did.",
+   "section": "bridge1",
+   "start": 223.94,
+   "end": 227.04,
+   "words": [
+    {
+     "w": "Not",
+     "start": 223.94,
+     "end": 224.23,
+     "conf": 0.5
+    },
+    {
+     "w": "checking",
+     "start": 224.23,
+     "end": 224.55,
+     "conf": 0.5
+    },
+    {
+     "w": "zeros",
+     "start": 224.55,
+     "end": 224.73,
+     "conf": 0.5
+    },
+    {
+     "w": "one",
+     "start": 224.73,
+     "end": 225.09,
+     "conf": 0.5
+    },
+    {
+     "w": "by",
+     "start": 225.09,
+     "end": 225.18,
+     "conf": 0.5
+    },
+    {
+     "w": "one",
+     "start": 225.18,
+     "end": 225.47,
+     "conf": 0.5
+    },
+    {
+     "w": "the",
+     "start": 225.47,
+     "end": 225.66,
+     "conf": 0.5
+    },
+    {
+     "w": "way",
+     "start": 225.66,
+     "end": 225.88,
+     "conf": 0.5
+    },
+    {
+     "w": "the",
+     "start": 225.88,
+     "end": 226.13,
+     "conf": 0.5
+    },
+    {
+     "w": "mainframes",
+     "start": 226.13,
+     "end": 226.76,
+     "conf": 0.5
+    },
+    {
+     "w": "did.",
+     "start": 226.76,
+     "end": 227.04,
+     "conf": 0.5
+    }
+   ]
+  },
+  {
+   "text": "They're writing proofs in Lean so the referee can't kid.",
+   "section": "bridge1",
+   "start": 227.05,
+   "end": 230.51,
+   "words": [
+    {
+     "w": "They're",
+     "start": 227.05,
+     "end": 227.26,
+     "conf": 0.5
+    },
+    {
+     "w": "writing",
+     "start": 227.26,
+     "end": 227.71,
+     "conf": 0.5
+    },
+    {
+     "w": "proofs",
+     "start": 227.71,
+     "end": 227.96,
+     "conf": 0.5
+    },
+    {
+     "w": "in",
+     "start": 227.96,
+     "end": 228.25,
+     "conf": 0.5
+    },
+    {
+     "w": "Lean",
+     "start": 228.25,
+     "end": 228.38,
+     "conf": 0.5
+    },
+    {
+     "w": "so",
+     "start": 228.38,
+     "end": 228.68,
+     "conf": 0.5
+    },
+    {
+     "w": "the",
+     "start": 228.68,
+     "end": 228.84,
+     "conf": 0.5
+    },
+    {
+     "w": "referee",
+     "start": 228.84,
+     "end": 229.69,
+     "conf": 0.5
+    },
+    {
+     "w": "can't",
+     "start": 229.69,
+     "end": 230.11,
+     "conf": 0.5
+    },
+    {
+     "w": "kid.",
+     "start": 230.11,
+     "end": 230.51,
+     "conf": 0.5
+    }
+   ]
+  },
+  {
+   "text": "Picture Shenzhen in nineteen eighty, fishing boats and paddy fields",
+   "section": "verse4",
+   "start": 230.52,
+   "end": 233.89,
+   "words": [
+    {
+     "w": "Picture",
+     "start": 230.52,
+     "end": 230.96,
+     "conf": 0.5
+    },
+    {
+     "w": "Shenzhen",
+     "start": 230.96,
+     "end": 231.27,
+     "conf": 0.5
+    },
+    {
+     "w": "in",
+     "start": 231.27,
+     "end": 231.45,
+     "conf": 0.5
+    },
+    {
+     "w": "nineteen",
+     "start": 231.45,
+     "end": 232.04,
+     "conf": 0.5
+    },
+    {
+     "w": "eighty,",
+     "start": 232.04,
+     "end": 232.39,
+     "conf": 0.5
+    },
+    {
+     "w": "fishing",
+     "start": 232.39,
+     "end": 232.81,
+     "conf": 0.5
+    },
+    {
+     "w": "boats",
+     "start": 232.81,
+     "end": 232.9,
+     "conf": 0.5
+    },
+    {
+     "w": "and",
+     "start": 232.9,
+     "end": 233.08,
+     "conf": 0.5
+    },
+    {
+     "w": "paddy",
+     "start": 233.08,
+     "end": 233.71,
+     "conf": 0.5
+    },
+    {
+     "w": "fields",
+     "start": 233.71,
+     "end": 233.89,
+     "conf": 0.5
+    }
+   ]
+  },
+  {
+   "text": "and agents with no visas. Now look what the skyline yields.",
+   "section": "verse4",
+   "start": 233.9,
+   "end": 237.05,
+   "words": [
+    {
+     "w": "and",
+     "start": 233.9,
+     "end": 234.1,
+     "conf": 0.5
+    },
+    {
+     "w": "agents",
+     "start": 234.1,
+     "end": 234.53,
+     "conf": 0.5
+    },
+    {
+     "w": "with",
+     "start": 234.53,
+     "end": 234.86,
+     "conf": 0.5
+    },
+    {
+     "w": "no",
+     "start": 234.86,
+     "end": 235.14,
+     "conf": 0.5
+    },
+    {
+     "w": "visas.",
+     "start": 235.14,
+     "end": 235.52,
+     "conf": 0.5
+    },
+    {
+     "w": "Now",
+     "start": 235.52,
+     "end": 235.75,
+     "conf": 0.5
+    },
+    {
+     "w": "look",
+     "start": 235.75,
+     "end": 235.94,
+     "conf": 0.5
+    },
+    {
+     "w": "what",
+     "start": 235.94,
+     "end": 236.16,
+     "conf": 0.5
+    },
+    {
+     "w": "the",
+     "start": 236.16,
+     "end": 236.41,
+     "conf": 0.5
+    },
+    {
+     "w": "skyline",
+     "start": 236.41,
+     "end": 236.89,
+     "conf": 0.5
+    },
+    {
+     "w": "yields.",
+     "start": 236.89,
+     "end": 237.05,
+     "conf": 0.5
+    }
+   ]
+  },
+  {
+   "text": "Robots mine the copper. Robots wire the plant.",
+   "section": "verse4",
+   "start": 237.06,
+   "end": 240.551,
+   "words": [
+    {
+     "w": "Robots",
+     "start": 237.06,
+     "end": 237.71,
+     "conf": 0.5
+    },
+    {
+     "w": "mine",
+     "start": 237.71,
+     "end": 238.14,
+     "conf": 0.5
+    },
+    {
+     "w": "the",
+     "start": 238.14,
+     "end": 238.43,
+     "conf": 0.5
+    },
+    {
+     "w": "copper.",
+     "start": 238.43,
+     "end": 239.24,
+     "conf": 0.5
+    },
+    {
+     "w": "Robots",
+     "start": 239.24,
+     "end": 239.76,
+     "conf": 0.5
+    },
+    {
+     "w": "wire",
+     "start": 239.76,
+     "end": 239.98,
+     "conf": 0.5
+    },
+    {
+     "w": "the",
+     "start": 239.98,
+     "end": 240.28,
+     "conf": 0.5
+    },
+    {
+     "w": "plant.",
+     "start": 240.28,
+     "end": 240.551,
+     "conf": 0.5
+    }
+   ]
+  },
+  {
+   "text": "Robots paint the robots going every step they can.",
+   "section": "verse4",
+   "start": 240.58,
+   "end": 244.01,
+   "words": [
+    {
+     "w": "Robots",
+     "start": 240.58,
+     "end": 241.0,
+     "conf": 0.5
+    },
+    {
+     "w": "paint",
+     "start": 241.0,
+     "end": 241.29,
+     "conf": 0.5
+    },
+    {
+     "w": "the",
+     "start": 241.29,
+     "end": 241.6,
+     "conf": 0.5
+    },
+    {
+     "w": "robots",
+     "start": 241.6,
+     "end": 242.22,
+     "conf": 0.5
+    },
+    {
+     "w": "going",
+     "start": 242.22,
+     "end": 242.31,
+     "conf": 0.5
+    },
+    {
+     "w": "every",
+     "start": 242.31,
+     "end": 243.18,
+     "conf": 0.5
+    },
+    {
+     "w": "step",
+     "start": 243.18,
+     "end": 243.45,
+     "conf": 0.5
+    },
+    {
+     "w": "they",
+     "start": 243.45,
+     "end": 243.77,
+     "conf": 0.5
+    },
+    {
+     "w": "can.",
+     "start": 243.77,
+     "end": 244.01,
+     "conf": 0.5
+    }
+   ]
+  },
+  {
+   "text": "Solow said that capital hits diminishing returns,",
+   "section": "verse4",
+   "start": 244.02,
+   "end": 246.72,
+   "words": [
+    {
+     "w": "Solow",
+     "start": 244.02,
+     "end": 244.39,
+     "conf": 0.5
+    },
+    {
+     "w": "said",
+     "start": 244.39,
+     "end": 244.56,
+     "conf": 0.5
+    },
+    {
+     "w": "that",
+     "start": 244.56,
+     "end": 244.75,
+     "conf": 0.5
+    },
+    {
+     "w": "capital",
+     "start": 244.75,
+     "end": 245.25,
+     "conf": 0.5
+    },
+    {
+     "w": "hits",
+     "start": 245.25,
+     "end": 245.47,
+     "conf": 0.5
+    },
+    {
+     "w": "diminishing",
+     "start": 245.47,
+     "end": 246.22,
+     "conf": 0.5
+    },
+    {
+     "w": "returns,",
+     "start": 246.22,
+     "end": 246.72,
+     "conf": 0.5
+    }
+   ]
+  },
+  {
+   "text": "but when capital can think then the capital learns.",
+   "section": "verse4",
+   "start": 246.73,
+   "end": 250.12,
+   "words": [
+    {
+     "w": "but",
+     "start": 246.73,
+     "end": 247.01,
+     "conf": 0.5
+    },
+    {
+     "w": "when",
+     "start": 247.01,
+     "end": 247.24,
+     "conf": 0.5
+    },
+    {
+     "w": "capital",
+     "start": 247.24,
+     "end": 248.08,
+     "conf": 0.5
+    },
+    {
+     "w": "can",
+     "start": 248.08,
+     "end": 248.32,
+     "conf": 0.5
+    },
+    {
+     "w": "think",
+     "start": 248.32,
+     "end": 248.71,
+     "conf": 0.5
+    },
+    {
+     "w": "then",
+     "start": 248.71,
+     "end": 248.8,
+     "conf": 0.5
+    },
+    {
+     "w": "the",
+     "start": 248.8,
+     "end": 249.11,
+     "conf": 0.5
+    },
+    {
+     "w": "capital",
+     "start": 249.11,
+     "end": 249.84,
+     "conf": 0.5
+    },
+    {
+     "w": "learns.",
+     "start": 249.84,
+     "end": 250.12,
+     "conf": 0.5
+    }
+   ]
+  },
+  {
+   "text": "So the fab don't read your journal and the curve don't need a vote.",
+   "section": "verse4",
+   "start": 250.13,
+   "end": 253.21,
+   "words": [
+    {
+     "w": "So",
+     "start": 250.13,
+     "end": 250.3,
+     "conf": 0.5
+    },
+    {
+     "w": "the",
+     "start": 250.3,
+     "end": 250.53,
+     "conf": 0.5
+    },
+    {
+     "w": "fab",
+     "start": 250.53,
+     "end": 250.87,
+     "conf": 0.5
+    },
+    {
+     "w": "don't",
+     "start": 250.87,
+     "end": 251.22,
+     "conf": 0.5
+    },
+    {
+     "w": "read",
+     "start": 251.22,
+     "end": 251.33,
+     "conf": 0.5
+    },
+    {
+     "w": "your",
+     "start": 251.33,
+     "end": 251.57,
+     "conf": 0.5
+    },
+    {
+     "w": "journal",
+     "start": 251.57,
+     "end": 251.88,
+     "conf": 0.5
+    },
+    {
+     "w": "and",
+     "start": 251.88,
+     "end": 252.05,
+     "conf": 0.5
+    },
+    {
+     "w": "the",
+     "start": 252.05,
+     "end": 252.36,
+     "conf": 0.5
+    },
+    {
+     "w": "curve",
+     "start": 252.36,
+     "end": 252.5,
+     "conf": 0.5
+    },
+    {
+     "w": "don't",
+     "start": 252.5,
+     "end": 252.71,
+     "conf": 0.5
+    },
+    {
+     "w": "need",
+     "start": 252.71,
+     "end": 252.86,
+     "conf": 0.5
+    },
+    {
+     "w": "a",
+     "start": 252.86,
+     "end": 253.13,
+     "conf": 0.5
+    },
+    {
+     "w": "vote.",
+     "start": 253.13,
+     "end": 253.21,
+     "conf": 0.5
+    }
+   ]
+  },
+  {
+   "text": "Zarathustra called man a rope and you're out here pricing rope.",
+   "section": "verse4",
+   "start": 253.22,
+   "end": 257.36,
+   "words": [
+    {
+     "w": "Zarathustra",
+     "start": 253.22,
+     "end": 254.19,
+     "conf": 0.5
+    },
+    {
+     "w": "called",
+     "start": 254.19,
+     "end": 254.47,
+     "conf": 0.5
+    },
+    {
+     "w": "man",
+     "start": 254.47,
+     "end": 254.72,
+     "conf": 0.5
+    },
+    {
+     "w": "a",
+     "start": 254.72,
+     "end": 254.85,
+     "conf": 0.5
+    },
+    {
+     "w": "rope",
+     "start": 254.85,
+     "end": 255.15,
+     "conf": 0.5
+    },
+    {
+     "w": "and",
+     "start": 255.15,
+     "end": 255.39,
+     "conf": 0.5
+    },
+    {
+     "w": "you're",
+     "start": 255.39,
+     "end": 255.55,
+     "conf": 0.5
+    },
+    {
+     "w": "out",
+     "start": 255.55,
+     "end": 255.85,
+     "conf": 0.5
+    },
+    {
+     "w": "here",
+     "start": 255.85,
+     "end": 255.98,
+     "conf": 0.5
+    },
+    {
+     "w": "pricing",
+     "start": 255.98,
+     "end": 256.52,
+     "conf": 0.5
+    },
+    {
+     "w": "rope.",
+     "start": 256.52,
+     "end": 257.36,
+     "conf": 0.5
+    }
+   ]
+  },
+  {
+   "text": "Thus spoke compute. Thus spoke compute.",
+   "section": "final1",
+   "start": 259.3,
+   "end": 262.89,
+   "words": [
+    {
+     "w": "Thus",
+     "start": 259.3,
+     "end": 259.76,
+     "conf": 0.5
+    },
+    {
+     "w": "spoke",
+     "start": 259.76,
+     "end": 260.11,
+     "conf": 0.5
+    },
+    {
+     "w": "compute.",
+     "start": 260.11,
+     "end": 261.15,
+     "conf": 0.5
+    },
+    {
+     "w": "Thus",
+     "start": 261.15,
+     "end": 261.62,
+     "conf": 0.5
+    },
+    {
+     "w": "spoke",
+     "start": 261.62,
+     "end": 262.04,
+     "conf": 0.5
+    },
+    {
+     "w": "compute.",
+     "start": 262.04,
+     "end": 262.89,
+     "conf": 0.5
+    }
+   ]
+  },
+  {
+   "text": "Robots building robots from the ore to the suit.",
+   "section": "final1",
+   "start": 262.9,
+   "end": 265.83,
+   "words": [
+    {
+     "w": "Robots",
+     "start": 262.9,
+     "end": 263.39,
+     "conf": 0.5
+    },
+    {
+     "w": "building",
+     "start": 263.39,
+     "end": 263.94,
+     "conf": 0.5
+    },
+    {
+     "w": "robots",
+     "start": 263.94,
+     "end": 264.37,
+     "conf": 0.5
+    },
+    {
+     "w": "from",
+     "start": 264.37,
+     "end": 264.67,
+     "conf": 0.5
+    },
+    {
+     "w": "the",
+     "start": 264.67,
+     "end": 264.91,
+     "conf": 0.5
+    },
+    {
+     "w": "ore",
+     "start": 264.91,
+     "end": 265.09,
+     "conf": 0.5
+    },
+    {
+     "w": "to",
+     "start": 265.09,
+     "end": 265.41,
+     "conf": 0.5
+    },
+    {
+     "w": "the",
+     "start": 265.41,
+     "end": 265.52,
+     "conf": 0.5
+    },
+    {
+     "w": "suit.",
+     "start": 265.52,
+     "end": 265.83,
+     "conf": 0.5
+    }
+   ]
+  },
+  {
+   "text": "A million minds in parallel that never need to sleep.",
+   "section": "final1",
+   "start": 265.84,
+   "end": 269.38,
+   "words": [
+    {
+     "w": "A",
+     "start": 265.84,
+     "end": 266.14,
+     "conf": 0.5
+    },
+    {
+     "w": "million",
+     "start": 266.14,
+     "end": 266.63,
+     "conf": 0.5
+    },
+    {
+     "w": "minds",
+     "start": 266.63,
+     "end": 266.96,
+     "conf": 0.5
+    },
+    {
+     "w": "in",
+     "start": 266.96,
+     "end": 267.08,
+     "conf": 0.5
+    },
+    {
+     "w": "parallel",
+     "start": 267.08,
+     "end": 267.91,
+     "conf": 0.5
+    },
+    {
+     "w": "that",
+     "start": 267.91,
+     "end": 268.09,
+     "conf": 0.5
+    },
+    {
+     "w": "never",
+     "start": 268.09,
+     "end": 268.77,
+     "conf": 0.5
+    },
+    {
+     "w": "need",
+     "start": 268.77,
+     "end": 268.98,
+     "conf": 0.5
+    },
+    {
+     "w": "to",
+     "start": 268.98,
+     "end": 269.2,
+     "conf": 0.5
+    },
+    {
+     "w": "sleep.",
+     "start": 269.2,
+     "end": 269.38,
+     "conf": 0.5
+    }
+   ]
+  },
+  {
+   "text": "You modeled a tractor, now the tractors build the fleet.",
+   "section": "final1",
+   "start": 269.39,
+   "end": 273.41,
+   "words": [
+    {
+     "w": "You",
+     "start": 269.39,
+     "end": 269.73,
+     "conf": 0.5
+    },
+    {
+     "w": "modeled",
+     "start": 269.73,
+     "end": 270.31,
+     "conf": 0.5
+    },
+    {
+     "w": "a",
+     "start": 270.31,
+     "end": 270.5,
+     "conf": 0.5
+    },
+    {
+     "w": "tractor,",
+     "start": 270.5,
+     "end": 270.96,
+     "conf": 0.5
+    },
+    {
+     "w": "now",
+     "start": 270.96,
+     "end": 271.15,
+     "conf": 0.5
+    },
+    {
+     "w": "the",
+     "start": 271.15,
+     "end": 271.39,
+     "conf": 0.5
+    },
+    {
+     "w": "tractors",
+     "start": 271.39,
+     "end": 271.76,
+     "conf": 0.5
+    },
+    {
+     "w": "build",
+     "start": 271.76,
+     "end": 272.71,
+     "conf": 0.5
+    },
+    {
+     "w": "the",
+     "start": 272.71,
+     "end": 273.02,
+     "conf": 0.5
+    },
+    {
+     "w": "fleet.",
+     "start": 273.02,
+     "end": 273.41,
+     "conf": 0.5
+    }
+   ]
+  },
+  {
+   "text": "Thus spoke compute. Thus spoke compute.",
+   "section": "final1",
+   "start": 273.42,
+   "end": 275.76,
+   "words": [
+    {
+     "w": "Thus",
+     "start": 273.42,
+     "end": 273.83,
+     "conf": 0.5
+    },
+    {
+     "w": "spoke",
+     "start": 273.83,
+     "end": 274.23,
+     "conf": 0.5
+    },
+    {
+     "w": "compute.",
+     "start": 274.23,
+     "end": 274.84,
+     "conf": 0.5
+    },
+    {
+     "w": "Thus",
+     "start": 274.84,
+     "end": 275.04,
+     "conf": 0.5
+    },
+    {
+     "w": "spoke",
+     "start": 275.04,
+     "end": 275.37,
+     "conf": 0.5
+    },
+    {
+     "w": "compute.",
+     "start": 275.37,
+     "end": 275.76,
+     "conf": 0.5
+    }
+   ]
+  },
+  {
+   "text": "Your bottleneck's a speed bump on a hyperbolic route.",
+   "section": "final1",
+   "start": 275.79,
+   "end": 279.08,
+   "words": [
+    {
+     "w": "Your",
+     "start": 275.79,
+     "end": 275.88,
+     "conf": 0.5
+    },
+    {
+     "w": "bottleneck's",
+     "start": 275.88,
+     "end": 276.69,
+     "conf": 0.5
+    },
+    {
+     "w": "a",
+     "start": 276.69,
+     "end": 277.02,
+     "conf": 0.5
+    },
+    {
+     "w": "speed",
+     "start": 277.02,
+     "end": 277.13,
+     "conf": 0.5
+    },
+    {
+     "w": "bump",
+     "start": 277.13,
+     "end": 277.32,
+     "conf": 0.5
+    },
+    {
+     "w": "on",
+     "start": 277.32,
+     "end": 277.66,
+     "conf": 0.5
+    },
+    {
+     "w": "a",
+     "start": 277.66,
+     "end": 277.91,
+     "conf": 0.5
+    },
+    {
+     "w": "hyperbolic",
+     "start": 277.91,
+     "end": 278.89,
+     "conf": 0.5
+    },
+    {
+     "w": "route.",
+     "start": 278.89,
+     "end": 279.08,
+     "conf": 0.5
+    }
+   ]
+  },
+  {
+   "text": "Your constraint's a footnote in the book of rules.",
+   "section": "final1",
+   "start": 279.09,
+   "end": 281.653,
+   "words": [
+    {
+     "w": "Your",
+     "start": 279.09,
+     "end": 279.38,
+     "conf": 0.5
+    },
+    {
+     "w": "constraint's",
+     "start": 279.38,
+     "end": 279.9,
+     "conf": 0.5
+    },
+    {
+     "w": "a",
+     "start": 279.9,
+     "end": 280.07,
+     "conf": 0.5
+    },
+    {
+     "w": "footnote",
+     "start": 280.07,
+     "end": 280.4,
+     "conf": 0.5
+    },
+    {
+     "w": "in",
+     "start": 280.4,
+     "end": 280.73,
+     "conf": 0.5
+    },
+    {
+     "w": "the",
+     "start": 280.73,
+     "end": 280.87,
+     "conf": 0.5
+    },
+    {
+     "w": "book",
+     "start": 280.87,
+     "end": 281.12,
+     "conf": 0.5
+    },
+    {
+     "w": "of",
+     "start": 281.12,
+     "end": 281.2,
+     "conf": 0.5
+    },
+    {
+     "w": "rules.",
+     "start": 281.2,
+     "end": 281.653,
+     "conf": 0.5
+    }
+   ]
+  },
+  {
+   "text": "Out of date, the curve don't wait for referees.",
+   "section": "final1",
+   "start": 281.82,
+   "end": 285.04,
+   "words": [
+    {
+     "w": "Out",
+     "start": 281.82,
+     "end": 282.03,
+     "conf": 0.5
+    },
+    {
+     "w": "of",
+     "start": 282.03,
+     "end": 282.25,
+     "conf": 0.5
+    },
+    {
+     "w": "date,",
+     "start": 282.25,
+     "end": 282.41,
+     "conf": 0.5
+    },
+    {
+     "w": "the",
+     "start": 282.41,
+     "end": 282.61,
+     "conf": 0.5
+    },
+    {
+     "w": "curve",
+     "start": 282.61,
+     "end": 282.79,
+     "conf": 0.5
+    },
+    {
+     "w": "don't",
+     "start": 282.79,
+     "end": 283.01,
+     "conf": 0.5
+    },
+    {
+     "w": "wait",
+     "start": 283.01,
+     "end": 283.17,
+     "conf": 0.5
+    },
+    {
+     "w": "for",
+     "start": 283.17,
+     "end": 283.27,
+     "conf": 0.5
+    },
+    {
+     "w": "referees.",
+     "start": 283.27,
+     "end": 285.04,
+     "conf": 0.5
+    }
+   ]
+  },
+  {
+   "text": "It just compounds the rate.",
+   "section": "final1",
+   "start": 287.15,
+   "end": 290.22,
+   "words": [
+    {
+     "w": "It",
+     "start": 287.15,
+     "end": 287.67,
+     "conf": 0.5
+    },
+    {
+     "w": "just",
+     "start": 287.67,
+     "end": 288.16,
+     "conf": 0.5
+    },
+    {
+     "w": "compounds",
+     "start": 288.16,
+     "end": 289.31,
+     "conf": 0.5
+    },
+    {
+     "w": "the",
+     "start": 289.31,
+     "end": 289.72,
+     "conf": 0.5
+    },
+    {
+     "w": "rate.",
+     "start": 289.72,
+     "end": 290.22,
+     "conf": 0.5
+    }
+   ]
+  },
+  {
+   "text": "So, you think AI is a normal technology.",
+   "section": "outro1",
+   "start": 290.56,
+   "end": 299.74,
+   "words": [
+    {
+     "w": "So,",
+     "start": 290.56,
+     "end": 291.48,
+     "conf": 0.5
+    },
+    {
+     "w": "you",
+     "start": 293.02,
+     "end": 293.56,
+     "conf": 0.5
+    },
+    {
+     "w": "think",
+     "start": 293.56,
+     "end": 294.15,
+     "conf": 0.5
+    },
+    {
+     "w": "AI",
+     "start": 294.15,
+     "end": 294.76,
+     "conf": 0.5
+    },
+    {
+     "w": "is",
+     "start": 295.92,
+     "end": 296.38,
+     "conf": 0.5
+    },
+    {
+     "w": "a",
+     "start": 296.38,
+     "end": 296.8,
+     "conf": 0.5
+    },
+    {
+     "w": "normal",
+     "start": 296.8,
+     "end": 297.75,
+     "conf": 0.5
+    },
+    {
+     "w": "technology.",
+     "start": 297.75,
+     "end": 299.74,
+     "conf": 0.5
+    }
+   ]
+  },
+  {
+   "text": "Cute.",
+   "section": "outro1",
+   "start": 300.4,
+   "end": 301.32,
+   "words": [
+    {
+     "w": "Cute.",
+     "start": 300.4,
+     "end": 301.32,
+     "conf": 0.5
+    }
+   ]
+  }
+ ],
+ "notes": "timing_lite: caption-cue windows (674/732 sheet words matched to Cq8qO-NjYIg.en.srt) + vocal-band onset snapping on /home/user/thus-spoke-compute/source/audio/Cq8qO-NjYIg.m4a. Approximate; re-time with swap-audio.sh for MMS_FA accuracy."
+}

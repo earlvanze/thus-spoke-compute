@@ -6,7 +6,9 @@ __pycache__/
 # Per-project render caches (source media for this authorized project is tracked under source/).
 out/
 qa/
-data/
+data/*
+!data/lyrics.json
+!data/audio.json
 audio/
 analysis/work/
 analysis/candidates/
@@ -16,3 +18,4 @@ analysis/candidates/
 !source/audio/*.m4a
 *.mp4
 .env
+.shims/

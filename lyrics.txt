@@ -1,0 +1,102 @@
+# lyrics.txt — canonical sheet for "AI is a normal technology?" (Thus Spoke Compute).
+# Drafted from source/captions/Cq8qO-NjYIg.en.srt (YouTube auto-captions) and corrected by context; lines marked
+# in LYRICS-REVIEW.md are best guesses — confirm them by ear, edit here, and re-run analysis/timing_lite.py (or swap-audio.sh).
+# One line per sung phrase. [section] headers drive app/src/project/script.ts.
+[intro]
+So you think AI is a normal technology?
+Like electricity, like the spreadsheet, like the fax machine.
+Slow diffusion, adoption lag, complementary investment.
+Okay. But consider.
+
+[verse1]
+So you think AI is a normal technology?
+A dynamo remix with a slower chronology.
+Took forty years to rewire every floor in the factory.
+So the paper says be patient, and the paper calls it satisfactory.
+Daron ran the numbers with the Nobel on the shelf.
+Point seven on the TFP, ten years all by itself.
+Only easy tasks it touched, the rest were way too hard to learn.
+So the model keeps it modest, and the model gets its turn.
+Solow saw computers everywhere except the stats.
+So the seminar concludes, don't put away the party hats.
+Permits take a year, the grid upgrade takes ten,
+the FDA wants phase three, and then phase three again.
+
+[pre1]
+Baumol's got his cost disease, the plumber's still a plumber.
+So the singularity gets scheduled for the summer after summer.
+But you modeled it as a hammer in a human hand.
+What's your forecast when the hammer starts to build the hand?
+
+[chorus1]
+Robots building robots from the ore to the suit.
+A million minds in parallel that never need to sleep.
+You modeled a tractor, now the tractors build the fleet.
+Your bottleneck's a speed bump on a hyperbolic route.
+Your constraints are footnotes, and the footnotes are out of date.
+The curve don't wait for referees, it just compounds the rate.
+
+[verse2]
+Gary saw a wall back in twenty twenty-two,
+then the wall took gold at the IMO and the wall kept breaking through.
+He's been calling it so long, the wall should get tenure.
+Every riddle that it flubs becomes a Substack adventure.
+Stopped clock's right twice a day. He posts ten times an hour.
+Still waiting on the one where the forecast shows some power.
+Yann says LLMs are an off-ramp, not the road.
+Autoregressive's doomed, he says, while the doomed one hauls the load.
+Godfather of the network, now disowning his own kids.
+Selling world models for a decade. Name one thing the world model did.
+Says a house cat has got more sense. Cool. Go on and hire the cat.
+Let it train your Llama Four. See how far you get with that.
+
+[verse3]
+Ed's on the pod saying bubble's gonna pop.
+Capex to the moon while the revenue's a flop.
+Maybe, but the railroads went bust and the tracks outlived the tycoons.
+The bubble funds the buildout, and the buildout's landing soon.
+
+[chorus2]
+Thus spoke compute. Thus spoke compute.
+Robots building robots from the ore to the suit.
+A million minds in parallel that never need to sleep.
+You modeled a tractor, now the tractors build the fleet.
+Thus spoke compute. Thus spoke compute.
+Your bottleneck's a speed bump on a hyperbolic route.
+Your constraints are footnotes, and the footnotes are out of date.
+The curve don't wait for referees, it just compounds the rate.
+
+[bridge1]
+Seven problems, Clay put a million down on each.
+Quarter century later, six are still beyond our reach.
+Hilbert's tombstone reads, we must know. We will know.
+So spin up ten thousand agents, feed great minds, and let them go.
+Riemann, Navier-Stokes, go on and ask the swarm.
+P versus NP, if it's equal, every vault gets stormed.
+Not checking zeros one by one the way the mainframes did.
+They're writing proofs in Lean so the referee can't kid.
+
+[verse4]
+Picture Shenzhen in nineteen eighty, fishing boats and paddy fields
+and agents with no visas. Now look what the skyline yields.
+Robots mine the copper. Robots wire the plant.
+Robots paint the robots going every step they can.
+Solow said that capital hits diminishing returns,
+but when capital can think then the capital learns.
+So the fab don't read your journal and the curve don't need a vote.
+Zarathustra called man a rope and you're out here pricing rope.
+
+[final1]
+Thus spoke compute. Thus spoke compute.
+Robots building robots from the ore to the suit.
+A million minds in parallel that never need to sleep.
+You modeled a tractor, now the tractors build the fleet.
+Thus spoke compute. Thus spoke compute.
+Your bottleneck's a speed bump on a hyperbolic route.
+Your constraint's a footnote in the book of rules.
+Out of date, the curve don't wait for referees.
+It just compounds the rate.
+
+[outro1]
+So, you think AI is a normal technology.
+Cute.

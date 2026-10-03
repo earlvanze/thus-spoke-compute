@@ -1,0 +1,4 @@
+{"fixes": [
+  {"line": 22, "words": [[94.95, 95.13], [95.13, 95.55], [95.55, 95.75], [95.75, 96.9], [97.19, 97.53], [97.53, 97.89], [97.89, 98.51], [98.51, 98.82], [98.82, 99.14], [99.14, 99.9]],
+   "why": "chorus1: captions mask the first half of the line under [music]; vocal-band onsets at 94.95/95.13/95.75 carry it, not a 0.5 s squeeze"}
+]}
