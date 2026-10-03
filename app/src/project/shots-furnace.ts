@@ -502,8 +502,10 @@ function footnotes(s: S) {
   lyric(s, tail, 560, { width: 1300, max: 100, anno: false });
 }
 
-// THE CURVE DON'T WAIT FOR REFEREES, IT JUST COMPOUNDS THE RATE: the curve leaves the frame; the referees stay small
+// THE CURVE DON'T WAIT FOR REFEREES, IT JUST COMPOUNDS THE RATE: the curve leaves the frame; the referees stay small.
+// Choruses 1-2 (n < 3): a gentle exponential with the camera drifting up. Final chorus (n >= 3): LIFTOFF — see liftoff().
 function compound(s: S) {
+  if (nOf(s) >= 3) return liftoff(s);
   const { t, sh, c, g } = s;
   const all = sh.lines.flatMap((l) => l.words);
   const n = nOf(s);
@@ -515,7 +517,6 @@ function compound(s: S) {
   const pts: [number, number][] = []; for (let i = 0; i <= 120; i++) { const u = i / 120; pts.push([150 + u * 1700, 960 - (Math.exp(u * 4.2) - 1) / (Math.exp(4.2) - 1) * 2300]); }
   const k = prog(t, sh.start, rate.end + 0.3, ease.inOutQuad);
   strokePts(c, pts, k, col('acid', 1), 7); glowPts(s, pts, k, 'acid', 20, 0.45);
-  // doublings tick off the curve
   for (let d = 1; d <= 6 + 2 * n; d++) {
     const u = Math.log(1 + (Math.pow(2, d) / Math.pow(2, 6 + 2 * n)) * (Math.exp(4.2) - 1)) / 4.2;
     if (u > k) break;
@@ -523,61 +524,240 @@ function compound(s: S) {
     note(c, `×${Math.pow(2, d)}`, p.x - 20, p.y, 0.9, 26, 'signal', 'right');
     g.fillStyle = col('ember', 0.6); g.beginPath(); g.arc(p.x, p.y, 10, 0, TAU); g.fill();
   }
-  // the referees: small figures with a flag, left at the start of the curve
-  const rk = prog(t, ref.start - 0.05, ref.start + 0.3, ease.outBack);
-  for (let i = 0; i < 3; i++) {
-    const x = 260 + i * 90, y = 1000;
-    c.strokeStyle = col('bone', 0.8 * rk); c.lineWidth = 5; c.beginPath(); c.arc(x, y - 90, 14, 0, TAU); c.moveTo(x, y - 76); c.lineTo(x, y - 30); c.lineTo(x - 16, y); c.moveTo(x, y - 30); c.lineTo(x + 16, y); c.moveTo(x, y - 60); c.lineTo(x + 30, y - 90); c.stroke();
-    c.fillStyle = col('signal', rk); c.fillRect(x + 30, y - 110, 26, 18);
-  }
-  // the words: line words before "it" set at the start of the curve, "compounds the rate" climbs with it
+  referees(s, ref, 1);
   const ci = all.findIndex((w) => /^it$/i.test(clean(w.w)) || /compound/i.test(w.w));
   const head = all.slice(0, ci > 0 ? ci : Math.ceil(all.length / 2));
   const tail = all.slice(head.length);
   lyric(s, head, 240, { width: 1500, max: 110, alpha: 1 - prog(up, 0.08, 0.25) });
-  // the tail rides with the camera (screen-anchored), set big under the climbing curve
   const ty = H / 2 - 900 * up + 220 / lerp(1, 0.75, up), tx = W / 2 + 200 * up - 180;
   if (tail.length) row(s, tail, A(125, 900), 1300 / lerp(1, 0.75, up), 190 / lerp(1, 0.75, up), tx, ty, { from: 1.6 });
 }
 
-// THUS SPOKE COMPUTE: the hook as a monument — serif "Thus spoke" (the old voice), COMPUTE molten; rays grow with n
+/** Three small referees with a flag at the foot of the curve (scale k keeps them readable when the camera zooms out). */
+function referees(s: S, ref: Word, k: number) {
+  const { t, c } = s;
+  const rk = prog(t, ref.start - 0.05, ref.start + 0.3, ease.outBack);
+  if (rk <= 0) return;
+  for (let i = 0; i < 3; i++) {
+    const x = 260 + i * 90 * k, y = 1000;
+    c.save(); c.translate(x, y); c.scale(k, k);
+    c.strokeStyle = col('bone', 0.8 * rk); c.lineWidth = 5; c.beginPath(); c.arc(0, -90, 14, 0, TAU); c.moveTo(0, -76); c.lineTo(0, -30); c.lineTo(-16, 0); c.moveTo(0, -30); c.lineTo(16, 0); c.moveTo(0, -60); c.lineTo(30, -90); c.stroke();
+    c.fillStyle = col('signal', rk); c.fillRect(30, -110, 26, 18);
+    c.restore();
+  }
+}
+
+/**
+ * FINAL CHORUS LIFTOFF ("…referees. / It just compounds the rate."): a far steeper exponential (e^9 over 16,000 px) whose
+ * pen accelerates — slow along the floor through line 1, then inCubic over the held "compounds" — while the camera chases
+ * the pen head and pulls out (zoom 1 → 0.16) so the whole curve reads as a wall. COMPOUNDS rides the head with an
+ * accelerating echo trail and speed streaks; the doubling counter races to ×2^24; THE RATE lands with a hit at the top.
+ */
+const LK = 9, LH = 16000, LX0 = 150, LW = 2600;
+const liftY = (u: number) => 960 - LH * (Math.exp(LK * u) - 1) / (Math.exp(LK) - 1);
+const liftX = (u: number) => LX0 + LW * u;
+function liftoff(s: S) {
+  const { t, sh, c, g } = s;
+  const all = sh.lines.flatMap((l) => l.words);
+  const ref = all.find((w) => /referee/i.test(w.w)) ?? all[0]!;
+  const it = all.find((w) => /^it$/i.test(clean(w.w))) ?? all[Math.max(0, all.length - 5)]!;
+  const comp = all.find((w) => /compound/i.test(w.w)) ?? all[all.length - 3]!;
+  const rate = all[all.length - 1]!;
+  const tEnd = Math.max(rate.end, rate.start + 0.25);
+  // pen progress u: creeps along the floor during line 1, then accelerates hard through "it just compounds the rate"
+  const uAt = (tt: number) => (tt < it.start ? 0.5 * prog(tt, sh.start, it.start, ease.outQuad) : 0.5 + 0.5 * prog(tt, it.start, tEnd, (x) => x * x * x));
+  const u = uAt(t);
+  const hx = liftX(u), hy = liftY(u), height = 960 - hy;
+  const vel = (960 - liftY(uAt(t + 1 / 30)) - height) * 30; // px/s of climb (for streaks + stretch)
+  // camera: chase the head (head sits in the upper third), zoom out with height so the curve becomes a steep wall
+  // frame the whole curve, floor to pen: as it climbs the view pulls back and the curve reads as a steepening wall
+  const z = Math.min(1, 800 / (height + 260), 1500 / (hx - LX0 + 360));
+  const camX = Math.min((LX0 - 120 + hx + 160) / 2, hx - 520 / z), camY = (980 + hy - 120) / 2;
+  const shakeK = clamp(vel / 20000);
+  const rot = -0.04 * clamp(height / 4000);
+  cam(s, { x: camX, y: camY, z, r: rot });
+  const at = (dx: number, dy: number) => [hx + dx / z, hy + dy / z] as const; // screen-px offsets from the pen head
+  const lw = (px: number) => px / Math.sqrt(z) / Math.sqrt(z); // keep strokes screen-visible while zooming out
+  // the curve (drawn up to u) + a faint projection of where it is going
+  const pts: [number, number][] = []; for (let i = 0; i <= 220; i++) { const q = (i / 220) * u; pts.push([liftX(q), liftY(q)]); }
+  const fut: [number, number][] = []; for (let i = 0; i <= 80; i++) { const q = u + (i / 80) * (1 - u); fut.push([liftX(q), liftY(q)]); }
+  strokePts(c, fut, 1, col('graphite', 0.35), lw(2));
+  strokePts(c, pts, 1, col('acid', 1), lw(7)); strokePts(g, pts, 1, col('acid', 0.5), lw(22));
+  // the floor (the "normal" baseline) and the referees left on it
+  rule(c, -400, 960, LX0 + LW + 600, 960, 1, col('graphite', 0.8), lw(2));
+  // altitude rungs (×10 each): they compress and stream past as the view pulls back — the sense of climbing
+  for (let e = 1; e <= 6; e++) {
+    const y = 960 - 25 * Math.pow(10, e * 0.62) * 6; if (y < hy - 400 / z) break;
+    rule(c, LX0 - 200 / z, y, LX0 + LW + 300, y, 1, col('graphite', 0.45), lw(1.5));
+    note(c, `10^${18 + 2 * e} FLOP`, LX0 - 60 / z, y - 8 / z, 0.7, 18 / z, 'ash', 'left');
+  }
+  referees(s, ref, Math.min(4, 1 / Math.sqrt(z)));
+  // doublings: ×2 … ×2^24, each popping as the pen passes it; labels keep a constant screen size
+  for (let d = 1; d <= 24; d++) {
+    const ud = Math.log(1 + (Math.pow(2, d) / Math.pow(2, 24)) * (Math.exp(LK) - 1)) / LK;
+    if (ud > u) break;
+    const x = liftX(ud), y = liftY(ud), pop = pulseAt(t, it.start + (ud - 0.5) / 0.5 * (tEnd - it.start), 0.15);
+    const tsz = (22 + 18 * pop) / z;
+    note(c, `×${Math.pow(2, d).toLocaleString('en-US')}`, x - 24 / z, y + 8 / z, 0.9, tsz, d > 16 ? 'ember' : 'signal', 'right');
+    g.fillStyle = col('ember', 0.5 + 0.5 * pop); g.beginPath(); g.arc(x, y, (8 + 14 * pop) / z, 0, TAU); g.fill();
+  }
+  // speed streaks below the head, denser and longer as it accelerates
+  const ns = Math.floor(40 * shakeK);
+  for (let i = 0; i < ns; i++) {
+    const ox = (hash(i, 1) - 0.5) * 1400 / z, len = (200 + 900 * hash(i, 2)) * shakeK / z, oy = hash(i, 3, Math.floor(t * 30)) * 900 / z;
+    rule(g, hx + ox, hy + oy, hx + ox, hy + oy + len, 1, col(i % 3 ? 'acid' : 'ember', 0.25 + 0.3 * shakeK), lw(3));
+  }
+  // the pen head
+  g.fillStyle = col('ember', 0.9); g.beginPath(); g.arc(hx, hy, 26 / z, 0, TAU); g.fill();
+  c.fillStyle = col('ember', 1); c.beginPath(); c.arc(hx, hy, 10 / z, 0, TAU); c.fill();
+  // --- typography (sized in screen pixels: world size = px / z)
+  const head = all.slice(0, all.indexOf(it));
+  const a1 = 1 - prog(t, it.start - 0.1, it.start + 0.4);
+  if (a1 > 0) { cam(s, { x: W / 2, y: H / 2, z: 1, r: 0 }); lyric(s, head, 240, { width: 1500, max: 110, alpha: a1 }); cam(s, { x: camX, y: camY, z, r: rot }); }
+  // IT JUST: small, left behind on the floor where the climb starts
+  const itJust = all.slice(all.indexOf(it), all.indexOf(comp));
+  itJust.forEach((w, i) => { const [x, y] = at(-760 + i * 150, -40); word(s, w, txt(w), A(62, 300), 70 / z, x, y, { sc: slam(w, t, 1.4), alpha: 1 - prog(t, comp.start + 0.2, comp.start + 0.7) }); });
+  // COMPOUNDS rides the head; an echo trail of past positions shows the acceleration
+  if (t >= comp.start - 0.06) {
+    const fam = A(125, 900), spx = sizeTo('COMPOUNDS', fam, 1180, 220), px = spx / z;
+    const [cx0, cy0] = at(-40 - 590, 110);
+    // echo trail: where the word was a moment ago, in screen space (it streaks down as the climb accelerates)
+    for (let e = 4; e >= 1; e--) word(s, null, 'COMPOUNDS', fam, px, cx0, cy0 + (e * 70 * shakeK) / z, { color: col('signal', 0.1 * (5 - e) * clamp(shakeK * 2.5)) });
+    const stretch = 1 + 0.5 * shakeK;
+    c.save(); g.save();
+    for (const ctx of [c, g]) { ctx.translate(cx0, cy0); ctx.scale(1, stretch); ctx.translate(-cx0, -cy0); }
+    word(s, comp, 'COMPOUNDS', fam, px, cx0, cy0, { sc: slam(comp, t, 2.2), glow: 1.4 });
+    c.restore(); g.restore();
+  }
+  // THE RATE: lands at the top as the curve leaves the frame; the multiplier spins past a million
+  const the = all[all.length - 2]!;
+  if (t >= the.start - 0.06 && the !== comp) { const [x, y] = at(-960, 330); word(s, the, 'THE', A(62, 300), 100 / z, x, y, { sc: slam(the, t, 1.4) }); }
+  if (t >= rate.start - 0.06) {
+    const [x, y] = at(-330, 380);
+    word(s, rate, 'RATE', A(125, 900), 300 / z, x, y, { sc: slam(rate, t, 2.6), glow: 1.6 });
+    const mult = Math.pow(2, Math.min(40, 20 + Math.floor((t - rate.start) * 60)));
+    const [mx, my] = at(-40, 560);
+    note(c, `×${mult.toLocaleString('en-US')}`, mx, my, 1, 34 / z, 'ember', 'right');
+  }
+  const hit = pulseAt(t, rate.start, 0.12) + 0.5 * pulseAt(t, comp.start, 0.12);
+  s.post.flash = 0.12 * pulseAt(t, rate.start, 0.12);
+  s.post.shake = [noise1(t * 60, 3) * (6 * shakeK + 16 * hit), noise1(t * 60, 4) * (6 * shakeK + 16 * hit)];
+  s.post.zoom = (s.post.zoom ?? 1) * (1 + 0.04 * hit);
+  s.bg.glow = 0.35 + 0.5 * shakeK;
+}
+
+/**
+ * The ORACLE: an original 2.5D speaking machine — a rack monolith (oblique side + top faces) with blinking blade units, a
+ * ringed speaker grille that pulses with the voice, and a plinth whose inscription is COMPUTE. "Thus" and "spoke" are
+ * spoken: they leave the grille on sound-wave arcs and settle either side of it; COMPUTE ignites on the plinth.
+ * The second statement re-speaks over the first (which drifts outward, smaller), and the camera pushes into the grille.
+ * n grows the machine's blades/halo and adds background machines (compute replicating).
+ */
+function machine(s: S, cx: number, top: number, sc: number, a: number, speak: number, lit: number, seed: number, flat = false) {
+  const { c, g, t } = s;
+  const fw_ = 520 * sc, fh = 680 * sc, dx = 70 * sc, dy = -44 * sc, x0 = cx - fw_ / 2;
+  c.save(); c.globalAlpha = a;
+  // side + top faces (oblique projection, darker) then the front
+  c.fillStyle = col('ink', 1); c.beginPath(); c.moveTo(x0 + fw_, top); c.lineTo(x0 + fw_ + dx, top + dy); c.lineTo(x0 + fw_ + dx, top + fh + dy); c.lineTo(x0 + fw_, top + fh); c.closePath(); c.fill();
+  c.fillStyle = col('graphite', 0.55); c.beginPath(); c.moveTo(x0, top); c.lineTo(x0 + dx, top + dy); c.lineTo(x0 + fw_ + dx, top + dy); c.lineTo(x0 + fw_, top); c.closePath(); c.fill();
+  c.fillStyle = col('ink2', 1); c.fillRect(x0, top, fw_, fh);
+  c.strokeStyle = col('graphite', 1); c.lineWidth = 3 * sc; c.strokeRect(x0, top, fw_, fh);
+  c.beginPath(); c.moveTo(x0 + fw_, top); c.lineTo(x0 + fw_ + dx, top + dy); c.lineTo(x0 + fw_ + dx, top + fh + dy); c.lineTo(x0 + fw_, top + fh); c.moveTo(x0, top); c.lineTo(x0 + dx, top + dy); c.lineTo(x0 + fw_ + dx, top + dy); c.stroke();
+  if (flat) { c.restore(); return; }
+  // blade units: 3 above the grille, 4 below; LEDs blink (hash of time), more of them lit as `lit` grows
+  const gy = top + fh * 0.44, R = 150 * sc;
+  const blades = [0.05, 0.13, 0.21, 0.69, 0.77, 0.85, 0.93];
+  blades.forEach((b, bi) => {
+    const y = top + fh * b - 18 * sc;
+    c.fillStyle = col('ink', 1); c.fillRect(x0 + 24 * sc, y, fw_ - 48 * sc, 38 * sc);
+    for (let q = 0; q < 16; q++) {
+      const on = hash(bi, q, Math.floor(t * 12) + seed) < 0.25 + 0.6 * lit;
+      c.fillStyle = col(on ? (q % 5 ? 'signal' : 'acid') : 'graphite', on ? 0.95 : 0.5); c.fillRect(x0 + 40 * sc + q * 27 * sc, y + 14 * sc, 14 * sc, 10 * sc);
+      if (on) { g.fillStyle = col(q % 5 ? 'ember' : 'acid', 0.25); g.fillRect(x0 + 40 * sc + q * 27 * sc, y + 14 * sc, 14 * sc, 10 * sc); }
+    }
+  });
+  // the grille: concentric rings that swell with the voice, a vertical aperture that glows while speaking
+  const sw = 1 + 0.08 * speak;
+  for (let r = 0; r < 7; r++) {
+    c.strokeStyle = col(r === 6 ? 'bone' : 'graphite', r === 6 ? 0.8 : 0.9); c.lineWidth = (r === 6 ? 5 : 3) * sc;
+    c.beginPath(); c.arc(cx, gy, R * sw * (0.3 + r * 0.115), 0, TAU); c.stroke();
+  }
+  const ah = R * (0.25 + 0.75 * speak);
+  c.fillStyle = mix('graphite', 'signal', speak); c.fillRect(cx - 9 * sc, gy - ah, 18 * sc, ah * 2);
+  g.fillStyle = col('ember', 0.7 * speak); g.fillRect(cx - 16 * sc, gy - ah, 32 * sc, ah * 2);
+  g.strokeStyle = col('signal', 0.35 * speak); g.lineWidth = 10 * sc; g.beginPath(); g.arc(cx, gy, R * sw, 0, TAU); g.stroke();
+  c.restore();
+}
 function oracle(s: S) {
   const { t, sh, c, g } = s;
   const l = ln(s);
   const n = nOf(s), v = sh.o.v ?? 0;
   const ws = l.words;
   const A3 = ws.slice(0, 3), B3 = ws.slice(3, 6);
-  const second = B3.length ? prog(t, B3[0]!.start - 0.12, B3[0]!.start + 0.2, ease.outExpo) : 0;
-  s.bg.glow = 0.5 + 0.2 * n;
-  cam(s, { x: W / 2, y: H / 2, z: lerp(1.0, 0.82, second) * (1 + 0.05 * prog(t, sh.start, sh.end)), r: (v ? 0.02 : -0.02) * second });
-  // rays
+  const second = B3.length ? prog(t, B3[0]!.start - 0.12, B3[0]!.start + 0.25, ease.outExpo) : 0;
+  s.bg.glow = 0.45 + 0.15 * n; s.bg.gx = 0.5; s.bg.gy = 0.38;
+  const GX = W / 2, TOP = 122, GY = TOP + 680 * 0.44;
+  // camera: holds on the monolith, pushes into the grille on the second statement; mirrored tilt on the second chorus pass
+  cam(s, { x: GX, y: lerp(H / 2, H / 2 + 30, second), z: lerp(1.0, 1.05, second) * (1 + 0.03 * prog(t, sh.start, sh.end)), r: (v ? 0.015 : -0.015) * (1 - second) });
+  const speakAt = (w?: Word) => (w ? (t >= w.start - 0.03 && t < w.end + 0.08 ? 1 : pulseAt(t, w.end + 0.08, 0.1)) : 0);
+  const voice = clamp(s.au.env('vocal', t));
+  const speak = Math.max(...ws.map((w) => speakAt(w)), 0) * (0.6 + 0.4 * voice);
   const hit = Math.max(...ws.map((w) => (/compute/i.test(w.w) ? pulseAt(t, w.start, 0.2) : 0)), 0);
-  const rays = 24 + 24 * n;
+  // halo rays behind the machine
+  const rays = 18 + 18 * n;
   for (let i = 0; i < rays; i++) {
     const a = (i / rays) * TAU + t * 0.04 * (v ? -1 : 1);
-    const len = (700 + hash(i, 5, n) * 900) * (0.6 + 0.4 * prog(t, A3[2]?.start ?? sh.start, (A3[2]?.start ?? sh.start) + 0.4, ease.outExpo));
-    g.strokeStyle = col('signal', 0.04 + 0.03 * n + 0.08 * hit); g.lineWidth = 6 + hash(i, 2) * 14;
-    g.beginPath(); g.moveTo(W / 2 + Math.cos(a) * 160, H / 2 + Math.sin(a) * 160); g.lineTo(W / 2 + Math.cos(a) * len, H / 2 + Math.sin(a) * len); g.stroke();
+    const len = (650 + hash(i, 5, n) * 800) * (0.55 + 0.45 * prog(t, A3[2]?.start ?? sh.start, (A3[2]?.start ?? sh.start) + 0.4, ease.outExpo));
+    g.strokeStyle = col('signal', 0.03 + 0.02 * n + 0.08 * hit); g.lineWidth = 6 + hash(i, 2) * 12;
+    g.beginPath(); g.moveTo(GX + Math.cos(a) * 420, GY + Math.sin(a) * 420); g.lineTo(GX + Math.cos(a) * len * 1.3, GY + Math.sin(a) * len); g.stroke();
   }
-  const draw = (tri: Word[], y0: number, scl: number, a: number) => {
-    if (!tri.length) return;
-    const [w1, w2, w3] = tri as [Word, Word, Word];
-    const fs = F.serif(600, true), fc = A(125, 900);
-    const ssz = 150 * scl, csz = sizeTo('COMPUTE', fc, 1500 * scl, 380 * scl);
-    const t1 = measure('Thus', fs, ssz), t2 = measure('spoke', fs, ssz);
-    word(s, w1, 'Thus', fs, ssz, W / 2 - (t1 + t2 + 40) / 2 + t1 / 2, y0 - csz * CAP / 2 - 70 * scl, { sc: slam(w1, t, 1.3), alpha: a });
-    if (w2) word(s, w2, 'spoke', fs, ssz, W / 2 + (t1 + t2 + 40) / 2 - t2 / 2, y0 - csz * CAP / 2 - 70 * scl, { sc: slam(w2, t, 1.3), alpha: a });
-    if (w3) {
-      const kk = t >= w3.start - 0.06;
-      if (kk) word(s, w3, 'COMPUTE', fc, csz, W / 2, y0 + 40 * scl, { sc: slam(w3, t, 1.9), alpha: a, glow: 1.4 });
+  // background machines: compute replicating (flat silhouettes, more each chorus)
+  for (let i = 0; i < 2 * (n - 1); i++) {
+    const side = i % 2 ? 1 : -1, k = 1 + Math.floor(i / 2);
+    machine(s, GX + side * (430 + 260 * k), TOP + 120 + 70 * k, 0.55 / k, 0.55, 0, 0, i, true);
+  }
+  // the plinth, with the inscription line
+  const py = TOP + 680 + 20, ph = 230;
+  c.fillStyle = col('ink2', 1); c.fillRect(GX - 760, py, 1520, ph); c.strokeStyle = col('graphite', 1); c.lineWidth = 3; c.strokeRect(GX - 760, py, 1520, ph);
+  c.fillStyle = col('graphite', 0.6); c.beginPath(); c.moveTo(GX - 760, py); c.lineTo(GX - 720, py - 26); c.lineTo(GX + 800, py - 26); c.lineTo(GX + 760, py); c.closePath(); c.fill();
+  machine(s, GX, TOP, 1, 1, speak, clamp(prog(t, sh.start, sh.end) + 0.3 * (n - 1)), n);
+  // sound waves: arcs leave the grille on every spoken word ("Thus", "spoke")
+  for (const w of ws.filter((x) => !/compute/i.test(x.w))) {
+    const age = t - w.start;
+    if (age < 0 || age > 0.9) continue;
+    for (const side of [-1, 1]) {
+      const r = 170 + age * 900, al = 0.7 * (1 - age / 0.9);
+      c.strokeStyle = col('bone', al * 0.6); c.lineWidth = 4; c.beginPath(); c.arc(GX, GY, r, side < 0 ? Math.PI - 0.5 : -0.5, side < 0 ? Math.PI + 0.5 : 0.5); c.stroke();
+      g.strokeStyle = col('signal', al * 0.5); g.lineWidth = 8; g.beginPath(); g.arc(GX, GY, r, side < 0 ? Math.PI - 0.5 : -0.5, side < 0 ? Math.PI + 0.5 : 0.5); g.stroke();
     }
+  }
+  // spoken words: fly out of the aperture to either side of the machine
+  const fs = F.serif(600, true);
+  const spoken = (w: Word | undefined, text: string, side: number, out: number) => {
+    if (!w || t < w.start - 0.06) return;
+    const k = prog(t, w.start - 0.06, w.start + 0.35, ease.outExpo);
+    const tx = GX + side * (560 + 90 * out), ty = GY + 10 - 230 * out;
+    const x = lerp(GX, tx, k), y = lerp(GY, ty, k), sz = lerp(40, 170, k) * (1 - 0.5 * out);
+    word(s, w, text, fs, sz, x, y, { alpha: 1 - 0.55 * out });
   };
-  // first statement; the second one stacks underneath while the first recedes (the hook replicates too)
-  draw(A3, lerp(H / 2, H / 2 - 260, second), lerp(1, 0.7, second), lerp(1, 0.5, second));
-  if (B3.length && t > B3[0]!.start - 0.12) draw(B3, H / 2 + 260 * second, 0.95, 1);
+  const out1 = second; // the first statement drifts outward and up when the second begins
+  spoken(A3[0], 'Thus', -1, out1); spoken(A3[1], 'spoke', 1, out1);
+  if (B3.length) { spoken(B3[0], 'Thus', -1, 0); spoken(B3[1], 'spoke', 1, 0); }
+  // COMPUTE: the inscription on the plinth, lit by the sung word (the second statement re-ignites it)
+  const fc = A(125, 900), csz = sizeTo('COMPUTE', fc, 1320, 260), cy = py + ph / 2;
+  const c1 = A3[2], c2 = B3[2];
+  const cur = c2 && t >= c2.start - 0.06 ? c2 : c1;
+  if (cur) {
+    if (t < cur.start - 0.06) word(s, null, 'COMPUTE', fc, csz, GX, cy, { color: col('graphite', 0.7) }); // carved, unlit
+    else {
+      word(s, cur, 'COMPUTE', fc, csz, GX, cy, { sc: slam(cur, t, cur === c2 ? 1.25 : 1.5), glow: 1.5 });
+      // a white-hot sweep runs across the inscription as it ignites
+      const sk = prog(t, cur.start, cur.start + 0.45, ease.outCubic);
+      if (sk < 1) { const sx = GX - 660 + 1320 * sk; g.fillStyle = col('ember', 0.6 * (1 - sk)); g.fillRect(sx - 40, py + 10, 80, ph - 20); }
+    }
+  }
   s.post.flash = 0.06 * hit;
   s.post.shake = [noise1(t * 50, 3) * 10 * hit, noise1(t * 50, 4) * 10 * hit];
-  void c;
 }
 
 export const FURNACE = { takeoff, sarcasm, dynamo, factory, tasks, solow, hammer, robots, minds, fleet, hyper, footnotes, compound, oracle };
