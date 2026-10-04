@@ -154,3 +154,55 @@ export function solidText(ctx: CanvasRenderingContext2D, text: string, fam: stri
     ctx.restore();
   }
 }
+
+// ------------------------------------------------------------------ detonation + spark trail (ported from pdoom-video,
+// MIT © Giacomo Magnanini: scenes/outro.ts detonation and scenes/_motifs.ts sparkParticles), recoloured to this palette
+// and drawn on the Canvas2D layers: bone streaks on the base layer, hot streaks and rings on the glow layer.
+import { mulberry32 as _mb32, hash as _hash, smoothstep as _ss } from '../engine/util';
+/** pdoom's detonation at screen point (cx, cy): `age` seconds since the blast; rings on each of `rings` (times). */
+export function detonation(s: S, cx: number, cy: number, age: number, rings: number[], fade = 1) {
+  if (age < 0 || fade <= 0) return;
+  const { c, g, t } = s;
+  c.save(); g.save(); c.setTransform(1, 0, 0, 1, 0, 0); g.setTransform(1, 0, 0, 1, 0, 0);
+  const rnd = _mb32(99), grow = ease.outExpo(clamp(age / 1.4));
+  c.lineCap = 'round'; g.lineCap = 'round';
+  for (let i = 0; i < 2600; i++) {
+    const a = rnd() * TAU, sp = 0.2 + rnd() ** 2 * 1.4, r0 = rnd() * 40, len = 60 + rnd() * 380, hot = rnd() < 0.3;
+    const r1 = r0 + grow * sp * 1400, tail = Math.max(r0, r1 - len * (0.3 + grow));
+    const al = fade * (1 - grow * 0.4);
+    const ctx = hot ? g : c;
+    ctx.strokeStyle = hot ? col(i % 3 ? 'ember' : 'signal', al * 0.9) : col('bone', al * 0.75); ctx.lineWidth = hot ? 1.8 : 1;
+    ctx.beginPath(); ctx.moveTo(cx + Math.cos(a) * tail, cy + Math.sin(a) * tail); ctx.lineTo(cx + Math.cos(a) * r1, cy + Math.sin(a) * r1); ctx.stroke();
+  }
+  rings.forEach((tk, k) => {
+    const ak = t - tk; if (ak < 0 || ak > 1.2) return;
+    const R = ease.outCubic(ak / 1.2) * 1300;
+    g.strokeStyle = col(k % 2 ? 'acid' : 'signal', (1 - ak / 1.2) * fade); g.lineWidth = 2.5 * (1 - ak / 1.2) + 0.8;
+    g.beginPath(); g.arc(cx, cy, R, 0, TAU); g.stroke();
+    c.strokeStyle = col('bone', 0.35 * (1 - ak / 1.2) * fade); c.lineWidth = 1.5; c.beginPath(); c.arc(cx, cy, R, 0, TAU); c.stroke();
+  });
+  c.restore(); g.restore();
+  s.post.flash = Math.max(s.post.flash ?? 0, Math.pow(0.5, age / 0.045) * 1.2 * fade);
+  const sh = Math.pow(0.5, age / 0.4) * fade;
+  s.post.shake = [Math.sin(t * 90) * 14 * sh, Math.cos(t * 77) * 14 * sh];
+  void _ss;
+}
+/** pdoom's spark particles: streaks shed by a moving head (headAt(t) gives its position in the current transform). */
+export function sparkTrail(s: S, headAt: (tt: number) => { x: number; y: number } | null, o: { rate?: number; life?: number; speed?: number; gravity?: number; seed?: number } = {}) {
+  const { g, t } = s;
+  const life = o.life ?? 0.45, speed = o.speed ?? 260, grav = o.gravity ?? 520, seed = o.seed ?? 1, rate = o.rate ?? 90;
+  const n0 = Math.floor((t - life) * rate), n1 = Math.floor(t * rate);
+  g.lineCap = 'round';
+  for (let n = n0; n <= n1; n++) {
+    const tb = n / rate; if (tb > t) continue;
+    const age = t - tb, h = headAt(tb); if (!h) continue;
+    const a = _hash(n, seed) * TAU, sp = speed * (0.25 + _hash(n, seed + 1) ** 2 * 1.2), lf = life * (0.35 + 0.65 * _hash(n, seed + 2));
+    if (age > lf) continue;
+    const vx = Math.cos(a) * sp, vy = Math.sin(a) * sp - speed * 0.3;
+    const x = h.x + vx * age, y = h.y + vy * age + 0.5 * grav * age * age;
+    const a0 = Math.max(0, age - 0.018), x0 = h.x + vx * a0, y0 = h.y + vy * a0 + 0.5 * grav * a0 * a0;
+    const k = 1 - age / lf, heat_ = k * k;
+    g.strokeStyle = heat_ > 0.5 ? col('ember', 0.9 * k) : col('signal', 0.9 * k); g.lineWidth = 1.6;
+    g.beginPath(); g.moveTo(x0, y0); g.lineTo(x, y); g.stroke();
+  }
+}

@@ -3,7 +3,7 @@
 import {
   A, CAP, F, H, W, base, clamp, col, ease, from, fw, hold, label, lerp, ln, lyric, measure, mix, note, prog, rule, setFont, slam,
   split, strokePts, TAU, txt, upto, word, along, sizeTo, pulseAt, type S, type Word,
-box, solidText,
+box, solidText, detonation,
 } from './common';
 import { cam } from '../scenes/shots';
 import { heat } from '../scenes/kit';
@@ -983,6 +983,12 @@ function oracle(s: S) {
   }
   s.post.flash = 0.06 * hit;
   s.post.shake = [noise1(t * 50, 3) * 10 * hit, noise1(t * 50, 4) * 10 * hit];
+  // the final chorus opens out of the rope's detonation (pdoom's blast): streaks + a ring on each beat of the first bar
+  if (sh.o.boom) {
+    const age = t - sh.start, rings = s.au.beats.filter((b) => b >= sh.start - 0.01).slice(0, 4);
+    if (rings[0] !== undefined) rings[0] = sh.start;
+    detonation(s, W / 2, H / 2, age, rings, 1 - prog(age, 1.6, 2.6));
+  }
 }
 
 // INSTRUMENTAL (after chorus 2, into the bridge): the oracle machine goes quiet and computes. Glyphs stream out of its
