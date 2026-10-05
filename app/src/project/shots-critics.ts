@@ -4,7 +4,7 @@
 import {
   A, CAP, F, H, W, base, clamp, col, ease, from, fw, hold, label, lerp, ln, lyric, measure, mix, note, prog, rule, setFont, slam,
   strokePts, TAU, txt, typeOn, upto, word, along, sizeTo, pulseAt, stamp, type S, type Word,
-box,
+box, sparkTrail,
 } from './common';
 import { cam } from '../scenes/shots';
 import { clean, heat, lerpCam, snapCam } from '../scenes/kit';
@@ -569,11 +569,19 @@ function shenzhen(s: S) {
   // water + waves
   for (let i = 0; i < 10; i++) { const y = hy + 30 + i * 40; c.strokeStyle = col('graphite', 0.7); c.lineWidth = 2; c.beginPath(); for (let x = 0; x <= W; x += 20) { const yy = y + Math.sin(x * 0.02 + t * 1.5 + i) * 5; x ? c.lineTo(x, yy) : c.moveTo(x, yy); } c.stroke(); }
   rule(c, 0, hy, W, hy, 1, col('bone', 0.8), 3);
-  // line 1: the scene-setting words at the top; FISHING / BOATS ride the water as hulls and stay visible; PADDY / FIELDS are terraces
+  // line 1: the scene-setting words at the top; FISHING / BOATS ride the water as hulls; PADDY / FIELDS are terraces
   const fish = l1.words.filter((w) => /fishing|boats/i.test(w.w)), field = l1.words.filter((w) => /paddy|fields/i.test(w.w));
   const head = l1.words.filter((w) => !fish.includes(w) && !field.includes(w) && !/nineteen|eighty/i.test(w.w));
+  // Keep the fishing boats legible as the paddy fields and skyline develop behind them.
   const a1 = 1;
   lyric(s, head, 170, { width: 900, max: 84, align: 'l', alpha: a1 });
+  // PADDY / FIELDS: terraces on the far shore, drawn first so the fishing boats' sails stand in front of them
+  field.forEach((w, i) => {
+    if (t < w.start - 0.3) return;
+    const k = prog(t, w.start - 0.1, w.start + 0.5, ease.outCubic), y0 = hy - 16 - i * 64;
+    for (let r = 0; r < 3; r++) rule(c, 330 + r * 22, y0 - r * 18, 330 + r * 22 + (760 - r * 50) * k, y0 - r * 18, 1, col('graphite', a1), 4);
+    word(s, w, txt(w), A(125, 900), 50, 700, y0 - 34, { alpha: a1 * k });
+  });
   fish.forEach((w, i) => {
     if (t < w.start - 0.3) return;
     const k = ease.outBack(prog(t, w.start - 0.1, w.start + 0.35)), x = 520 + i * 560 + Math.sin(t * 0.8 + i) * 18, y = hy + 140 + Math.sin(t * 2 + i) * 6 - (1 - k) * 60;
@@ -584,12 +592,6 @@ function shenzhen(s: S) {
     c.fillStyle = col('bone', 0.85); c.beginPath(); c.moveTo(x + 6, y - 225); c.lineTo(x + 150, y - 60); c.lineTo(x + 6, y - 60); c.closePath(); c.fill();
     c.restore();
     word(s, w, txt(w), f, 64, x, y - 6, { base: 'ink', hot: 'blood', alpha: a1 });
-  });
-  field.forEach((w, i) => {
-    if (t < w.start - 0.3) return;
-    const k = prog(t, w.start - 0.1, w.start + 0.5, ease.outCubic), y0 = hy - 30 - i * 90;
-    for (let r = 0; r < 3; r++) rule(c, 120 + r * 26, y0 - r * 22, 120 + r * 26 + (700 - r * 60) * k, y0 - r * 22, 1, col('graphite', a1), 4);
-    word(s, w, txt(w), A(125, 900), 56, 120 + 240, y0 - 60, { alpha: a1 * k, align: 'l' });
   });
   // line 2: each word rises from the horizon as a tower with the word running up its face; SKYLINE is the tallest
   const ws2 = l2.words, n2 = ws2.length;
@@ -609,67 +611,115 @@ function shenzhen(s: S) {
   void sh; void g;
 }
 
-// ------------------------------------------------------------------ V4: the assembly line — ROBOTS stamped on every unit
+/** A flat, original 2D robot: legs that step (phase), torso, arms, head with a visor. `paint` 0..1 fills it from the feet. */
+function bot2D(s: S, x: number, y: number, sc: number, paint: number, step: number, hot: number) {
+  const { c } = s;
+  c.save(); c.translate(x, y); c.scale(sc, sc);
+  const body = (fill: string) => {
+    c.fillStyle = fill;
+    const lift = Math.sin(step * Math.PI * 2);
+    c.fillRect(-34, -70 - Math.max(0, lift) * 14, 24, 70); c.fillRect(10, -70 - Math.max(0, -lift) * 14, 24, 70);
+    c.fillRect(-56, -190, 112, 118); c.fillRect(-80, -180, 20, 84); c.fillRect(60, -180, 20, 84);
+    c.fillRect(-36, -256, 72, 60);
+  };
+  body(col('graphite', 1));
+  if (paint > 0) { c.save(); c.beginPath(); c.rect(-90, -260 * paint, 180, 270 * paint); c.clip(); body(mix('signal', 'ember', hot)); c.restore(); }
+  c.fillStyle = col('ink', 1); c.fillRect(-26, -236, 52, 12);
+  c.fillStyle = mix('acid', 'signal', paint); c.fillRect(-22, -233, 44 * (0.4 + 0.6 * paint), 6);
+  c.fillStyle = col('ink', 0.6); c.fillRect(-36, -168, 72, 50);
+  c.restore();
+}
+/** Two-link IK arm from base (bx,by) to target (tx,ty), elbow up. Returns the elbow. Draws links, joints and the tool. */
+function arm2D(s: S, bx: number, by: number, tx: number, ty: number, L1: number, L2: number, tool: 'drill' | 'reel' | 'spray', hot: number) {
+  const { c, g } = s;
+  const dx = tx - bx, dy = ty - by, d = Math.min(L1 + L2 - 1, Math.hypot(dx, dy));
+  const a = Math.atan2(dy, dx), cosE = (L1 * L1 + d * d - L2 * L2) / (2 * L1 * d), e = Math.acos(clamp(cosE, -1, 1));
+  const a1 = a - e, ex = bx + Math.cos(a1) * L1, ey = by + Math.sin(a1) * L1;
+  // base plinth
+  c.fillStyle = col('graphite', 1); c.fillRect(bx - 60, by - 30, 120, 30); c.fillStyle = col('ink2', 1); c.fillRect(bx - 40, by - 70, 80, 44);
+  const link = (x0: number, y0: number, x1: number, y1: number, w: number) => { c.strokeStyle = col('ash', 1); c.lineWidth = w; c.lineCap = 'round'; c.beginPath(); c.moveTo(x0, y0); c.lineTo(x1, y1); c.stroke(); c.strokeStyle = col('bone', 0.35); c.lineWidth = w * 0.25; c.beginPath(); c.moveTo(x0, y0 - w * 0.2); c.lineTo(x1, y1 - w * 0.2); c.stroke(); };
+  link(bx, by - 60, ex, ey, 44); link(ex, ey, tx, ty - 40, 32);
+  for (const [jx, jy, r] of [[bx, by - 60, 30], [ex, ey, 24]] as const) { c.fillStyle = col('graphite', 1); c.beginPath(); c.arc(jx, jy, r, 0, TAU); c.fill(); c.fillStyle = mix('graphite', 'signal', hot); c.beginPath(); c.arc(jx, jy, r * 0.4, 0, TAU); c.fill(); }
+  // tool head
+  c.fillStyle = col('graphite', 1); c.fillRect(tx - 26, ty - 56, 52, 30);
+  if (tool === 'drill') { c.fillStyle = mix('ash', 'ember', hot); c.beginPath(); c.moveTo(tx - 14, ty - 26); c.lineTo(tx + 14, ty - 26); c.lineTo(tx, ty + 10); c.closePath(); c.fill(); }
+  if (tool === 'reel') { c.strokeStyle = mix('ash', 'signal', hot); c.lineWidth = 6; c.beginPath(); c.arc(tx, ty - 12, 16, 0, TAU); c.stroke(); }
+  if (tool === 'spray') { c.fillStyle = col('ash', 1); c.fillRect(tx - 8, ty - 26, 16, 24); }
+  if (hot > 0.05) { g.fillStyle = col('ember', 0.5 * hot); g.beginPath(); g.arc(tx, ty, 26, 0, TAU); g.fill(); }
+  return { ex, ey, a1 };
+}
+// ------------------------------------------------------------------ V4: the robot factory floor
+// Three articulated arms (each one is a ROBOTS — the word stencilled on its upper arm, lit when sung) work the words:
+// MINE drills an ore rock that becomes the COPPER ingot; WIRE strings cables into the PLANT; PRINT forms a ROBOTS unit
+// from the feet up. Then the printed robots march off down the line carrying the final words, the presses
+// and the march accelerating to the end of the shot.
 function assembly(s: S) {
   const { t, sh, c, g } = s;
-  const all = sh.lines.flatMap((l) => l.words);
-  scr(s, 1.0, 1.03);
-  // the belt: rollers + moving chevrons
-  const by = 760;
-  rule(c, 0, by, W, by, 1, col('bone', 0.8), 4); rule(c, 0, by + 70, W, by + 70, 1, col('bone', 0.8), 4);
-  // accelerating cadence: hits per second grow from 1.6 to 14 over the shot; phase = ∫ rate dt (closed form)
-  const D = Math.max(0.5, sh.end - sh.start), xT = clamp((t - sh.start) / D), ra = 1.6, rb = 12.4;
+  const l1 = ln(s, 0), l2 = ln(s, 1), all = [...l1.words, ...l2.words];
+  scr(s, 1.0, 1.02);
+  const D = Math.max(0.5, sh.end - sh.start), xT = clamp((t - sh.start) / D), ra = 1.4, rb = 10.6;
   const phase = D * (ra * xT + (rb * xT * xT * xT) / 3), rate = ra + rb * xT * xT;
-  const beltX = D * (ra * xT + (rb * xT * xT * xT) / 3) * 118;
-  const mv = beltX % 120;
-  // One physical conveyor carries the sung robot/word units below. Do not add a second generic unit row here.
-  for (let x = -120; x < W + 120; x += 120) { c.strokeStyle = col('graphite', 1); c.lineWidth = 4; c.beginPath(); c.moveTo(x - mv + 20, by + 12); c.lineTo(x - mv + 50, by + 35); c.lineTo(x - mv + 20, by + 58); c.stroke(); }
-  for (let x = 40; x < W; x += 160) { c.strokeStyle = col('graphite', 1); c.beginPath(); c.arc(x, by + 110, 22, 0, TAU); c.stroke(); }
-  // stations (arm shapes) above the belt: MINE / WIRE / PRINT
-  const ST = [{ x: 420, l: 'MINE' }, { x: 960, l: 'WIRE' }, { x: 1500, l: 'PRINT' }];
-  const verbs = all.filter((w) => /mine|wire|print/i.test(w.w));
+  const floor = 900, belt = 840;
+  // floor + belt (chevrons run with the cadence)
+  rule(c, 0, floor, W, floor, 1, col('graphite', 1), 3);
+  c.fillStyle = col('ink2', 1); c.fillRect(0, belt, W, 40); rule(c, 0, belt, W, belt, 1, col('bone', 0.8), 3);
+  const mv = (phase * 90) % 120;
+  for (let x = -120; x < W + 120; x += 120) { c.strokeStyle = col('graphite', 1); c.lineWidth = 4; c.beginPath(); c.moveTo(x + mv + 20, belt + 8); c.lineTo(x + mv + 44, belt + 20); c.lineTo(x + mv + 20, belt + 32); c.stroke(); }
+  const robotsW = all.filter((w) => /^robots$/i.test(clean(w.w)));
+  const verb = (re: RegExp) => all.find((w) => re.test(clean(w.w)));
+  const vMine = verb(/^mine$/i), vWire = verb(/^wire$/i), vPrint = verb(/^print$/i);
+  const copper = verb(/^copper$/i), plant = verb(/^plant$/i), painted = l2.words.find((w, i) => i > 1 && /^robots$/i.test(clean(w.w)));
+  const ST = [{ x: 380, v: vMine, subj: robotsW[0], tool: 'drill' as const, sign: 'MINE' }, { x: 960, v: vWire, subj: robotsW[1], tool: 'reel' as const, sign: 'WIRE' }, { x: 1540, v: vPrint, subj: robotsW[2], tool: 'spray' as const, sign: 'PRINT' }];
   ST.forEach((st, i) => {
-    const v = verbs[i];
+    // strike envelope: the sung verb, plus the accelerating cadence of the line
     const ph = phase - i * 0.33, fr = ph - Math.floor(ph);
-    const cad = ph > 0 ? Math.pow(1 - fr, 6) : 0; // the press drops at each beat of the accelerating cadence
-    const hit = Math.max(v ? pulseAt(t, v.start, 0.12) : 0, cad * clamp(0.4 + rate / 14));
-    rule(c, st.x, 140, st.x, 380 + 160 * hit, 1, col('bone', 0.9), 12);
-    c.fillStyle = col(hit > 0.1 ? 'signal' : 'graphite', 1); c.fillRect(st.x - 70, 380 + 160 * hit, 140, 40);
-    if (hit > 0.05) { g.fillStyle = col('ember', 0.5 * hit); g.fillRect(st.x - 90, 370 + 160 * hit, 180, 60); }
-    note(c, st.l, st.x, 120, 0.8, 22, 'ash', 'center');
+    const cad = ph > 0 ? Math.pow(1 - fr, 5) * clamp(0.3 + rate / 12) : 0;
+    const hitV = st.v ? Math.max(0, 1 - Math.abs(t - st.v.start) / 0.18) : 0;
+    const hit = Math.max(hitV, cad * (st.v && t > st.v.start - 0.2 ? 1 : 0.35));
+    const tx = st.x, ty = lerp(600, belt - 80, hit);
+    const hot = st.subj ? heat(st.subj, t) : 0;
+    const j = arm2D(s, st.x - 230, floor, tx, ty, 300, 280, st.tool, Math.max(hot, hitV));
+    // ROBOTS stencilled along the upper arm
+    if (st.subj) word(s, st.subj, 'ROBOTS', A(87, 900), 34, (st.x - 230 + j.ex) / 2, (floor - 60 + j.ey) / 2, { rot: j.a1, base: 'ink', hot: 'signal', ghost: 0.9 });
+    // hanging station sign with the verb
+    rule(c, st.x + 150, 100, st.x + 150, 160, 1, col('graphite', 1), 3);
+    c.fillStyle = col('ink2', 1); c.fillRect(st.x + 60, 160, 180, 64); c.strokeStyle = col('graphite', 1); c.lineWidth = 2; c.strokeRect(st.x + 60, 160, 180, 64);
+    if (st.v) word(s, st.v, st.sign, A(100, 900), 40, st.x + 150, 192, { ghost: 0.5 });
   });
-  note(c, `${Math.round(rate * 60)} UNITS / MIN`, W - 120, 1040, 0.9, 26, rate > 9 ? 'signal' : 'ash', 'right');
-  // every sung word rides the belt: it enters at its onset at the right of the station that matches, and flows left
-  const lineIdx = (w: Word) => sh.lines.findIndex((l) => l.words.includes(w));
-  sh.lines.forEach((l, li) => {
-    const nxt = sh.lines[li + 1];
-    const off = nxt ? prog(t, nxt.start - 0.15, nxt.start + 0.35, ease.inCubic) : 0;
-    if (off >= 1 || t < l.start - 0.5) return;
-    const drift = -(t - l.start) * 25 - off * 2200;
-    // every word is an object on the belt: a crate with the word stencilled on it; ROBOTS are robot units
-    const isR = l.words.map((w) => /robot/i.test(w.w));
-    const f = A(87, 900), fsz = l.words.map((w, i) => (isR[i] ? 40 : 34));
-    const wds = l.words.map((w, i) => Math.max(isR[i] ? 120 : 70, measure(txt(w), f, fsz[i]!) + 30));
-    const tot = wds.reduce((a, b) => a + b, 0) + 16 * (wds.length - 1);
-    const sc = Math.min(1, 1640 / tot);
-    let x = W / 2 - (tot * sc) / 2 + drift;
-    l.words.forEach((w, i) => {
-      const cw = wds[i]! * sc, cx = x + cw / 2, k = ease.outBack(prog(t, w.start - 0.1, w.start + 0.2));
-      x += (wds[i]! + 16) * sc;
-      if (k <= 0.001) return;
-      const hot = heat(w, t);
-      c.save(); c.translate(cx, by); c.scale(k, k);
-      if (isR[i]) { // a robot unit: legs, body, head with a visor — the word on its chest
-        c.fillStyle = mix('ash', 'signal', hot); c.fillRect(-cw * 0.32, -40, cw * 0.18, 40); c.fillRect(cw * 0.14, -40, cw * 0.18, 40);
-        box(c, -cw / 2, -150 * sc, cw, 112 * sc, 34, mix('ash', 'signal', hot), col('graphite', 1), col('bone', 0.6), col('ink', 0.6), 1.5);
-        box(c, -cw * 0.25, -214 * sc, cw * 0.5, 58 * sc, 26, mix('ash', 'signal', hot), col('graphite', 1), col('bone', 0.6), col('ink', 0.6), 1.5);
-        c.fillStyle = col('ink', 1); c.fillRect(-cw * 0.18, -194 * sc, cw * 0.36, 12 * sc);
-      } else box(c, -cw / 2, -96 * sc, cw, 96 * sc, 40, mix('ash', 'ember', hot * 0.6), col('graphite', 1), col('bone', 0.55), col('ink', 0.6), 1.5);
-      c.restore();
-      word(s, w, txt(w), f, fsz[i]! * sc * Math.max(0.001, k), cx, by - (isR[i] ? 94 : 48) * sc * k, { base: 'ink', hot: 'blood' });
-    });
+  // MINE: an ore rock that cracks under the drill and becomes the COPPER ingot
+  { const x = 380, k = copper ? prog(t, copper.start - 0.05, copper.start + 0.25, ease.outBack) : 0;
+    if (k < 1) { c.fillStyle = col('graphite', 1 - k); c.beginPath(); c.moveTo(x - 80, belt); c.lineTo(x - 66, belt - 60); c.lineTo(x - 10, belt - 84); c.lineTo(x + 54, belt - 64); c.lineTo(x + 84, belt); c.closePath(); c.fill();
+      for (let q = 0; q < 6; q++) if (hash(q, 3) < clamp(phase * 0.15)) rule(c, x - 40 + q * 14, belt - 70 + q * 6, x - 30 + q * 16, belt - 20, 1, col('ember', 0.8 * (1 - k)), 2); }
+    if (k > 0.001) { c.save(); c.translate(x, belt); c.scale(k, k); c.fillStyle = mix('signal', 'ember', 0.25); c.beginPath(); c.moveTo(-110, 0); c.lineTo(-84, -64); c.lineTo(84, -64); c.lineTo(110, 0); c.closePath(); c.fill(); c.fillStyle = col('ember', 0.6); c.fillRect(-80, -60, 160, 8); c.restore();
+      if (copper) word(s, copper, 'COPPER', A(100, 900), 38 * k, x, belt - 30, { base: 'ink', hot: 'blood' }); } }
+  // WIRE: the plant (a little factory) gets wired — cables run from the reel into it
+  { const x = 960, k = plant ? prog(t, plant.start - 0.4, plant.start + 0.2, ease.outCubic) : 0, wk = vWire ? prog(t, vWire.start - 0.05, (plant?.start ?? vWire.start + 0.5) + 0.1, ease.inOutCubic) : 0;
+    c.fillStyle = col('ink2', 1); c.strokeStyle = col('bone', 0.85); c.lineWidth = 3;
+    c.beginPath(); c.moveTo(x - 120, belt); c.lineTo(x - 120, belt - 90); for (let q = 0; q < 4; q++) { c.lineTo(x - 120 + q * 60 + 60, belt - 130); c.lineTo(x - 120 + q * 60 + 60, belt - 90); } c.lineTo(x + 120, belt); c.closePath(); c.fill(); c.stroke();
+    for (let q = 0; q < 3; q++) strokePts(c, [[x - 4, 640], [x - 60 + q * 60, belt - 160 + q * 10], [x - 90 + q * 90, belt - 60]], wk, col('signal', 0.9), 4);
+    if (k > 0.001) { for (let q = 0; q < 5; q++) { c.fillStyle = col('signal', 0.9 * k); c.fillRect(x - 100 + q * 42, belt - 60, 24, 18); g.fillStyle = col('ember', 0.3 * k); g.fillRect(x - 100 + q * 42, belt - 60, 24, 18); } }
+    if (plant) word(s, plant, 'PLANT', A(100, 900), 40, x, belt - 24, { ghost: 0.35 }); }
+  // PRINT: a ROBOTS unit forms from the feet up; particles fly from the nozzle while it prints
+  { const x = 1540, pk = vPrint ? prog(t, vPrint.start, (painted?.start ?? vPrint.start + 0.5) + 0.35, ease.inOutCubic) : 0;
+    bot2D(s, x, belt, 1.0, pk, 0, painted ? heat(painted, t) : 0);
+    if (pk > 0 && pk < 1) for (let q = 0; q < 26; q++) { const f = hash(q, Math.floor(t * 30)); g.fillStyle = col('ember', 0.6); g.fillRect(x - 40 + f * 80, 640 + hash(q, 2, Math.floor(t * 30)) * (belt - 260 * pk - 640), 4, 4); }
+    if (painted) word(s, painted, 'ROBOTS', A(87, 900), 34, x, belt - 140, { base: 'ink', hot: 'blood', ghost: 0.4 }); }
+  // the march: one painted robot per remaining word, stepping off down the line, faster and faster
+  const marchW = l2.words.filter((w) => w.start > (painted?.start ?? l2.start) + 0.05);
+  marchW.forEach((w, i) => {
+    if (t < w.start - 0.1) return;
+    const age = t - w.start, dist = 140 * age + 90 * age * age * (1 + rate / 6);
+    const x = 1540 + 120 + dist - i * 0, step = (age * (1.5 + rate * 0.35)) % 1;
+    if (x > W + 120) return;
+    bot2D(s, x, belt, 0.62, 1, step, heat(w, t));
+    word(s, w, txt(w), A(87, 900), 26, x, belt - 108, { base: 'ink', hot: 'blood' });
   });
-  void lineIdx;
+  // small connecting words of the sung lines, at the top, so every sung word is on screen
+  // each small "the" sits just before the object it introduces (copper, plant, robots)
+  const thes = all.filter((w) => /^the$/i.test(clean(w.w)) && !marchW.includes(w));
+  const theX = [250, 820, 1395];
+  thes.forEach((w, i) => word(s, w, 'THE', A(62, 500), 30, theX[Math.min(i, 2)]!, belt - 20, { ghost: 0.3 }));
+  note(c, `${Math.round(rate * 60)} UNITS / MIN`, W - 120, 1040, 0.9, 26, rate > 8 ? 'signal' : 'ash', 'right');
 }
 
 // ------------------------------------------------------------------ V4: diminishing returns — until capital can think, and learns
@@ -766,20 +816,26 @@ function rope(s: S) {
     const tot = wds.reduce((x, y) => x + y, 0); const us: number[] = []; let acc0 = 0;
     for (const wd of wds) { us.push(0.05 + 0.82 * (acc0 + wd / 2) / tot); acc0 += wd; }
     const pos = us.map((u) => along(pts, u));
-    let cur = -1; ws.forEach((w, i) => { if (t >= w.start) cur = i; });
-    const wordLit = cur < 0 ? 0.03 * prog(t, l2.start - 0.3, ws[0]!.start) : lerp(us[cur]! - (wds[cur]! / tot) * 0.41, us[cur]! + (wds[cur]! / tot) * 0.41, prog(t, ws[cur]!.start, Math.max(ws[cur]!.start + 0.1, ws[cur]!.end)));
-    // After the last sung word, the fuse keeps burning into the handoff instead of freezing in place.
-    const last = ws.length - 1;
-    const lit = cur === last && t > ws[last]!.end
-      ? lerp(wordLit, 1, prog(t, ws[last]!.end, sh.end - 0.1, ease.inOutCubic))
-      : wordLit;
+    // the spark position over time: word by word, then — after the last word — it keeps burning to the rope's far end
+    const lastW = ws[ws.length - 1]!;
+    const litAt = (tt: number) => {
+      let cu = -1; ws.forEach((w, i) => { if (tt >= w.start) cu = i; });
+      const base = cu < 0 ? 0.03 * prog(tt, l2.start - 0.3, ws[0]!.start) : lerp(us[cu]! - (wds[cu]! / tot) * 0.41, us[cu]! + (wds[cu]! / tot) * 0.41, prog(tt, ws[cu]!.start, Math.max(ws[cu]!.start + 0.1, ws[cu]!.end)));
+      return lerp(base, 0.985, prog(tt, lastW.end, sh.end - 0.05, ease.inCubic));
+    };
+    const lit = litAt(t);
     // camera: ride the words zoomed in; the pull-back starts just before "out"
     const ride = ws.filter((w) => w.start < outW.start);
     const times = [l2.start - 0.3, ...ride.map((w) => w.start - 0.07), outW.start - 0.4];
     const targets = [{ x: pos[0]!.x + 60, y: pos[0]!.y - 60, z: 2.1, r: 0 }, ...ride.map((_, i) => ({ x: pos[i]!.x + 50, y: pos[i]!.y - 60, z: 2.1, r: -clamp(pos[i]!.a, -0.5, 0.5) * 0.3 })), { x: W / 2, y: oy + H / 2 - 20, z: 1, r: 0 }];
-    const kB = snapCam(t, times, targets, 0.5);
+    const kB0 = snapCam(t, times, targets, 0.5);
+    // crescendo: the camera whips in on the running spark; it detonates at the cut (the next shot carries the blast)
+    const spk = along(pts, Math.max(0.001, lit)), whip = prog(t, sh.end - 1.1, sh.end, ease.inCubic);
+    const kB = lerpCam(kB0, { x: spk.x, y: spk.y, z: 3.2, r: 0 }, whip);
     const kA = { x: W / 2, y: H / 2, z: 1, r: 0 };
     cam(s, lerpCam(kA, kB, sw));
+    if (t > lastW.end) sparkTrail(s, (tt) => (tt < lastW.end ? null : along(pts, litAt(tt))), { rate: 140, speed: 300, life: 0.5 });
+    s.post.flash = Math.max(s.post.flash ?? 0, 0.5 * Math.pow(prog(t, sh.end - 0.25, sh.end), 3));
     // posts
     for (const [x, lab] of [[ax, 'ANIMAL'], [bx, 'OVERMAN']] as const) { c.fillStyle = col('graphite', 1); c.fillRect(x - 10, py - 30, 20, oy + 1000 - py); c.fillStyle = col('ash', 1); c.beginPath(); c.arc(x, py, 16, 0, TAU); c.fill(); note(c, lab, x, py - 50, 1, 22, 'ash', 'center'); }
     // the rope: thick core, twisted strand marks every ~14 px (charred and glowing behind the spark), a highlight
