@@ -569,10 +569,10 @@ function shenzhen(s: S) {
   // water + waves
   for (let i = 0; i < 10; i++) { const y = hy + 30 + i * 40; c.strokeStyle = col('graphite', 0.7); c.lineWidth = 2; c.beginPath(); for (let x = 0; x <= W; x += 20) { const yy = y + Math.sin(x * 0.02 + t * 1.5 + i) * 5; x ? c.lineTo(x, yy) : c.moveTo(x, yy); } c.stroke(); }
   rule(c, 0, hy, W, hy, 1, col('bone', 0.8), 3);
-  // line 1: the scene-setting words at the top; FISHING / BOATS ride the water as hulls; PADDY / FIELDS are terraces
+  // line 1: the scene-setting words at the top; FISHING / BOATS ride the water as hulls and stay visible; PADDY / FIELDS are terraces
   const fish = l1.words.filter((w) => /fishing|boats/i.test(w.w)), field = l1.words.filter((w) => /paddy|fields/i.test(w.w));
   const head = l1.words.filter((w) => !fish.includes(w) && !field.includes(w) && !/nineteen|eighty/i.test(w.w));
-  const a1 = 1 - grow * 0.85;
+  const a1 = 1;
   lyric(s, head, 170, { width: 900, max: 84, align: 'l', alpha: a1 });
   fish.forEach((w, i) => {
     if (t < w.start - 0.3) return;
@@ -622,18 +622,12 @@ function assembly(s: S) {
   const phase = D * (ra * xT + (rb * xT * xT * xT) / 3), rate = ra + rb * xT * xT;
   const beltX = D * (ra * xT + (rb * xT * xT * xT) / 3) * 118;
   const mv = beltX % 120;
-  // printed units ride the belt: one per hit, solid boxes stamped ROBOT
-  for (let k = Math.max(0, Math.floor(phase) - 26); k <= Math.floor(phase); k++) {
-    const ux = 1590 - (beltX - k * 118), uy = 760 - 70;
-    if (ux < -120 || ux > W + 120) continue;
-    box(c, ux - 40, uy, 80, 66, 30, col('ash', 1), col('graphite', 1), col('bone', 0.6), col('ink', 0.6), 1.5);
-    setFont(c, F.mono(700), 15); c.fillStyle = col('ink', 1); c.textAlign = 'center'; c.fillText('ROBOT', ux, uy + 40);
-  }
+  // One physical conveyor carries the sung robot/word units below. Do not add a second generic unit row here.
   for (let x = -120; x < W + 120; x += 120) { c.strokeStyle = col('graphite', 1); c.lineWidth = 4; c.beginPath(); c.moveTo(x - mv + 20, by + 12); c.lineTo(x - mv + 50, by + 35); c.lineTo(x - mv + 20, by + 58); c.stroke(); }
   for (let x = 40; x < W; x += 160) { c.strokeStyle = col('graphite', 1); c.beginPath(); c.arc(x, by + 110, 22, 0, TAU); c.stroke(); }
-  // stations (arm shapes) above the belt: MINE / WIRE / PAINT
-  const ST = [{ x: 420, l: 'MINE' }, { x: 960, l: 'WIRE' }, { x: 1500, l: 'PAINT' }];
-  const verbs = all.filter((w) => /mine|wire|paint/i.test(w.w));
+  // stations (arm shapes) above the belt: MINE / WIRE / PRINT
+  const ST = [{ x: 420, l: 'MINE' }, { x: 960, l: 'WIRE' }, { x: 1500, l: 'PRINT' }];
+  const verbs = all.filter((w) => /mine|wire|print/i.test(w.w));
   ST.forEach((st, i) => {
     const v = verbs[i];
     const ph = phase - i * 0.33, fr = ph - Math.floor(ph);
@@ -719,7 +713,7 @@ function returns(s: S) {
 
 // ------------------------------------------------------------------ V4: the fab and the vote; man is a rope (between animal and overman) — priced
 function rope(s: S) {
-  const { t, c, g } = s;
+  const { t, sh, c, g } = s;
   const l1 = ln(s, 0), l2 = ln(s, 1);
   const fab = fw(l1, /fab/i), vote = l1.words[l1.words.length - 1]!, zar = fw(l2, /zarathustra/i), rp = l2.words.filter((w) => /rope/i.test(w.w)), pr = fw(l2, /pricing/i);
   const sw = prog(t, l2.start - 0.2, l2.start + 0.3, ease.inOutCubic);
@@ -773,7 +767,12 @@ function rope(s: S) {
     for (const wd of wds) { us.push(0.05 + 0.82 * (acc0 + wd / 2) / tot); acc0 += wd; }
     const pos = us.map((u) => along(pts, u));
     let cur = -1; ws.forEach((w, i) => { if (t >= w.start) cur = i; });
-    const lit = cur < 0 ? 0.03 * prog(t, l2.start - 0.3, ws[0]!.start) : lerp(us[cur]! - (wds[cur]! / tot) * 0.41, us[cur]! + (wds[cur]! / tot) * 0.41, prog(t, ws[cur]!.start, Math.max(ws[cur]!.start + 0.1, ws[cur]!.end)));
+    const wordLit = cur < 0 ? 0.03 * prog(t, l2.start - 0.3, ws[0]!.start) : lerp(us[cur]! - (wds[cur]! / tot) * 0.41, us[cur]! + (wds[cur]! / tot) * 0.41, prog(t, ws[cur]!.start, Math.max(ws[cur]!.start + 0.1, ws[cur]!.end)));
+    // After the last sung word, the fuse keeps burning into the handoff instead of freezing in place.
+    const last = ws.length - 1;
+    const lit = cur === last && t > ws[last]!.end
+      ? lerp(wordLit, 1, prog(t, ws[last]!.end, sh.end - 0.1, ease.inOutCubic))
+      : wordLit;
     // camera: ride the words zoomed in; the pull-back starts just before "out"
     const ride = ws.filter((w) => w.start < outW.start);
     const times = [l2.start - 0.3, ...ride.map((w) => w.start - 0.07), outW.start - 0.4];

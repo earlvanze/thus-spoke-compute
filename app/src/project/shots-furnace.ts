@@ -594,7 +594,7 @@ function hyper(s: S) {
   strokePts(c, off(pts, -44), uCar, col('acid', 1), 6); strokePts(g, off(pts, -44), uCar, col('acid', 0.4), 18);
   ws.forEach((w, i) => {
     const p = pos[i]!, rot = clamp(p.a, -0.75, 0.75);
-    const shown = t >= w.start - 0.45, hot = heat(w, t), pop = ease.outBack(prog(t, w.start - 0.08, w.start + 0.2));
+    const lead = /route/i.test(w.w) ? 0.24 : 0.45, shown = t >= w.start - lead, hot = heat(w, t), pop = ease.outBack(prog(t, w.start - lead + 0.12, w.start + 0.2));
     if (!shown) return;
     c.save(); c.translate(p.x, p.y); c.rotate(rot);
     if (/bottleneck/i.test(w.w)) { // a bottle lying across the lane, its neck narrowing ahead; the word is its label
@@ -861,9 +861,10 @@ function liftoff(s: S) {
   // THE RATE: lands at the top as the curve leaves the frame; the multiplier spins past a million
   const the = all[all.length - 2]!;
   if (t >= the.start - 0.06 && the !== comp) { const [x, y] = at(-960, 330); word(s, the, 'THE', A(62, 300), 100 / z, x, y, { sc: slam(the, t, 1.4) }); }
-  if (t >= rate.start - 0.06) {
+  if (t >= rate.start - 0.24) {
+    const rateLead = ease.outBack(prog(t, rate.start - 0.24, rate.start + 0.12));
     const [x, y] = at(-330, 380);
-    word(s, rate, 'RATE', A(125, 900), 300 / z, x, y, { sc: slam(rate, t, 2.6), glow: 1.6 });
+    word(s, rate, 'RATE', A(125, 900), 300 / z, x, y, { sc: Math.max(0.001, rateLead), glow: 1.6 });
     const mult = Math.pow(2, Math.min(40, 20 + Math.floor((t - rate.start) * 60)));
     const [mx, my] = at(-40, 560);
     note(c, `×${mult.toLocaleString('en-US')}`, mx, my, 1, 34 / z, 'ember', 'right');

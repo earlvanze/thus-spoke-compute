@@ -4115,7 +4115,7 @@
    "end": 240.26
   },
   {
-   "text": "Robots paint the robots going every step they can.",
+   "text": "Robots print the robots going name the step they can’t.",
    "section": "verse4",
    "words": [
     {
@@ -4125,7 +4125,7 @@
      "end": 240.81
     },
     {
-     "w": "paint",
+     "w": "print",
      "start": 240.82,
      "conf": 0.8,
      "end": 241.17
@@ -4149,10 +4149,16 @@
      "end": 242.37
     },
     {
-     "w": "every",
-     "start": 242.38,
-     "conf": 0.0,
-     "end": 242.79
+     "w": "name",
+     "start": 242.31,
+     "conf": 1.0,
+     "end": 242.59
+    },
+    {
+     "w": "the",
+     "start": 242.65,
+     "conf": 1.0,
+     "end": 242.8
     },
     {
      "w": "step",
@@ -4167,14 +4173,14 @@
      "end": 243.35
     },
     {
-     "w": "can",
+     "w": "can’t",
      "start": 243.36,
      "conf": 1.0,
-     "end": 243.67
+     "end": 243.66
     }
    ],
    "start": 240.61,
-   "end": 243.67
+   "end": 243.66
   },
   {
    "text": "Solow said that capital hits diminishing returns,",
